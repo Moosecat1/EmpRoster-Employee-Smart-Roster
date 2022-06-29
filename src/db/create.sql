@@ -18,6 +18,7 @@ CREATE TABLE OperatingTime(
 
 CREATE TABLE Employee(
     emp_id VARCHAR(50) NOT NULL,
+    emp_password VARCHAR(255),
     emp_fName VARCHAR(255),
     emp_lName VARCHAR(255),
     emp_email VARCHAR(255),

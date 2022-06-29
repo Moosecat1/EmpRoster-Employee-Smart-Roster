@@ -8,13 +8,13 @@ export default function Home() {
 
     return (
         <main>
-            <Navbar/>
+           {/* <Navbar/>
             <div className={"main-container"}>
             <hero/>
             <information/>
             <banner/>
             <Footer/>
-            </div>
+            </div>*/} <p>hey</p>
         </main>
 
 
