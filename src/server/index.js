@@ -24,7 +24,7 @@ const db = mysql.createPool(
 const portNum = 2420;
 
 //opens server on selected port
-app.listen(portNum, () =>{
+app.listen(portNum, () => {
     console.log("Server running on port " + portNum + ".");
 });
 
@@ -91,14 +91,14 @@ app.post("/addEmployee", (req, res) => {
 
 //verify employee endpoint, which will just get an employee from the db to confirm it exists so it can log in.
 //this is just a select statement
-app.get("/verifyEmployee", async (req, res) => {
-    const emp_id = req.body.emp_id;
-    const emp_password = req.body.emp_password;
+app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password FROM Employee WHERE emp_id = ?",
+    db.query("SELECT emp_id, emp_password FROM Employee WHERE emp_id = ? AND emp_password = ?",
         [emp_id, emp_password],
         (err, result) => {
-            if(err){console.log("Employee Does Not Exist.");}
+            if(err){console.log(err);}
             else{res.send(result);}
     });
 });
