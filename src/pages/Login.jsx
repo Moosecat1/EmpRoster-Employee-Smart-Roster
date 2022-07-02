@@ -3,6 +3,10 @@
 //import "../css/Login.css"
 
 /*
+
+//import if you want to use my suggestion
+//const {verifyEmployee} = require('../modules/endpoint');
+
 export default function Login() {
 
     const [email, setEmail] = useState("");
@@ -12,6 +16,8 @@ export default function Login() {
     function sendLoginRequest(event, response) { //handles the main event 
         console.log("logging in"); //console log to test if we are logging in 
         event.preventDefault(); //prevent page reload 
+
+        //can replace this with below
         Axios.post("http://localhost:3001/login", { //post request to login page
             emp_email: email,
             emp_password: password,
@@ -26,6 +32,24 @@ export default function Login() {
                 window.location.href = "/";
             }
         });
+
+        //below is a replacement for the above axios request, to try make code a bit cleaner
+        //and so front end coders dont really have to deal with axios as it is cringe
+        //check insertEmployee and verifyEmployee in src/server for examples of how to use
+        /*
+            (async () => {
+                const empExists = await verifyEmployee(emp_id, emp_password);
+                
+                if(empExists){
+                    sessionStorage.setItem('emp_id', response.data[0].emp_id);
+                    sessionStorage.setItem('emp_fName', response.data[0].emp_fName);
+                    sessionStorage.setItem('emp_type', response.data[0].emp_type)
+                    window.location.href = "/";
+                } else{
+                    setMessage("Incorrect email or password");
+                }
+            })();
+        */
     }
     
 
