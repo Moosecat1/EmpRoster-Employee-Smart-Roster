@@ -50,9 +50,9 @@ export default function Login() {
                 }
             })();
         */
-    }
+   // }
     
-
+/*
 // JSX code for login form
    if(sessionStorage.getItem('emp_id') != null) {
         window.location.href = "/";
