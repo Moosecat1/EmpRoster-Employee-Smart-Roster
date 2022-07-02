@@ -1,7 +1,8 @@
-import React, {useState} from "react";
-import Axios from "axios";
-import "../css/Login.css"
+//import React, {useState} from "react";
+//import Axios from "axios";
+//import "../css/Login.css"
 
+/*
 export default function Login() {
 
     const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export default function Login() {
     
 
 // JSX code for login form
-    if(sessionStorage.getItem('emp_id') != null) {
+   if(sessionStorage.getItem('emp_id') != null) {
         window.location.href = "/";
     }else {
         <div className={"form"}>
@@ -61,4 +62,4 @@ export default function Login() {
 
 }
 
-
+*/
