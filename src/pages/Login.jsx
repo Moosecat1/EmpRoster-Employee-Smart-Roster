@@ -50,7 +50,7 @@ export default function Login() {
                 }
             })();
         */
-    }
+   // }
     
 /*
 // JSX code for login form
