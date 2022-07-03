@@ -6,5 +6,5 @@ import "../css/Navbar.css"
 
 export default function Home() {
     document.title = "EmpRoster - Smart Roster System"
-    return <Navbar/>
+    return (<main><Navbar/> <Footer/></main>);
 }
