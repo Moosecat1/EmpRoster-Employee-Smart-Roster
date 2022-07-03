@@ -1,0 +1,119 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    background: black;
+    color: white;
+}
+
+.footer-social-media {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.footer-social-media-icon {
+    margin: 0px 4px;
+    width: 25px;
+    height: 25px;
+}
+
+.footer-info  {
+    display: flex;
+    justify-content: center;
+}
+
+.footer-info-left, .footer-info-center, .footer-info-right {
+    font-size: x-small;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    width: 30%;
+}
+
+.footer-info-name, .footer-info-email, .footer-info-number {
+    margin-bottom: 10px;
+}
+
+.footer-info-name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 34px;
+}
+
+.footer-info-copyright {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 32px;
+}
+
+.footer-info-our-story {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.footer-info-FAQ {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.footer-info-contact {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+}
+.footer-info-our-story, .footer-info-FAQ, .footer-info-contact {
+    text-align: center;
+}
+
+.footer-info-products, .footer-info-smart-roster, .footer-info-social {
+    text-align: end;
+}
+
+.footer-info-products {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.footer-info-smart-roster {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.bi {
+    font-size: 15px;
+    padding: 10px;
+}
+
+.footer-seperator {
+    flex-grow: 1;
+    border: none;
+    height: 1px;
+    background-color: black;
+    width: 100%;
+}
+
+.footer-info-text-field {
+    width: 200px;
+    height: 35px;
+
+}
