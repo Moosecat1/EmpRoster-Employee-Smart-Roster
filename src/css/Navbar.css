@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.nav {
+    background-image: linear-gradient(to right, darkblue, cyan);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 1rem 1rem;
+}
+
+.site-name {
+    display: flex;
+    font-size: 2rem;
+}
+
+.logo-holder {
+    color: black;
+    width: 4.5rem;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.nav a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.nav li {
+    color: black;
+    border-style: solid;
+    padding: 0.5rem 0.8rem;
+    font-size: large;
+}
+
+.nav li:hover {
+    background-color: gray;
+}
