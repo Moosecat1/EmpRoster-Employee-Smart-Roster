@@ -1,5 +1,5 @@
 import React from 'react';
-import './footer.css';
+import '../css/footer.css';
 import emprlogo from '../resources/logo.png';
 
 function Footer() {
