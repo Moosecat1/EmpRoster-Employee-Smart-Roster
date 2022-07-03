@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Navbar from "../components/navbar";
-import {verifyEmployee} from '../modules/endpoint';
+const { verifyEmployee } = require('../modules/endpoint');
 import "../css/custom.css";
 import Form from "react-bootstrap/Form";
 
