@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 import Navbar from "../components/navbar";
-const { verifyEmployee } = require('../modules/endpoint');
 import "../css/custom.css";
 import Form from "react-bootstrap/Form";
+
+const { verifyEmployee } = require('../modules/endpoint');
+
 
 export default function Login(){
 
