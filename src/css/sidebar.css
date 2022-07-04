@@ -1,0 +1,28 @@
+.side {
+    background: #EEEEEE;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 87px;
+    bottom: 0px;
+}
+
+.side li {
+    padding: 0.5rem 0.8rem;
+    font-size: large;
+}
+
+.side ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.side a {
+    text-decoration: none;
+}
+
+.bi {
+    fill: currentColor;
+}
