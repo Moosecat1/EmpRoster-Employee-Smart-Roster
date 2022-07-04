@@ -1,4 +1,5 @@
 import emprlogo from '../resources/logo.png';
+import "../css/Navbar.css"
 
 export default function Navbar()
 {
