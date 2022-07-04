@@ -8,13 +8,15 @@ const verifyEmployee = async (emp_id, emp_password) => {
     const hash = sha256(emp_password);
 
     var empExists = false;
+    var res;
 
     //run a get request, which uses the parameters in the link as opposed to in the body in post requests
     await axios.get("http://localhost:2420/verifyEmployee/" + emp_id + "&" + hash.toString()).then((response) => {
         var dataLength = response.data.length;
+        res = response;
 
         //if there was data returned, the user exists.
-        if(dataLength != 0)
+        if(dataLength !== 0)
         {
             empExists = true;
         }
@@ -22,7 +24,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
         console.log(err);
     });
 
-    return empExists;
+    return {empExists: empExists, response: res};
 }
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
