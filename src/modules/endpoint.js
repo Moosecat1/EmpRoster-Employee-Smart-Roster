@@ -44,6 +44,15 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
     });
 }
 
+const addCompany = async (company_name) => {
+    await axios.post("http://localhost:2420/addCompany", {
+        company_name: company_name
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
+module.exports.addCompany = addCompany;
