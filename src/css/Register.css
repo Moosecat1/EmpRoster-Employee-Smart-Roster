@@ -1,3 +1,20 @@
 input[type="text"] {
-    font-size: 150%;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+}
+
+.buttonDiv {
+    display: flex;
+    justify-content: center;
+}
+
+#addButton {
+    background-color:teal;
+}
+
+#removeButton {
+    background-color: maroon;
 }
