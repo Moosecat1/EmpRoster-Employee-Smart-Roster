@@ -6,7 +6,7 @@ import '../css/Register.css'
 const { addEmployee } = require('../modules/endpoint');
 
 
-export default function Register(){
+export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([
         {firstName: '', lastName: '', privilege: 'Employee'},
     ]);
@@ -50,7 +50,7 @@ export default function Register(){
                 console.log(privilege + ": " + firstName + " " + lastName);
 
                 //change later
-                const companyId = '1';
+                const companyId = sessionStorage.getItem('company_id');
 
                 if(firstName !== "" || lastName !== "" || privilege !== "")
                 {

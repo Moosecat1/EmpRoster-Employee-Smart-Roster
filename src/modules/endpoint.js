@@ -56,11 +56,17 @@ const addEmployee = async (emp_fName, emp_lName, emp_privilege, company_id) => {
 }
 
 const addCompany = async (company_name) => {
+    var company_id;
+
     await axios.post("http://localhost:2420/addCompany", {
         company_name: company_name
+    }).then((res) => {
+        company_id = res.data[1];
     }).catch((err) => {
         console.log(err);
     });
+
+    return company_id;
 }
 
 //export the functions so they can be used program-wide

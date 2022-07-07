@@ -64,7 +64,7 @@ app.post("/addCompany", (req, res) => {
             //if there is an error, log it to the console
             if(err){console.log(err);}
             //else, send the result of the query in the result field, which can be accessed on the frontend
-            else{res.send(result);}
+            else{res.send([result, company_id]);}
     });
 });
 
