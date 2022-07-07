@@ -44,6 +44,15 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
     });
 }
 
+const getEmployeeList = async(company_id) => {
+    await axios.get("http://localhost:2420/getEmployeesList/" + company_id).then((response) => {
+        return response;
+    }).catch((err) => {
+    console.log(err);
+    });
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
+module.exports.getEmployeeList = getEmployeeList;

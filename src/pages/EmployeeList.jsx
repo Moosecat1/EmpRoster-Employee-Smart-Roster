@@ -7,10 +7,10 @@ export default function EmployeeList() {
     const [employeeList, setEList] = useState("");
     useEffect(() => {
         axios.get("http://localhost:2420/getEmployeesList/" + 1).then((response) => {
-            setEList(response.data);
-    })}, []);
-    console.log(employeeList.length);
-    for (let i = 0; i < employeeList.length; i++) {
+            setEList(response);
+    })}, [employeeList]);
+    console.log(employeeList);
+    for (let i = 0; i < employeeList.data.length; i++) {
         console.log('meow');
     }
     /*document.getElementById("eListContainer").innerHTML = employeeList;*/
