@@ -30,7 +30,7 @@ export default function RegisterCreateEmployees(){
     }
 
     const handleAdd = () => {
-        setInputFields([...inputFields, {firstName: '', lastName: '', privilege: ''}]);
+        setInputFields([...inputFields, {firstName: '', lastName: '', privilege: 'Employee'}]);
     }
 
     const handleRemove = (index) => {
@@ -58,6 +58,8 @@ export default function RegisterCreateEmployees(){
                     await addEmployee(firstName, lastName, privilege, companyId);
                 }
             }
+
+            document.location.href = "/";
         })();
     }
 
