@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
 
-const { addCompany } = require('../modules/endpoint');
+const { addCompany } = require('../../modules/endpoint');
+
+document.title = "Create Your Company";
 
 export default function RegisterCreateCompany(){
     const [companyName, setCompanyName] = useState("");
@@ -9,10 +11,10 @@ export default function RegisterCreateCompany(){
     const createCompany = () => {
 
         (async() => {
-            if(companyName != ""){
+            if(companyName !== ""){
                 var company_id = await addCompany(companyName);
                 sessionStorage.setItem('company_id', company_id);
-                window.location.href = "/register/createemployees";
+                window.location.href = "/register/createadmin";
             }
         })()
     }
@@ -31,5 +33,5 @@ export default function RegisterCreateCompany(){
                 <button className="w-100 btn btn-lg btn-primary" onClick={createCompany}>Next</button>
             </div>
         </>
-    )
+    );
 }

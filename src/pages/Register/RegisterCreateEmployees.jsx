@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import Navbar from '../components/navbar';
-import '../css/Register.css'
+import Navbar from '../../components/navbar';
+import '../../css/Register.css'
 
-const { addEmployee } = require('../modules/endpoint');
+const { addEmployee } = require('../../modules/endpoint');
 
+document.title = "Add Employees";
 
 export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([

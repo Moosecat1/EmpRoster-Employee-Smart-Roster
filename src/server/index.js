@@ -105,6 +105,26 @@ app.post("/addEmployee", (req, res) => {
     });
 });
 
+app.post("/addAdmin", (req, res) => {
+    const emp_id = genId();
+    const emp_password = req.body.emp_password;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_email = req.body.emp_email;
+    const emp_phNum = req.body.emp_phNum;
+    const emp_type = req.body.emp_type;
+    const emp_privilege = req.body.emp_privilege;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 //verify employee endpoint, which will just get an employee from the db to confirm it exists so it can log in.
 //this is just a select statement
 app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
