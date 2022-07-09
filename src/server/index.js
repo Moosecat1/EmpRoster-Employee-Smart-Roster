@@ -84,12 +84,24 @@ app.post("/addEmployee", (req, res) => {
     const emp_privilege = req.body.emp_privilege;
     const company_id = req.body.company_id;
 
-    db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_privilege, company_id) \n\
-        VALUES (?, ?, ?, ?, ?)",
-        [emp_id, emp_fName, emp_lName, emp_privilege, company_id],
+    var emp_id = company_id;
+
+    db.query("SELECT MAX(CAST(SUBSTR(emp_id, ?) AS UNSIGNED)) AS id FROM Employee WHERE emp_id LIKE ?",
+        [company_id.length + 1, company_id + "%"],
         (err, result) => {
             if(err){console.log(err);}
-            else{res.send(result);}
+            else
+            {
+                emp_id += (result[0].id + 1);
+
+                db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_privilege, company_id) \n\
+                    VALUES (?, ?, ?, ?, ?)",
+                    [emp_id, emp_fName, emp_lName, emp_privilege, company_id],
+                    (err, result) => {
+                        if(err){console.log(err);}
+                        else{res.send(result);}
+                });
+            }
     });
 });
 
