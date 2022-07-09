@@ -53,19 +53,27 @@ function genId()
 //endpoint to add a company to the database
 app.post("/addCompany", (req, res) => {
     //generate a company id using the function above
-    const company_id = genId();
     //get the company_name from the supplied arguments
     const company_name = req.body.company_name;
 
+    var company_id = company_name.slice(0, 4).toLowerCase();
+
+    db.query("SELECT MAX(CAST(SUBSTR(company_id, 5) AS UNSIGNED)) FROM Company WHERE company_id LIKE ?'%'",
+        [company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{console.log(result);}
+    });
+
     //query the db with the string query (ie. the INSERT statement), with values initialised above
-    db.query("INSERT INTO Company (company_id, company_name) VALUES (?, ?)",
+    /*db.query("INSERT INTO Company (company_id, company_name) VALUES (?, ?)",
         [company_id, company_name],
         (err, result) => {
             //if there is an error, log it to the console
             if(err){console.log(err);}
             //else, send the result of the query in the result field, which can be accessed on the frontend
             else{res.send(result);}
-    });
+    });*/
 });
 
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
