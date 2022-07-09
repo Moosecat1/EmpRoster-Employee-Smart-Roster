@@ -28,37 +28,15 @@ app.listen(portNum, () => {
     console.log("Server running on port " + portNum + ".");
 });
 
-//uses randomisation to generate an id for a company/employee
-function genId()
-{
-    var company_id = "";
-
-    while(company_id.length < 8)
-    {
-        if(company_id.length < 4)
-        {
-            const randChar = randomChar();
-            company_id += randChar;
-        }
-        else 
-        {
-            const rand = random(0, 10);
-            company_id += rand;
-        }
-    }
-
-    return company_id;
-}
-
 //endpoint to add a company to the database
 app.post("/addCompany", (req, res) => {
-    //generate a company id using the function above
     //get the company_name from the supplied arguments
     const company_name = req.body.company_name;
 
-    var company_id = (company_name.replace(/ /g, "")).slice(0, 4).toLowerCase();
-
-    db.query("SELECT MAX(CAST(SUBSTR(company_id, 5) AS UNSIGNED)) AS id FROM Company WHERE company_id LIKE ?",
+    //remove spaces and then reduce it to its first 4 characters and make it lower case to make company id
+    var company_id = (company_name.replace(/ /g, "")).slice(0, 3).toLowerCase();
+   
+    db.query("SELECT MAX(CAST(SUBSTR(company_id, 4) AS UNSIGNED)) AS id FROM Company WHERE company_id LIKE ?",
         [company_id + "%"],
         (err, result) => {
             if(err){console.log(err);}
@@ -81,7 +59,6 @@ app.post("/addCompany", (req, res) => {
 
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
 app.post("/addEmployee", (req, res) => {
-    const emp_id = genId();
     const emp_password = req.body.emp_password;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
@@ -91,12 +68,24 @@ app.post("/addEmployee", (req, res) => {
     const emp_privilege = req.body.emp_privilege;
     const company_id = req.body.company_id;
 
-    db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+    var emp_id = company_id;
+
+    db.query("SELECT MAX(CAST(SUBSTR(emp_id, ?) AS UNSIGNED)) AS id FROM Employee WHERE emp_id LIKE ?",
+        [company_id.length + 1, company_id + "%"],
         (err, result) => {
             if(err){console.log(err);}
-            else{res.send(result);}
+            else
+            {
+                emp_id += (result[0].id + 1);
+
+                db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+                    (err, result) => {
+                        if(err){console.log(err);}
+                        else{res.send(result);}
+                });
+            }
     });
 });
 
