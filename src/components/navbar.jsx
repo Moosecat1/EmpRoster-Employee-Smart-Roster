@@ -14,7 +14,7 @@ export default function Navbar()
             </li>
             <li>
                 {/*TODO: Link to create account page when made*/}
-                <a href="/login">Create</a>
+                <a href="/register/createcompany">Register</a>
             </li>
         </ul>
     </nav>
