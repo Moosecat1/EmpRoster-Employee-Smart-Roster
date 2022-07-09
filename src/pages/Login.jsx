@@ -7,7 +7,6 @@ const { verifyEmployee } = require('../modules/endpoint');
 
 document.title = "Login";
 
-
 export default function Login(){
     const [emp_id, setEmail] = useState("");
     const [emp_password, setPassword] = useState("");

@@ -51,14 +51,49 @@ app.post("/addCompany", (req, res) => {
                     //if there is an error, log it to the console
                     if(err){console.log(err);}
                     //else, send the result of the query in the result field, which can be accessed on the frontend
-                    else{res.send(result);}
+                    else{res.send([result, company_id]);}
                 });
             }
     });
 });
 
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
+/*app.post("/addEmployee", (req, res) => {
+    const emp_id = genId();
+    const emp_password = req.body.emp_password;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_email = req.body.emp_email;
+    const emp_phNum = req.body.emp_phNum;
+    const emp_type = req.body.emp_type;
+    const emp_privilege = req.body.emp_privilege;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});*/
+
 app.post("/addEmployee", (req, res) => {
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_privilege = req.body.emp_privilege;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_privilege, company_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [emp_id, emp_fName, emp_lName, emp_privilege, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.post("/addAdmin", (req, res) => {
     const emp_password = req.body.emp_password;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
@@ -97,6 +132,15 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 
     db.query("SELECT emp_id, emp_password FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getEmployees", (req, res) => {
+    db.query("SELECT * FROM Employee",
+        [],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
