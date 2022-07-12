@@ -27,7 +27,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
     return {empExists: empExists, response: res};
 }
 
-const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
+/*const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
     const hash = sha256(emp_password);
     
     await axios.post("http://localhost:2420/addEmployee", {
@@ -42,8 +42,52 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
     }).catch((err) => {
         console.log(err);
     });
+}*/
+
+const addEmployee = async (emp_fName, emp_lName, emp_privilege, company_id) => {
+    await axios.post("http://localhost:2420/addEmployee", {
+        emp_fName: emp_fName,
+        emp_lName: emp_lName,
+        emp_privilege: emp_privilege,
+        company_id: company_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const addAdmin = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, company_id) => {
+    const hash = sha256(emp_password);
+
+    await axios.post("http://localhost:2420/addAdmin", {
+        emp_password: hash.toString(),
+        emp_fName: emp_fName,
+        emp_lName: emp_lName,
+        emp_email: emp_email,
+        emp_phNum: emp_phNum,
+        emp_type: emp_type,
+        emp_privilege: "Admin",
+        company_id: company_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const addCompany = async (company_name) => {
+    var company_id;
+
+    await axios.post("http://localhost:2420/addCompany", {
+        company_name: company_name
+    }).then((res) => {
+        company_id = res.data[1];
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return company_id;
 }
 
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
+module.exports.addAdmin = addAdmin;
+module.exports.addCompany = addCompany;
