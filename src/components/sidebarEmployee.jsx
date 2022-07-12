@@ -15,7 +15,7 @@ function SidebarEmployee() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="side-link text-black">
+                        <a href="employeelist" className="side-link text-black">
                             <i className="bi bi-printer"></i>
                             Request Leave
                         </a>
