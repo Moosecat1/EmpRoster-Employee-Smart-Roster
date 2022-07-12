@@ -3,8 +3,35 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/roster.css';
 
+const axios = require('axios');
+
 function Roster() {
 
+    var startTime = 24;
+    var endTime = 0;
+    var empRostStart;
+    var empRostEnd;
+
+    function companyOpTimesGet() {
+        (async () => {
+            await axios.get("http://localhost:2420/getCompanyOpTimes/" + 1).then((response) => {
+                console.log(response.);
+                for (var i = 0; i < response.data.length; i++) {
+                    if (startTime > response.data[i].)
+                }
+                employeeList = response.data;
+            })
+        })();
+    }
+
+    function empRosterGet() {
+        (async () => {
+            await axios.get("http://localhost:2420/getEmployeeRoster/" + 1).then((response) => {
+                console.log(response.data);
+                employeeList = response.data;
+            })
+        })();
+    }
     /*Need to add functionality for generating roster from DB*/
     return (
         <div className="d-flex flex-nowrap roster-container">
