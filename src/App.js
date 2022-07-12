@@ -1,6 +1,8 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+
+import EmployeeList from "./pages/EmployeeList"
 import RegisterCreateCompany from "./pages/Register/RegisterCreateCompany";
 import NoPage from "./pages/NoPage";
 import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
@@ -16,6 +18,7 @@ export default function App() {
             <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
             <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
             <Route path="/*" element={<NoPage/>}/>
+            <Route path="/employeelist" element={<EmployeeList/>}/>
         </Routes>
       </BrowserRouter>
   );
