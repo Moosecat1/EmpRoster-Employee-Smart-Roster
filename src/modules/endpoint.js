@@ -27,7 +27,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
     return {empExists: empExists, response: res};
 }
 
-/*const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
+const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
     const hash = sha256(emp_password);
     
     await axios.post("http://localhost:2420/addEmployee", {
@@ -37,17 +37,6 @@ const verifyEmployee = async (emp_id, emp_password) => {
         emp_email: emp_email,
         emp_phNum: emp_phNum,
         emp_type: emp_type,
-        emp_privilege: emp_privilege,
-        company_id: company_id
-    }).catch((err) => {
-        console.log(err);
-    });
-}*/
-
-const addEmployee = async (emp_fName, emp_lName, emp_privilege, company_id) => {
-    await axios.post("http://localhost:2420/addEmployee", {
-        emp_fName: emp_fName,
-        emp_lName: emp_lName,
         emp_privilege: emp_privilege,
         company_id: company_id
     }).catch((err) => {
