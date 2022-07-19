@@ -7,6 +7,7 @@ import RegisterCreateCompany from "./pages/Register/RegisterCreateCompany";
 import NoPage from "./pages/NoPage";
 import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
+import SettingsAccount from "./pages/Settings/SettingsAccount";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
             <Route path="/*" element={<NoPage/>}/>
             <Route path="/employeelist" element={<EmployeeList/>}/>
+            <Route path="/settings" element={<SettingsAccount/>}/>
         </Routes>
       </BrowserRouter>
   );
