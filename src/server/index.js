@@ -181,7 +181,7 @@ app.get("/getEmployeeRoster/:emp_id", (req, res) => {
 });
 
 app.get("/getCompanyOpTimes/:company_id", (req, res) => {
-    const company_id = req.params.emp_id
+    const company_id = req.params.company_id
     db.query("SELECT * FROM OperatingTime WHERE (company_id = ?)",
         [company_id],
         (err, result) => {

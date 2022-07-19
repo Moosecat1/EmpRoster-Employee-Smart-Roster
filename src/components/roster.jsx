@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/roster.css';
 
 const axios = require('axios');
+document.getElementById("xxx").display = "none"
 
 function Roster() {
 
@@ -11,15 +12,20 @@ function Roster() {
     var endTime = 0;
     var empRostStart;
     var empRostEnd;
+    var difference;
 
     function companyOpTimesGet() {
         (async () => {
             await axios.get("http://localhost:2420/getCompanyOpTimes/" + 1).then((response) => {
-                console.log(response.);
+                console.log(response.data);
                 for (var i = 0; i < response.data.length; i++) {
-                    if (startTime > response.data[i].)
+                    if (startTime > response.data[i].start_time) {
+                        startTime = response.data[i].start_time;
+                    }
+                    if (endTime < response.data[i].end_time) {
+                        endTime = response.data[i].end_time
+                    }
                 }
-                employeeList = response.data;
             })
         })();
     }
@@ -27,14 +33,69 @@ function Roster() {
     function empRosterGet() {
         (async () => {
             await axios.get("http://localhost:2420/getEmployeeRoster/" + 1).then((response) => {
-                console.log(response.data);
-                employeeList = response.data;
+                const container = document.getElementById("container")
+                const group = document.createElement("ListGroup horizontal");
+                const blank = document.createElement("ListGroup.Item");
+                blank.variant = "secondary";
+                blank.append(group);
+                const monday = document.createElement("ListGroup.Item");
+                monday.variant = "secondary";
+                monday.innerHTML = "Monday";
+                monday.append(group);
+                const tuesday = document.createElement("ListGroup.Item");
+                tuesday.variant = "secondary";
+                tuesday.innerHTML = "Tuesday";
+                tuesday.append(group);
+                const wednesday = document.createElement("ListGroup.Item");
+                wednesday.variant = "secondary";
+                wednesday.innerHTML = "Wednesday";
+                wednesday.append(group);
+                const thursday = document.createElement("ListGroup.Item");
+                thursday.variant = "secondary";
+                thursday.innerHTML = "Thursday";
+                thursday.append(group);
+                const friday = document.createElement("ListGroup.Item");
+                friday.variant = "secondary";
+                friday.innerHTML = "Friday";
+                friday.append(group);
+                const saturday = document.createElement("ListGroup.Item");
+                saturday.variant = "secondary";
+                saturday.innerHTML = "Saturday";
+                saturday.append(group);
+                const sunday = document.createElement("ListGroup.Item");
+                sunday.variant = "secondary";
+                sunday.innerHTML = "Sunday";
+                sunday.append(group);
+                group.append(container);
+                for (var i = 0; i < difference; i++) {
+                    var timeGroup = document.createElement("ListGroup horizontal");
+                    var timeItem = document.createElement("ListGroup.Iten");
+                    timeItem.variant = "secondary";
+                    timeItem.innerHTML = "9:00";
+                    timeItem.append(timeGroup);
+                    for (var j = 0; j < 6; j++) {
+                        empRostStart = response.data[j].rost_start;
+                        empRostEnd = response.data[j].rost_end;
+                        var day = j.toLocaleString('en-us', { weekday : 'long'});
+                        var item = document.createElement("ListGroup.Item");
+                        if (i >= empRostStart && i <= empRostEnd) {
+                            item.variant = "success";
+                            item.innerHTML = "Rostered";
+                        }
+                        else {
+                            item.variant = "danger";
+                            item.innerHTML = "Unrostered"
+                        }
+                        item.append(timeGroup);
+                    }
+                    timeGroup.append(container);
+                }
             })
         })();
     }
     /*Need to add functionality for generating roster from DB*/
     return (
-        <div className="d-flex flex-nowrap roster-container">
+        <div className="d-flex flex-nowrap roster-container" id ="container">
             <ListGroup>
                 <ListGroup.Item variant="secondary" className="empty"></ListGroup.Item>
                 <ListGroup.Item variant="secondary">0:00</ListGroup.Item>
