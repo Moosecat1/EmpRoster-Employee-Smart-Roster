@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navbar';
 
-const { addAdmin } = require('../../modules/endpoint');
+const { addAdmin, addEmployee } = require('../../modules/endpoint');
 
 document.title = "Create Admin Account";
 
@@ -28,7 +28,7 @@ export default function RegisterCreateAdmin(){
         );
 
         (async() => {
-            await addAdmin(password, firstName, lastName, email, phoneNumber, type, companyId);
+            await addEmployee(password, firstName, lastName, email, phoneNumber, type, "Admin", companyId);
 
             window.location.href = "/register/createemployees";
         })();

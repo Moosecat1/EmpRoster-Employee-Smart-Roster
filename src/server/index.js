@@ -1,11 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
-
-//get the created random functions using a path
-const randomMod = require('../modules/random');
-const random = randomMod.random;
-const randomChar = randomMod.randomChar;
+const { random } = require("../modules/random");
 
 const app = express();
 app.use(cors());
@@ -58,8 +54,7 @@ app.post("/addCompany", (req, res) => {
 });
 
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
-/*app.post("/addEmployee", (req, res) => {
-    const emp_id = genId();
+app.post("/addEmployee", (req, res) => {
     const emp_password = req.body.emp_password;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
@@ -69,16 +64,28 @@ app.post("/addCompany", (req, res) => {
     const emp_privilege = req.body.emp_privilege;
     const company_id = req.body.company_id;
 
-    db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+    var emp_id = company_id;
+
+    db.query("SELECT MAX(CAST(SUBSTR(emp_id, ?) AS UNSIGNED)) AS id FROM Employee WHERE emp_id LIKE ?",
+        [company_id.length + 1, company_id + "%"],
         (err, result) => {
             if(err){console.log(err);}
-            else{res.send(result);}
-    });
-});*/
+            else
+            {
+                emp_id += (result[0].id + 1);
 
-app.post("/addEmployee", (req, res) => {
+                db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+                    (err, result) => {
+                        if(err){console.log(err);}
+                        else{res.send(result);}
+                });
+            }
+    });
+});
+
+/*app.post("/addEmployee", (req, res) => {
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
     const emp_privilege = req.body.emp_privilege;
@@ -103,7 +110,7 @@ app.post("/addEmployee", (req, res) => {
                 });
             }
     });
-});
+});*/
 
 app.post("/addAdmin", (req, res) => {
     const emp_password = req.body.emp_password;

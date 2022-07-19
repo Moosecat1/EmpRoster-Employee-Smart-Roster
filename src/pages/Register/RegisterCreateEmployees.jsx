@@ -55,7 +55,7 @@ export default function RegisterCreateEmployees(){
 
                 if(firstName !== "" || lastName !== "" || privilege !== "")
                 {
-                    await addEmployee(firstName, lastName, privilege, companyId);
+                    await addEmployee(null, firstName, lastName, null, null, null, privilege, companyId);
                 }
             }
 
