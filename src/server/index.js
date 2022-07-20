@@ -53,6 +53,21 @@ app.post("/addCompany", (req, res) => {
     });
 });
 
+app.post("/addOperatingTime", (req, res) => {
+    const day_name = req.body.day_name;
+    const start_time = req.body.start_time;
+    const end_time = req.body.end_time;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO OperatingTime (day_name, start_time, end_time, company_id) \n\
+        VALUES (?, ?, ?, ?)",
+        [day_name, start_time, end_time, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
 app.post("/addEmployee", (req, res) => {
     const emp_password = req.body.emp_password;
@@ -77,64 +92,6 @@ app.post("/addEmployee", (req, res) => {
                 db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
-                    (err, result) => {
-                        if(err){console.log(err);}
-                        else{res.send(result);}
-                });
-            }
-    });
-});
-
-/*app.post("/addEmployee", (req, res) => {
-    const emp_fName = req.body.emp_fName;
-    const emp_lName = req.body.emp_lName;
-    const emp_privilege = req.body.emp_privilege;
-    const company_id = req.body.company_id;
-
-    var emp_id = company_id;
-
-    db.query("SELECT MAX(CAST(SUBSTR(emp_id, ?) AS UNSIGNED)) AS id FROM Employee WHERE emp_id LIKE ?",
-        [company_id.length + 1, company_id + "%"],
-        (err, result) => {
-            if(err){console.log(err);}
-            else
-            {
-                emp_id += (result[0].id + 1);
-
-                db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_privilege, company_id) \n\
-                    VALUES (?, ?, ?, ?, ?)",
-                    [emp_id, emp_fName, emp_lName, emp_privilege, company_id],
-                    (err, result) => {
-                        if(err){console.log(err);}
-                        else{res.send(result);}
-                });
-            }
-    });
-});*/
-
-app.post("/addAdmin", (req, res) => {
-    const emp_password = req.body.emp_password;
-    const emp_fName = req.body.emp_fName;
-    const emp_lName = req.body.emp_lName;
-    const emp_email = req.body.emp_email;
-    const emp_phNum = req.body.emp_phNum;
-    const emp_type = req.body.emp_type;
-    const emp_privilege = req.body.emp_privilege;
-    const company_id = req.body.company_id;
-
-    var emp_id = company_id;
-
-    db.query("SELECT MAX(CAST(SUBSTR(emp_id, ?) AS UNSIGNED)) AS id FROM Employee WHERE emp_id LIKE ?",
-        [company_id.length + 1, company_id + "%"],
-        (err, result) => {
-            if(err){console.log(err);}
-            else
-            {
-                emp_id += (result[0].id + 1);
-
-                db.query("INSERT INTO Employee (emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [emp_id, emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
                     (err, result) => {
                         if(err){console.log(err);}
                         else{res.send(result);}
