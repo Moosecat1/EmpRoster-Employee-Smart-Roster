@@ -176,3 +176,23 @@ app.get("/getEmployees", (req, res) => {
             else{res.send(result);}
     });
 });
+
+app.get("/getEmployeeRoster/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id
+    db.query("SELECT * FROM Roster WHERE (emp_id = ?)",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.get("/getCompanyOpTimes/:company_id", (req, res) => {
+    const company_id = req.params.company_id
+    db.query("SELECT * FROM OperatingTime WHERE (company_id = ?)",
+        [company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
