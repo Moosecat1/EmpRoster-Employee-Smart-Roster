@@ -44,23 +44,6 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
     });
 }
 
-const addAdmin = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, company_id) => {
-    const hash = sha256(emp_password);
-
-    await axios.post("http://localhost:2420/addAdmin", {
-        emp_password: hash.toString(),
-        emp_fName: emp_fName,
-        emp_lName: emp_lName,
-        emp_email: emp_email,
-        emp_phNum: emp_phNum,
-        emp_type: emp_type,
-        emp_privilege: "Admin",
-        company_id: company_id
-    }).catch((err) => {
-        console.log(err);
-    });
-}
-
 const addCompany = async (company_name) => {
     var company_id;
 
@@ -75,8 +58,19 @@ const addCompany = async (company_name) => {
     return company_id;
 }
 
+const addOperatingTime = async (day_name, start_time, end_time, company_id) => {
+    await axios.post("http://localhost:2420/addOperatingTime", {
+        day_name: day_name,
+        start_time: start_time,
+        end_time: end_time,
+        company_id: company_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
-module.exports.addAdmin = addAdmin;
 module.exports.addCompany = addCompany;
+module.exports.addOperatingTime = addOperatingTime;
