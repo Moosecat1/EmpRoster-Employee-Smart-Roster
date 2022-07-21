@@ -8,6 +8,7 @@ import NoPage from "./pages/NoPage";
 import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
+import MainHub from "./pages/MainHub"
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/*" element={<NoPage/>}/>
             <Route path="/employeelist" element={<EmployeeList/>}/>
             <Route path="/settings" element={<SettingsAccount/>}/>
+            <Route path="/mainhub" element ={<MainHub/>} />
         </Routes>
       </BrowserRouter>
   );

@@ -57,7 +57,7 @@ function Roster() {
                     timeItem.append(timeGroup);
                     for (var j = 0; j < 6; j++) {
                         empRostStart = parseInt(response.data[j].rost_start.substr(0, 2));
-                        empRostEnd = parseInt(response.data[j].rost_end.substr(0,2));
+                        empRostEnd = parseInt(response.data[j].rost_end.substr(0, 2));
                         var item = document.createElement("ListGroup.Item");
                         if (currentTime >= empRostStart && currentTime <= empRostEnd) {
                             item.variant = "success";
