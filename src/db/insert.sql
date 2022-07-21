@@ -30,72 +30,72 @@ INSERT INTO Employee
 VALUES ('5', 'Password5', 'Redim', 'Poster', 'posterr@joesMC.com', '+61 XXX XXX XXX', 'Casual', 'Employee', '1');
 
 INSERT INTO Availability
-VALUES ('04/07/2022', '9:00', '17:00', '1');
+VALUES (DATE '2022/07/04', '9:00', '17:00', '1');
 INSERT INTO Availability
-VALUES ('05/07/2022', '9:00', '17:00', '1');
+VALUES (DATE '2022/07/05', '9:00', '17:00', '1');
 INSERT INTO Availability
-VALUES ('06/07/2022', '9:00', '17:00', '1');
+VALUES (DATE '2022/07/06', '9:00', '17:00', '1');
 INSERT INTO Availability
-VALUES ('07/07/2022', '9:00', '17:00', '1');
+VALUES (DATE '2022/07/07', '9:00', '17:00', '1');
 INSERT INTO Availability
-VALUES ('08/07/2022', '9:00', '17:00', '1');
+VALUES (DATE '2022/07/08', '9:00', '17:00', '1');
 INSERT INTO Availability
-VALUES ('09/07/2022', '0:00', '0:00', '1');
+VALUES (DATE '2022/07/09', '0:00', '0:00', '1');
 INSERT INTO Availability
-VALUES ('10/07/2022', '0:00', '0:00', '1');
+VALUES (DATE '2022/07/10', '0:00', '0:00', '1');
 INSERT INTO Availability
-VALUES ('04/07/2022', '9:00', '17:00', '2');
+VALUES (DATE '2022/07/04', '9:00', '17:00', '2');
 INSERT INTO Availability
-VALUES ('05/07/2022', '9:00', '17:00', '2');
+VALUES (DATE '2022/07/05', '9:00', '17:00', '2');
 INSERT INTO Availability
-VALUES ('06/07/2022', '9:00', '17:00', '2');
+VALUES (DATE '2022/07/06', '9:00', '17:00', '2');
 INSERT INTO Availability
-VALUES ('07/07/2022', '9:00', '17:00', '2');
+VALUES (DATE '2022/07/07', '9:00', '17:00', '2');
 INSERT INTO Availability
-VALUES ('08/07/2022', '9:00', '17:00', '2');
+VALUES (DATE '2022/07/08', '9:00', '17:00', '2');
 INSERT INTO Availability
-VALUES ('09/07/2022', '0:00', '0:00', '2');
+VALUES (DATE '2022/07/09', '0:00', '0:00', '2');
 INSERT INTO Availability
-VALUES ('10/07/2022', '0:00', '0:00', '2');
+VALUES (DATE '2022/07/10', '0:00', '0:00', '2');
 INSERT INTO Availability
-VALUES ('04/07/2022', '0:00', '0:00', '3');
+VALUES (DATE '2022/07/04', '0:00', '0:00', '3');
 INSERT INTO Availability
-VALUES ('05/07/2022', '0:00', '0:00', '3');
+VALUES (DATE '2022/07/05', '0:00', '0:00', '3');
 INSERT INTO Availability
-VALUES ('06/07/2022', '10:00', '13:00', '3');
+VALUES (DATE '2022/07/06', '10:00', '13:00', '3');
 INSERT INTO Availability
-VALUES ('07/07/2022', '0:00', '0:00', '3');
+VALUES (DATE '2022/07/07', '0:00', '0:00', '3');
 INSERT INTO Availability
-VALUES ('08/07/2022', '0:00', '0:00', '3');
+VALUES (DATE '2022/07/08', '0:00', '0:00', '3');
 INSERT INTO Availability
-VALUES ('09/07/2022', '9:00', '17:00', '3');
+VALUES (DATE '2022/07/09', '9:00', '17:00', '3');
 INSERT INTO Availability
-VALUES ('10/07/2022', '9:00', '17:00', '3');
+VALUES (DATE '2022/07/10', '9:00', '17:00', '3');
 INSERT INTO Availability
-VALUES ('04/07/2022', '0:00', '0:00', '4');
+VALUES (DATE '2022/07/04', '0:00', '0:00', '4');
 INSERT INTO Availability
-VALUES ('05/07/2022', '9:00', '17:00', '4');
+VALUES (DATE '2022/07/05', '9:00', '17:00', '4');
 INSERT INTO Availability
-VALUES ('06/07/2022', '0:00', '0:00', '4');
+VALUES (DATE '2022/07/06', '0:00', '0:00', '4');
 INSERT INTO Availability
-VALUES ('07/07/2022', '9:00', '17:00', '4');
+VALUES (DATE '2022/07/07', '9:00', '17:00', '4');
 INSERT INTO Availability
-VALUES ('08/07/2022', '9:00', '17:00', '4');
+VALUES (DATE '2022/07/08', '9:00', '17:00', '4');
 INSERT INTO Availability
-VALUES ('09/07/2022', '9:00', '17:00', '4');
+VALUES (DATE '2022/07/09', '9:00', '17:00', '4');
 INSERT INTO Availability
-VALUES ('10/07/2022', '9:00', '17:00', '4');
+VALUES (DATE '2022/07/10', '9:00', '17:00', '4');
 INSERT INTO Availability
-VALUES ('04/07/2022', '0:00', '0:00', '5');
+VALUES (DATE '2022/07/04', '0:00', '0:00', '5');
 INSERT INTO Availability
-VALUES ('05/07/2022', '9:00', '17:00', '5');
+VALUES (DATE '2022/07/05', '9:00', '17:00', '5');
 INSERT INTO Availability
-VALUES ('06/07/2022', '0:00', '0:00', '5');
+VALUES (DATE '2022/07/06', '0:00', '0:00', '5');
 INSERT INTO Availability
-VALUES ('07/07/2022', '9:00', '17:00', '5');
+VALUES (DATE '2022/07/07', '9:00', '17:00', '5');
 INSERT INTO Availability
-VALUES ('08/07/2022', '9:00', '17:00', '5');
+VALUES (DATE '2022/07/08', '9:00', '17:00', '5');
 INSERT INTO Availability
-VALUES ('09/07/2022', '9:00', '17:00', '5');
+VALUES (DATE '2022/07/09', '9:00', '17:00', '5');
 INSERT INTO Availability
-VALUES ('10/07/2022', '9:00', '17:00', '5');
+VALUES (DATE '2022/07/10', '9:00', '17:00', '5');

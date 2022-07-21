@@ -15,13 +15,13 @@ function SidebarManager() {
                             </a>
                         </li>
                         <li>
-                            <a href="#" className="side-link text-black">
+                            <a href="employeelist" className="side-link text-black">
                                 <i className="bi bi-people-fill"></i>
                                 Employees
                             </a>
                         </li>
                         <li>
-                            <a href="#" className="side-link text-black">
+                            <a href="/settings" className="side-link text-black">
                                 <i className="bi bi-gear"></i>
                                 Settings
                             </a>

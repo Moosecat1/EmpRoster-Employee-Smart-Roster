@@ -4,7 +4,7 @@ import '../css/sidebar.css';
 function SidebarEmployee() {
     return (
         <div className="d-flex flex-nowrap">
-            <div className="side d-flex flex-column flex-shrink-0 p-1">
+            <div className="side d-flex flex-column flex-shrink-0 p-1 col-1">
 
                 <hr />
                 <ul className="side-pills flex-column mb-auto">
@@ -15,7 +15,7 @@ function SidebarEmployee() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="side-link text-black">
+                        <a href="employeelist" className="side-link text-black">
                             <i className="bi bi-printer"></i>
                             Request Leave
                         </a>

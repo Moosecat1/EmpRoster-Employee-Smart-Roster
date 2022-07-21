@@ -1,7 +1,7 @@
 .side {
     background: #EEEEEE;
     color: black;
-    display: flex;
+    display: inline;
     justify-content: space-between;
     position: fixed;
     top: 87px;
@@ -9,7 +9,7 @@
 }
 
 .side li {
-    padding: 0.5rem 0.8rem;
+    padding: .5rem 0;
     font-size: large;
 }
 
