@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Navbar from '../components/navbar';
 import Roster from '../components/roster';
-//import SidebarManager from '../components/sidebarManager';
+import Sidebar from '../components/sidebar';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -36,7 +36,7 @@ export default function ManagerEditRoster(){
     return(
         <>
             <Navbar/>
-            {/*<SidebarManager/>*/}
+            <Sidebar/>
                 <Container>
 
                 <Box
