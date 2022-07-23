@@ -106,7 +106,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     const emp_id = req.params.emp_id;
     const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
+    db.query("SELECT emp_id, emp_password, emp_fName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
         (err, result) => {
             if(err){console.log(err);}

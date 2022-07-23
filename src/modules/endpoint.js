@@ -24,7 +24,13 @@ const verifyEmployee = async (emp_id, emp_password) => {
         console.log(err);
     });
 
-    return {empExists: empExists, response: res};
+    //get values from response to send to frontend
+    const empId = res.data[0].emp_id;
+    const empfName = res.data[0].emp_fName;
+    const empPrivilege = res.data[0].emp_privilege;
+    const companyId = res.data[0].company_id;
+
+    return {empExists: empExists, empId: empId, empfName: empfName, empPrivilege: empPrivilege, companyId: companyId};
 }
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {

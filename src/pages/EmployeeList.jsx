@@ -13,7 +13,7 @@ export default function EmployeeList() {
 
     function employeeListGet() {
         (async () => {
-            await axios.get("http://localhost:2420/getEmployeesList/" + 1).then((response) => {
+            await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem("company_id")).then((response) => {
                 console.log(response.data);
                 employeeList = response.data;
                 const container = document.getElementById("eListContainer");
