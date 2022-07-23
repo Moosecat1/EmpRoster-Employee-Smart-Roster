@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Navbar from "../../components/navbar";
-import Footer from "../../components/footer";
 import Sidebar from "../../components/sidebar";
 import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
 
-import {Box,Button,Container, List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Switch, Slider, Grid, Paper, Avatar , styled} from "@mui/material";
+import {Box,Button, List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Switch, Slider, Grid, Paper, Avatar , styled} from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -67,12 +66,18 @@ export default function SettingsAccount(){
     const [hiddenStatus, setHiddenStatus] = React.useState(["block","none","none"]);
     const [theme, setTheme] = React.useState(1);
 
+    // let a = 0 ;
+    // let b = 1;
 
     const handleChange = (event) => {
         setTheme(event.target.value);
     };
 
-
+    // const handleClick = () => {
+    //     if(hiddenStatus == 1){
+    //         setHiddenStatus(b)
+    //     }
+    // }
 
     return(
         <>
@@ -92,7 +97,8 @@ export default function SettingsAccount(){
             sx={{display: {xs:"none",sm:'block'}}}
             >
             <List >
-                
+
+                <ListItem /*onClick={handleClick}*/>
                 <ListItemButton component="a"  >
                     <ListItemIcon >
                         <ManageAccounts/>
@@ -100,7 +106,7 @@ export default function SettingsAccount(){
                     <ListItemText primary="Account">
                     </ListItemText>
                 </ListItemButton>
-
+                </ListItem>
 
                 <ListItem disablePadding>
                     <ListItemButton component="a" >
@@ -131,7 +137,7 @@ export default function SettingsAccount(){
                          display={hiddenStatus[0]}>
                         <Grid container spacing={3}>
                             <Grid item xs={12} display='flex'>
-                                <Avatar {...stringAvatar('User Name')} ></Avatar>
+                                <Avatar {...stringAvatar('user name')} ></Avatar>
                                 <h3>User Name</h3>
                             </Grid>
 
@@ -154,7 +160,7 @@ export default function SettingsAccount(){
 
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText>Employee Phone Number:
+                                            <ListItemText>Employee Email Address:
                                                 <br/>
                                                 <Button variant="contained" size="small" submit>Edit</Button>
                                             </ListItemText>
@@ -315,8 +321,8 @@ export default function SettingsAccount(){
 
 
                                         <Button> <img src="p.png" width="100" height="100" alt="midnight-colour"/></Button>
-                                    <img src="pink.png" width="100" height="100" alt="hotpink-colour"/>
-                                    <img src="b.png" width="100" height="100" alt="aqua-colour"/>
+                                        <Button>   <img src="pink.png" width="100" height="100" alt="hotpink-colour"/></Button>
+                                        <Button>  <img src="b.png" width="100" height="100" alt="aqua-colour"/></Button>
                                     <br/>
                                     </Box>
                                     <Button variant="contained" submit>Save Changes</Button>
