@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Navbar from "../../components/navbar";
-import Sidebar from "../../components/sidebarEmployee";
+import SidebarEmployee from "../../components/sidebarEmployee";
 import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
 
 import {Box,Button, List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Switch, Slider, Grid, Paper, Avatar , styled} from "@mui/material";
@@ -88,7 +88,7 @@ export default function SettingsAccount(){
                 <Box
                 flex={.7}
                 bgcolor={"gray"}>
-            <Sidebar/>
+            <SidebarEmployee/>
                 </Box>
             <Box
             bgcolor={"white"}
