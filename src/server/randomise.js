@@ -1,5 +1,5 @@
 const { random, randomName, randomCompanyName, randomDomain, randomPhoneNumber, randomType, randomPrivilege } = require('../modules/random');
-const { addCompany, addEmployee } = require('../modules/endpoint');
+const { addCompany, addEmployee, addAvailability } = require('../modules/endpoint');
 
 var companyNo;
 
@@ -28,24 +28,6 @@ else
 
         const employeeNo = random(0, 100);
 
-        //generate operating time for company
-        const companyDayChoice = random(0, 3);
-
-        //if CDC = 0, they are standard mon-fri 
-        if(companyDayChoice === 0)
-        {
-
-        }
-        //else if CDC = 1, they are 
-        else if(companyDayChoice === 1)
-        {
-
-        }
-        else
-        {
-
-        }
-
         //generate employees for company
         for(let i2 = 0; i2 < employeeNo; i2++)
         {
@@ -58,7 +40,35 @@ else
             const empType = randomType();
             const empPrivilege = randomPrivilege();
 
-            await addEmployee(empPassword, empFName, empLName, empEmail, empPhNum, empType, empPrivilege, companyId);
+            const empId = await addEmployee(empPassword, empFName, empLName, empEmail, empPhNum, empType, empPrivilege, companyId);
+
+            if(empType === "Full-time")
+            {
+                //get current date
+                const availDate = new Date();
+
+                //set start of week date to last monday
+                let startOfWeek = new Date();
+                startOfWeek.setDate(availDate.getDate() - (availDate.getDay() - 1));
+
+                let currentDate = startOfWeek;
+
+                //roster the full-time employee on from the previous monday till the end of the next week's friday (ie. two weeks roster)
+                for(let i = 0; i < 10; i++)
+                {
+                    //get the date in mysql format
+                    const sqlDate = currentDate.toISOString().split('T')[0].replace(/-/g, '/');
+
+                    //set the current date to the previous date + a day and skip the weekend
+                    if(i !== 4){
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    } else{
+                        currentDate.setDate(currentDate.getDate() + 2);
+                    }
+
+                    await addAvailability(sqlDate, "09:00", "17:00", empId);
+                }
+            }
         }
     }
 })();
