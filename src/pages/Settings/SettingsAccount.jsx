@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
-import Sidebar from "../../components/sidebarEmployee";
+import Sidebar from "../../components/sidebar";
 import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
 
 import {Box,Button,Container, List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Switch, Slider, Grid, Paper, Avatar , styled} from "@mui/material";

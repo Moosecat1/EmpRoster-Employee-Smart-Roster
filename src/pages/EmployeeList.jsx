@@ -1,4 +1,4 @@
-import Sidebar from "../components/sidebarManager";
+import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import '../css/EmployeeList.css';
 import React from "react";

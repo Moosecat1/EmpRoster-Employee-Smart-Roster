@@ -2,7 +2,7 @@ import '../css/Home.css';
 import React from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import Sidebar from "../components/sidebarManager";
+import Sidebar from "../components/sidebar";
 import Roster from "../components/roster"
 
 export default function Home() {
