@@ -99,3 +99,7 @@ INSERT INTO Availability
 VALUES (DATE '2022/07/09', '9:00', '17:00', '5');
 INSERT INTO Availability
 VALUES (DATE '2022/07/10', '9:00', '17:00', '5');
+
+
+INSERT INTO Roster
+VALUES ()

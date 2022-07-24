@@ -68,9 +68,26 @@ const addOperatingTime = async (day_name, start_time, end_time, company_id) => {
         console.log(err);
     });
 }
+const empRosterGet = async (emp_id) => {
+    var res;
+    await axios.get("http://localhost:2420/getEmployeeRoster/" + emp_id).then((response) => {
+        res = response;
+    })
+    return {response: res};
+}
+
+const getEmployeeList = async (company_id) => {
+    var res;
+    await axios.get("http://localhost:2420/getEmployeesList/" + company_id).then((response) => {
+        res = response;
+    })
+    return {response: res};
+}
 
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
 module.exports.addOperatingTime = addOperatingTime;
+module.exports.empRosterGet = empRosterGet;
+module.exports.getEmployeeList = getEmployeeList;
