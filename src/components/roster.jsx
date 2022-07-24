@@ -35,26 +35,25 @@ function Roster() {
         })();
     }
 
-    function RosterGeneration() {
-        const container = document.getElementById("container")
-        const group = document.createElement("ListGroup");
-        const blank = document.createElement("ListGroup.Item");
-        blank.variant = "secondary";
-        blank.className = "empty";
-        group.append(blank);
-        for (var i = 0; i < 6; i++) {
-            var day = i.toLocaleString('en-us', {weekday: 'long'});
-            var dayElement = document.createElement("ListGroup.Item");
-            dayElement.variant = "secondary";
-            dayElement.innerHTML = day;
-            group.append(dayElement);
-        }
-        container.append(group);
-        if (emp_type = "manager") {
-            (async () => {
-                const res = await employeeListGet(company_id);
-                for (var i = 0; i < res.data.length; i++) {
-                    (async () => {
+    function RosterGeneration()  {
+        (async () => {
+            const container = document.getElementById("container")
+            const group = document.createElement("ListGroup");
+            const blank = document.createElement("ListGroup.Item");
+            blank.variant = "secondary";
+            blank.className = "empty";
+            group.append(blank);
+            for (var i = 0; i < 6; i++) {
+                var day = i.toLocaleString('en-us', {weekday: 'long'});
+                var dayElement = document.createElement("ListGroup.Item");
+                dayElement.variant = "secondary";
+                dayElement.innerHTML = day;
+                group.append(dayElement);
+            }
+            container.append(group);
+            if (emp_type === "manager") {
+                    const res = await employeeListGet(company_id);
+                    for (var i = 0; i < res.data.length; i++) {
                         var res2 = await empRosterGet(res.data[i].emp_id);
                         var empGroup = document.createElement("ListGroup");
                         var empItem = document.createElement("ListGroup.Item");
@@ -73,37 +72,35 @@ function Roster() {
                             empGroup.append(item);
                         }
                         container.append(empGroup);
-                    })
-                }
-            })
-        }
-        else if (emp_type = "employee") {
-            (async () => {
-                const res = await empRosterGet(emp_id);
-                for (var i = 0; i < difference; i++) {
-                    var timeGroup = document.createElement("ListGroup");
-                    var timeItem = document.createElement("ListGroup.Item");
-                    var currentTime = startTime + i;
-                    timeItem.variant = "secondary";
-                    timeItem.innerHTML = currentTime + ":00";
-                    timeGroup.append(timeItem);
-                    for (var j = 0; j < 6; j++) {
-                        empRostStart = parseInt(res.data[j].rost_start.substr(0, 2));
-                        empRostEnd = parseInt(res.data[j].rost_end.substr(0, 2));
-                        var item = document.createElement("ListGroup.Item");
-                        if ((currentTime >= empRostStart && currentTime <= empRostEnd) && j == (res.data[j].rost_date).getDay()) {
-                            item.variant = "success";
-                            item.innerHTML = "Rostered";
-                        } else {
-                            item.variant = "danger";
-                            item.innerHTML = "Unrostered";
-                        }
-                        timeGroup.append(item);
+                        
                     }
-                    container.append(timeGroup);
-                }
-            })
-        }
+            }
+            else if (emp_type === "employee") {
+                    const res = await empRosterGet(emp_id);
+                    for (var i = 0; i < difference; i++) {
+                        var timeGroup = document.createElement("ListGroup");
+                        var timeItem = document.createElement("ListGroup.Item");
+                        var currentTime = startTime + i;
+                        timeItem.variant = "secondary";
+                        timeItem.innerHTML = currentTime + ":00";
+                        timeGroup.append(timeItem);
+                        for (var j = 0; j < 6; j++) {
+                            empRostStart = parseInt(res.data[j].rost_start.substr(0, 2));
+                            empRostEnd = parseInt(res.data[j].rost_end.substr(0, 2));
+                            var item = document.createElement("ListGroup.Item");
+                            if ((currentTime >= empRostStart && currentTime <= empRostEnd) && j == (res.data[j].rost_date).getDay()) {
+                                item.variant = "success";
+                                item.innerHTML = "Rostered";
+                            } else {
+                                item.variant = "danger";
+                                item.innerHTML = "Unrostered";
+                            }
+                            timeGroup.append(item);
+                        }
+                        container.append(timeGroup);
+                    }
+            }
+        })();
     }
 
 
