@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/roster.css';
 
-const { empRosterGet, employeeListGet } = require('../modules/endpoint');
+const { empRosterGet, getEmployeeList } = require('../modules/endpoint');
 const axios = require('axios');
 
 function Roster() {
@@ -52,8 +52,9 @@ function Roster() {
             }
             container.append(group);
             if (emp_type === "manager") {
-                    const res = await employeeListGet(company_id);
-                    for (var i = 0; i < res.data.length; i++) {
+                    const res = await getEmployeeList(company_id);
+                    var response = res.response;
+                    for (var i = 0; i < response.data.length; i++) {
                         var res2 = await empRosterGet(res.data[i].emp_id);
                         var empGroup = document.createElement("ListGroup");
                         var empItem = document.createElement("ListGroup.Item");
@@ -72,7 +73,7 @@ function Roster() {
                             empGroup.append(item);
                         }
                         container.append(empGroup);
-                        
+
                     }
             }
             else if (emp_type === "employee") {
