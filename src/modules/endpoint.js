@@ -12,7 +12,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
 
     //run a get request, which uses the parameters in the link as opposed to in the body in post requests
     await axios.get("http://localhost:2420/verifyEmployee/" + emp_id + "&" + hash.toString()).then((response) => {
-        var dataLength = response.data.length;
+        const dataLength = response.data.length;
         res = response;
 
         //if there was data returned, the user exists.
@@ -35,6 +35,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
     const hash = sha256(emp_password);
+    var emp_id;
     
     await axios.post("http://localhost:2420/addEmployee", {
         emp_password: hash.toString(),
@@ -45,9 +46,13 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
         emp_type: emp_type,
         emp_privilege: emp_privilege,
         company_id: company_id
+    }).then((res) => {
+        emp_id = res.data[1];
     }).catch((err) => {
         console.log(err);
     });
+
+    return emp_id;
 }
 
 const addCompany = async (company_name) => {
@@ -64,19 +69,77 @@ const addCompany = async (company_name) => {
     return company_id;
 }
 
-const addOperatingTime = async (day_name, start_time, end_time, company_id) => {
-    await axios.post("http://localhost:2420/addOperatingTime", {
+const addRegularAvailability = async (day_name, reg_start, reg_end, emp_id) => {
+    await axios.post("http://localhost:2420/addRegularAvailability", {
         day_name: day_name,
-        start_time: start_time,
-        end_time: end_time,
-        company_id: company_id
+        reg_start: reg_start,
+        reg_end: reg_end,
+        emp_id: emp_id
     }).catch((err) => {
         console.log(err);
     });
+}
+
+const addAvailability = async (avail_date, avail_start, avail_end, avail_type, emp_id) => {
+    await axios.post("http://localhost:2420/addAvailability", {
+        avail_date: avail_date,
+        avail_start: avail_start,
+        avail_end: avail_end,
+        avail_type: avail_type,
+        emp_id: emp_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const getAvailability = async (emp_id, avail_date) => {
+    var res;
+    var hasAvailability = false;
+
+    await axios.get("http://localhost:2420/getAvailability/" + emp_id + "&" + avail_date).then((response) => {
+        var dataLength = response.data.length;
+        res = response;
+
+        if(dataLength !== 0)
+        {
+            hasAvailability = true;
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    const availStart = res.data[0].avail_start;
+    const availEnd = res.data[0].avail_end;
+    const availType = res.data[0].avail_type;
+
+    return{hasAvailability: hasAvailability, availStart: availStart, availEnd: availEnd, availType: availType};
+}
+
+const createRoster = async (emp_id, week_start) => {
+    var dayLooper = week_start;
+
+    //look at week start, cycle through regular availabilities. if conflict between regular and availabilities table, do the availabilities
+    for(let i = 0; i < 7; i++)
+    {
+        const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
+        const res = await getAvailability(emp_id, sqlDate);
+
+        if(res.hasAvailability)
+        {
+            //compare to current regular availability. if difference, add availability to roster table.
+        }
+        else
+        {
+            //add regular availability to roster table
+        }
+
+        dayLooper.setDate(dayLooper.getDate() + 1);
+    }
 }
 
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
-module.exports.addOperatingTime = addOperatingTime;
+module.exports.addRegularAvailability = addRegularAvailability;
+module.exports.addAvailability = addAvailability;
