@@ -1,12 +1,13 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Container from 'react-bootstrap/Container';
 import '../css/roster.css';
 
 const { empRosterGet, getEmployeeList } = require('../modules/endpoint');
 const axios = require('axios');
 
-function Roster() {
+function Rosters() {
 
     var startTime = 24;
     var endTime = 0;
@@ -17,6 +18,14 @@ function Roster() {
     var emp_id = 1;
     var emp_type = 'manager';
     var company_id = 1;
+    const Rosters = () => {
+        (async () => {
+            var res = await empRosterGet(emp_id);
+            console.log(res);
+            rosters = res.response.data;
+        })();
+    }
+    console.log(rosters);
 
     function companyOpTimesGet() {
         (async () => {
@@ -35,91 +44,24 @@ function Roster() {
         })();
     }
 
-    function RosterGeneration()  {
-        const container = document.querySelector("div");
-        const group = document.createElement("ListGroup");
-        const blank = document.createElement("ListGroup.Item");
-        blank.variant = "secondary";
-        blank.className = "empty";
-        group.append(blank);
-        for (var i = 0; i < 6; i++) {
-            var day = i.toLocaleString('en-us', {weekday: 'long'});
-            var dayElement = document.createElement("ListGroup.Item");
-            dayElement.variant = "secondary";
-            dayElement.innerHTML = day;
-            group.append(dayElement);
-        }
-        container.append(group);
-        if (emp_type === "manager") {
-            (async () => {
-                var res = await getEmployeeList(company_id);
-                var response = res.response;
-                for (var j = 0; j < (response.data.length - 1); j++) {
-                    (async () => {
-                        var res2 = await empRosterGet(response.data[j].emp_id);
-                        var response2 = res2.response;
-                        var empGroup = document.createElement("ListGroup");
-                        var empItem = document.createElement("ListGroup.Item");
-                        empItem.variant = "secondary";
-                        console.log(response);
-                        console.log(response2);
-                        console.log(response.data[j].emp_fName);
-                        empItem.innerHTML = response.data[j].emp_fName + " " + response.data[j].emp_lName;
-                        empGroup.append(empItem);
-                        for (var k = 0; k < 6; k++) {
-                            var item = document.createElement("ListGroup.Item");
-                            if (k == response2.data[0].rost_date) {
-                                item.innerHTML = "Start: " + response2.data[k].rost_start + "\n" + "End: " + response2.data[k].rost_end;
-                                item.variant = "success";
-                            } else {
-                                item.variant = "secondary";
-                            }
-                            empGroup.append(item);
-                        }
-                        container.append(empGroup);
-                    })();
-                }
-            })();
-        }
-        else if (emp_type === "employee") {
-            (async () => {
-                var res = await empRosterGet(emp_id);
-                var response = res.repsonse;
-                for (var i = 0; i < difference; i++) {
-                    var timeGroup = document.createElement("ListGroup");
-                    var timeItem = document.createElement("ListGroup.Item");
-                    var currentTime = startTime + i;
-                    timeItem.variant = "secondary";
-                    timeItem.innerHTML = currentTime + ":00";
-                    timeGroup.append(timeItem);
-                    for (var j = 0; j < 6; j++) {
-                        empRostStart = parseInt(response.data[j].rost_start.substr(0, 2));
-                        empRostEnd = parseInt(response.data[j].rost_end.substr(0, 2));
-                        var item = document.createElement("ListGroup.Item");
-                        if ((currentTime >= empRostStart && currentTime <= empRostEnd) && j == (response.data[j].rost_date).getDay()) {
-                            item.variant = "success";
-                            item.innerHTML = "Rostered";
-                        } else {
-                            item.variant = "danger";
-                            item.innerHTML = "Unrostered";
-                        }
-                        timeGroup.append(item);
-                    }
-                    container.append(timeGroup);
-                }
-            })();
-        }
-    }
-
-
-    if (checker === false) {
-        companyOpTimesGet();
-        RosterGeneration();
-        checker = true;
-    }
     /*Need to add functionality for generating roster from DB*/
     return (
-        <div className="d-flex flex-nowrap roster-container" id="container">
+        <div className="flex" id="container">
+            <ListGroup horizontal>
+                <ListGroup.Item variant="secondary">    </ListGroup.Item>
+                <ListGroup.Item variant="secondary">Monday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Tuesday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Wednesday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Thursday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Friday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Saturday</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Sunday</ListGroup.Item>
+            </ListGroup>
+            {rosters.map((roster) => (
+                <ListGroup className="timeGroup">
+                    <ListGroup.Item>{roster.start}</ListGroup.Item>
+                </ListGroup>
+            ))}
 
         </div>
     )
