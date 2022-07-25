@@ -9,8 +9,9 @@ import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
 import ManagerEditRoster from "./pages/ManagerEditRoster";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
-import MainHub from "./pages/MainHub"
-import EmployeeView from "./pages/EmployeeView"
+import MainHub from "./pages/MainHub";
+import EmployeeView from "./pages/EmployeeView";
+import ChangeAvailability from "./pages/ChangeAvailability";
 
 export default function App() {
   return (
@@ -25,8 +26,9 @@ export default function App() {
             <Route path="/employeelist" element={<EmployeeList/>}/>
             <Route path="/ManagerEditRoster" element={<ManagerEditRoster/>}/>
             <Route path="/settings" element={<SettingsAccount/>}/>
-            <Route path="/mainhub" element ={<MainHub/>} />
-            <Route path="/EmployeeView" element ={<EmployeeView/>} />
+            <Route path="/mainhub" element={<MainHub/>} />
+            <Route path="/EmployeeView" element={<EmployeeView/>} />
+            <Route path="/ChangeAvailability" element={<ChangeAvailability/>} />
         </Routes>
       </BrowserRouter>
   );
