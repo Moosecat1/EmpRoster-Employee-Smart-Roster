@@ -100,7 +100,7 @@ app.post("/addEmployee", (req, res) => {
     });
 });
 
-app.post("/addRegularAvailability", (req, res) =>{
+app.post("/addRegularAvailability", (req, res) => {
     const emp_id = req.body.emp_id;
     const day_name = req.body.day_name;
     const reg_start = req.body.reg_start;
@@ -115,7 +115,7 @@ app.post("/addRegularAvailability", (req, res) =>{
     });
 });
 
-app.post("/addAvailability", (req, res) =>{
+app.post("/addAvailability", (req, res) => {
     const avail_date = req.body.avail_date;
     const avail_start = req.body.avail_start;
     const avail_end = req.body.avail_end;
@@ -125,6 +125,22 @@ app.post("/addAvailability", (req, res) =>{
     db.query("INSERT INTO Availability (avail_date, avail_start, avail_end, avail_type, emp_id) \n\
         VALUES (?, ?, ?, ?, ?)",
         [avail_date, avail_start, avail_end, avail_type, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.post("/addRoster", (req, res) => {
+    const rost_date = req.body.rost_date;
+    const rost_start = req.body.rost_start;
+    const rost_end = req.body.rost_end;
+    const rost_week_start = req.body.rost_week_start;
+    const emp_id = req.body.emp_id;
+
+    db.query("INSERT INTO Roster (rost_date, rost_start, rost_end, rost_week_start, emp_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [rost_date, rost_start, rost_end, rost_week_start, emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -194,6 +210,18 @@ app.get("/getAvailability/:emp_id&:avail_date", (req, res) => {
 
     db.query("SELECT * FROM Availability WHERE (emp_id = ? AND avail_date = ?)",
         [emp_id, avail_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getRegularAvailability/:emp_id&:day_name", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const day_name = req.params.day_name;
+
+    db.query("SELECT * FROM RegularAvailability WHERE (emp_id = ? AND day_name = ?)",
+        [emp_id, day_name],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

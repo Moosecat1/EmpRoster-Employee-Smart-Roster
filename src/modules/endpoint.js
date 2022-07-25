@@ -24,11 +24,19 @@ const verifyEmployee = async (emp_id, emp_password) => {
         console.log(err);
     });
 
+    let empId;
+    let empfName;
+    let empPrivilege;
+    let companyId;
+
     //get values from response to send to frontend
-    const empId = res.data[0].emp_id;
-    const empfName = res.data[0].emp_fName;
-    const empPrivilege = res.data[0].emp_privilege;
-    const companyId = res.data[0].company_id;
+    if(empExists)
+    {
+        empId = res.data[0].emp_id;
+        empfName = res.data[0].emp_fName;
+        empPrivilege = res.data[0].emp_privilege;
+        companyId = res.data[0].company_id;
+    }
 
     return {empExists: empExists, empId: empId, empfName: empfName, empPrivilege: empPrivilege, companyId: companyId};
 }
@@ -80,6 +88,34 @@ const addRegularAvailability = async (day_name, reg_start, reg_end, emp_id) => {
     });
 }
 
+const getRegularAvailability = async (emp_id, day_name) => {
+    var res;
+    var hasRegularAvailability= false;
+
+    await axios.get("http://localhost:2420/getRegularAvailability/" + emp_id + "&" + day_name).then((response) => {
+        var dataLength = response.data.length;
+        res = response;
+
+        if(dataLength !== 0)
+        {
+            hasRegularAvailability = true;
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    let regStart;
+    let regEnd;
+
+    if(hasRegularAvailability)
+    {
+        regStart = res.data[0].reg_start;
+        regEnd = res.data[0].reg_end;
+    }
+
+    return {hasRegularAvailability: hasRegularAvailability, regStart: regStart, regEnd: regEnd};
+}
+
 const addAvailability = async (avail_date, avail_start, avail_end, avail_type, emp_id) => {
     await axios.post("http://localhost:2420/addAvailability", {
         avail_date: avail_date,
@@ -96,6 +132,8 @@ const getAvailability = async (emp_id, avail_date) => {
     var res;
     var hasAvailability = false;
 
+    console.log(avail_date);
+
     await axios.get("http://localhost:2420/getAvailability/" + emp_id + "&" + avail_date).then((response) => {
         var dataLength = response.data.length;
         res = response;
@@ -108,31 +146,71 @@ const getAvailability = async (emp_id, avail_date) => {
         console.log(err);
     });
 
-    const availStart = res.data[0].avail_start;
-    const availEnd = res.data[0].avail_end;
-    const availType = res.data[0].avail_type;
+    let availStart;
+    let availEnd;
+    let availType;
 
-    return{hasAvailability: hasAvailability, availStart: availStart, availEnd: availEnd, availType: availType};
+    if(hasAvailability)
+    {
+        availStart = res.data[0].avail_start;
+        availEnd = res.data[0].avail_end;
+        availType = res.data[0].avail_type;
+    }
+
+    return {hasAvailability: hasAvailability, availStart: availStart, availEnd: availEnd, availType: availType};
+}
+
+const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_id) => {
+    await axios.post("http://localhost:2420/addRoster", {
+        rost_date: rost_date,
+        rost_start: rost_start,
+        rost_end: rost_end,
+        rost_week_start: rost_week_start,
+        emp_id: emp_id
+    }).catch((err) => {
+        console.log(err);
+    });
 }
 
 const createRoster = async (emp_id, week_start) => {
+    const week_start_sql = week_start.toISOString().split('T')[0].replace(/-/g, '/');
+
     var dayLooper = week_start;
 
-    //look at week start, cycle through regular availabilities. if conflict between regular and availabilities table, do the availabilities
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    //look at week start, cycle through each day and based on their availability and regularavailability create the roster
     for(let i = 0; i < 7; i++)
     {
-        const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
-        const res = await getAvailability(emp_id, sqlDate);
+        const sqlDate = dayLooper.toISOString().split('T')[0];
 
-        if(res.hasAvailability)
+        //get availability and regular availability for the current date
+        const availRes = await getAvailability(emp_id, sqlDate);
+        const regAvailRes = await getRegularAvailability(emp_id, dayNames[i]);
+
+        //if the employee has a availability and regularavailability, if the type of the availability is available, add the availability entry to the roster
+        if(availRes.hasAvailability && regAvailRes.hasRegularAvailability)
         {
-            //compare to current regular availability. if difference, add availability to roster table.
+            if(availRes.availType === "Available")
+            {
+                await addRoster(sqlDate, availRes.availStart, availRes.availEnd, week_start_sql, emp_id)
+            }
         }
-        else
+        //if the employee has an availability and not a regular availability, add the availability entry to the roster
+        else if(availRes.hasAvailability && !regAvailRes.hasRegularAvailability)
         {
-            //add regular availability to roster table
+            if(availRes.availType === "Available")
+            {
+                await addRoster(sqlDate, availRes.availStart, availRes.availEnd, week_start_sql, emp_id);
+            }
+        }
+        //if the employee doesnt have an availability but a regular availability, add the regular availability to the roster
+        else if(!availRes.hasAvailability && regAvailRes.hasRegularAvailability)
+        {
+            await addRoster(sqlDate, regAvailRes.regStart, regAvailRes.regEnd, week_start_sql, emp_id);
         }
 
+        //+1 to the day
         dayLooper.setDate(dayLooper.getDate() + 1);
     }
 }
@@ -143,3 +221,5 @@ module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
 module.exports.addRegularAvailability = addRegularAvailability;
 module.exports.addAvailability = addAvailability;
+module.exports.getAvailability = getAvailability;
+module.exports.createRoster = createRoster;

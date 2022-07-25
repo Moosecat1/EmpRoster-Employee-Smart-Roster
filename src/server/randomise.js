@@ -1,5 +1,5 @@
 const { random, randomName, randomCompanyName, randomDomain, randomPhoneNumber, randomType, randomPrivilege } = require('../modules/random');
-const { addCompany, addEmployee, addRegularAvailability, addAvailability } = require('../modules/endpoint');
+const { addCompany, addEmployee, addRegularAvailability, addAvailability, createRoster } = require('../modules/endpoint');
 
 var companyNo;
 
@@ -64,6 +64,8 @@ else
             lastMonday.setDate(currentDate.getDate() - (currentDate.getDay() - 1));
             let lastSat = new Date();
             lastSat.setDate(currentDate.getDate() - (currentDate.getDay() - 6));
+            let weekStart = new Date();
+            weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
 
             //if emp is full-time, roster on 9-5 mon, tue, wed, thurs, fri
             if(empType === "Full-time")
@@ -143,6 +145,7 @@ else
             }
 
             //create roster for each employee based on their regular availabilities and weeks current availabilities
+            await createRoster(empId, weekStart);
         }
     }
 })();
