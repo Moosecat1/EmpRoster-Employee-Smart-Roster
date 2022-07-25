@@ -94,9 +94,56 @@ app.post("/addEmployee", (req, res) => {
                     [emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
                     (err, result) => {
                         if(err){console.log(err);}
-                        else{res.send(result);}
+                        else{res.send([result, emp_id]);}
                 });
             }
+    });
+});
+
+app.post("/addRegularAvailability", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const day_name = req.body.day_name;
+    const reg_start = req.body.reg_start;
+    const reg_end = req.body.reg_end;
+
+    db.query("INSERT INTO RegularAvailability (day_name, reg_start, reg_end, emp_id) \n\
+        VALUES (?, ?, ?, ?)",
+        [day_name, reg_start, reg_end, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.post("/addAvailability", (req, res) => {
+    const avail_date = req.body.avail_date;
+    const avail_start = req.body.avail_start;
+    const avail_end = req.body.avail_end;
+    const avail_type = req.body.avail_type;
+    const emp_id = req.body.emp_id;
+
+    db.query("INSERT INTO Availability (avail_date, avail_start, avail_end, avail_type, emp_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [avail_date, avail_start, avail_end, avail_type, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.post("/addRoster", (req, res) => {
+    const rost_date = req.body.rost_date;
+    const rost_start = req.body.rost_start;
+    const rost_end = req.body.rost_end;
+    const rost_week_start = req.body.rost_week_start;
+    const emp_id = req.body.emp_id;
+
+    db.query("INSERT INTO Roster (rost_date, rost_start, rost_end, rost_week_start, emp_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [rost_date, rost_start, rost_end, rost_week_start, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
     });
 });
 
@@ -106,7 +153,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     const emp_id = req.params.emp_id;
     const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
+    db.query("SELECT emp_id, emp_password, emp_fName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
         (err, result) => {
             if(err){console.log(err);}
@@ -116,7 +163,8 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 
 
 app.get("/getEmployeesList/:company_id", (req, res) => {
-    const company_id = req.params.company_id
+    const company_id = req.params.company_id;
+
     db.query("SELECT emp_fName, emp_lName, emp_type FROM Employee WHERE (company_id = ?)",
         [company_id],
         (err, result) => {
@@ -135,21 +183,47 @@ app.get("/getEmployees", (req, res) => {
 });
 
 app.get("/getEmployeeRoster/:emp_id", (req, res) => {
-    const emp_id = req.params.emp_id
+    const emp_id = req.params.emp_id;
+
     db.query("SELECT * FROM Roster WHERE (emp_id = ?)",
         [emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
-        });
+    });
 });
 
 app.get("/getCompanyOpTimes/:company_id", (req, res) => {
-    const company_id = req.params.company_id
+    const company_id = req.params.company_id;
+
     db.query("SELECT * FROM OperatingTime WHERE (company_id = ?)",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
-        });
+    });
+});
+
+app.get("/getAvailability/:emp_id&:avail_date", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const avail_date = req.params.avail_date;
+
+    db.query("SELECT * FROM Availability WHERE (emp_id = ? AND avail_date = ?)",
+        [emp_id, avail_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getRegularAvailability/:emp_id&:day_name", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const day_name = req.params.day_name;
+
+    db.query("SELECT * FROM RegularAvailability WHERE (emp_id = ? AND day_name = ?)",
+        [emp_id, day_name],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
 });

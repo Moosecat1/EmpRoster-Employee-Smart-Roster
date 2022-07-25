@@ -19,20 +19,22 @@ export default function Login(){
         (async () => {
             const res = await verifyEmployee(emp_id, emp_password);
             const empExists = res.empExists;
-            const response = res.response;
+            const empId = res.empId;
+            const empfName = res.empfName;
+            const empPrivilege = res.empPrivilege;
+            const companyId = res.companyId;
 
             if(empExists){
-                sessionStorage.setItem('emp_id', response.data[0].emp_id);
-                sessionStorage.setItem('emp_fName', response.data[0].emp_fName);
-                sessionStorage.setItem('emp_type', response.data[0].emp_type);
+                sessionStorage.setItem('emp_id', empId);
+                sessionStorage.setItem('emp_fName', empfName);
+                sessionStorage.setItem('emp_privilege', empPrivilege);
+                sessionStorage.setItem('company_id', companyId);
                 window.location.href = "/";
             } else{
                 setMessage("Incorrect email or password");
             }
         })();
-
     }
-
    
     if(sessionStorage.getItem('emp_id') != null) {
         window.location.href = "/";
