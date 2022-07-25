@@ -9,7 +9,7 @@ const axios = require('axios');
 
 var displayTodaysDate = () => {  // displays the current date
     var showDate = new Date();
-    var displayTodayDate = showDate.getDate() + '/' + showDate.getMonth() +'/'+ showDate.getFullYear()
+    var displayTodayDate = showDate.getDate() + '/' + (showDate.getMonth() + parseInt(1)) +'/'+ showDate.getFullYear()
     return displayTodayDate
 };
 
@@ -91,6 +91,7 @@ export default function EmployeeView(){
                     <Box p={4}
                          m={2}>
                         <Calendar/>
+                        <br/>
                         <Button variant="contained" size="large">Request Shift Swap</Button>
                     </Box>
 
