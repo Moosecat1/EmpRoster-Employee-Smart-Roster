@@ -17,20 +17,27 @@ export default function ChangeAvailability(){
             <Navbar/>
             <Sidebar/>
 
-            <Container disableGutters>
+            <Container >
 
-
-                        <Box
-
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="center"
-                            alignItems="flex-start"
-                            sx ={{borderStyle:"solid", height:"700px", width:"1000px"}}
+                <Box
+                    >
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="flex-start"
+                        sx ={{borderStyle:"solid", height:"600px", width:"1000px"}}
                         >
                             <Roster/>
-                            <Button >Confirm Changes</Button>
                         </Box>
+                    <Box
+                        p={1}
+                        sx ={{ width:"1000px"}}
+                        display="flex"
+                        justifyContent="center">
+                        <Button variant="contained" >Confirm Changes</Button>
+                    </Box>
+                </Box>
             </Container>
         </main>
     )
