@@ -182,7 +182,7 @@ app.get("/getEmployees", (req, res) => {
     });
 });
 
-app.get("/getEmployee:emp_id", (req, res) => {
+app.get("/getEmployee/:emp_id", (req, res) => {
     const emp_id = req.params.emp_id;
 
     db.query()
