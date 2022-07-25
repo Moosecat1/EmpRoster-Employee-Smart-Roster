@@ -31,10 +31,6 @@ export default function ChangeAvailability(){
                             <Roster/>
                             <Button >Confirm Changes</Button>
                         </Box>
-                    </Box >
-
-
-                </Box>
             </Container>
         </main>
     )
