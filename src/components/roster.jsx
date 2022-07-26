@@ -7,7 +7,7 @@ import '../css/roster.css';
 const { empRosterGet, getEmployeeList } = require('../modules/endpoint');
 const axios = require('axios');
 
-function Rosters() {
+const Rosters = () => {
 
     var startTime = 24;
     var endTime = 0;
@@ -18,31 +18,48 @@ function Rosters() {
     var emp_id = 1;
     var emp_type = 'manager';
     var company_id = 1;
-    const Rosters = () => {
-        (async () => {
-            var res = await empRosterGet(emp_id);
-            console.log(res);
-            rosters = res.response.data;
-        })();
-    }
-    console.log(rosters);
-
-    function companyOpTimesGet() {
-        (async () => {
-            await axios.get("http://localhost:2420/getCompanyOpTimes/" + 1).then((response) => {
-                for (var i = 0; i < response.data.length; i++) {
-                    var startInt = parseInt(response.data[i].start_time.substr(0, 2));
-                    var endInt = parseInt(response.data[i].end_time.substr(0, 2));
-                    if (startTime > startInt) {
-                        startTime = startInt;
-                    }
-                    if (endTime < endInt) {
-                        endTime = endInt;
-                    }
+    var rosterInfo;
+    (async () => {
+        var res = await empRosterGet(emp_id);
+        rosterInfo = res.response.data;
+        await axios.get("http://localhost:2420/getCompanyOpTimes/" + 1).then((response) => {
+            for (var i = 0; i < response.data.length; i++) {
+                var startInt = parseInt(response.data[i].start_time.substr(0, 2));
+                var endInt = parseInt(response.data[i].end_time.substr(0, 2));
+                if (startTime > startInt) {
+                    startTime = startInt;
                 }
-            })
-        })();
+                if (endTime < endInt) {
+                    endTime = endInt;
+                }
+            }
+        })
+    })();
+    var rosterTimes = '{ "rosters" : [';
+    for (var i = 0; i < difference; i++) {
+        var currentTime = startTime + i;
+        rosterTimes = rosterTimes + ', { "time":"' + currentTime + '":00" }';
     }
+    rosterTimes = rosterTimes + ' ]}';
+
+    const renderRosterTimes = () => {
+        const renderRosterKitten = () => {
+            if (roster start > startTime && roster end < endTime) {
+                rostered;
+            }
+            else {
+                unrostered;
+            }
+            return (
+                <ListGroup.Item></ListGroup.Item>
+            )
+        }
+        return(
+            <ListGroup>
+                <ListGroup.Item>{rosterTimes.time}</ListGroup.Item>
+            </ListGroup>
+        );
+    };
 
     /*Need to add functionality for generating roster from DB*/
     return (
@@ -57,16 +74,10 @@ function Rosters() {
                 <ListGroup.Item variant="secondary">Saturday</ListGroup.Item>
                 <ListGroup.Item variant="secondary">Sunday</ListGroup.Item>
             </ListGroup>
-            {rosters.map((roster) => (
-                <ListGroup className="timeGroup">
-                    <ListGroup.Item>{roster.start}</ListGroup.Item>
-                </ListGroup>
-            ))}
+            {rosterInfo.map(renderRosterTimes)}
 
         </div>
     )
 
-
-
-}
-export default Roster;
+};
+export default Rosters;
