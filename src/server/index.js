@@ -227,3 +227,15 @@ app.get("/getRegularAvailability/:emp_id&:day_name", (req, res) => {
             else{res.send(result);}
     });
 });
+
+app.get("/getRoster/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?)",
+        [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
