@@ -145,7 +145,7 @@ class Roster extends Component {
                         <thead>
                             <tr>
                                 <th></th>
-                                <th onClick={alert("oebis")}>Sunday</th>
+                                <th>Sunday</th>
                                 <th>Monday</th>
                                 <th>Tuesday</th>
                                 <th>Wednesday</th>
