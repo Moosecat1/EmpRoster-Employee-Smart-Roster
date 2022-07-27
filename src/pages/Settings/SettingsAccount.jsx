@@ -195,7 +195,7 @@ export default function SettingsAccount(){
                 <Box
                     id={"Accessability"}
                      sx={{ ...style}}
-                    display={hiddenStatus[1]}>
+                    display={hiddenStatus[0]}>
 
                     <Grid container
                           direction="row"
@@ -236,7 +236,7 @@ export default function SettingsAccount(){
 
                 <Box id='Themes'
                      sx={{...style}}
-                     display={hiddenStatus[2]}>
+                     display={hiddenStatus[0]}>
                     <Grid container spacing={3}>
 
                         <Grid item xs={12}>
