@@ -9,7 +9,7 @@ document.title = "Add Employees";
 
 export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([
-        {firstName: '', lastName: '', privilege: 'Employee'},
+        {firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'},
     ]);
 
     const handleChangeInput = (index, event) => {
@@ -30,7 +30,7 @@ export default function RegisterCreateEmployees(){
     }
 
     const handleAdd = () => {
-        setInputFields([...inputFields, {firstName: '', lastName: '', privilege: 'Employee'}]);
+        setInputFields([...inputFields, {firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]);
     }
 
     const handleRemove = (index) => {
@@ -47,15 +47,16 @@ export default function RegisterCreateEmployees(){
                 const firstName = employee.firstName;
                 const lastName = employee.lastName;
                 const privilege = employee.privilege;
+                const type = employee.type;
 
-                console.log(privilege + ": " + firstName + " " + lastName);
+                console.log(privilege + ":" + type + ": " + firstName + " " + lastName);
 
                 //change later
                 const companyId = sessionStorage.getItem('company_id');
 
-                if(firstName !== "" || lastName !== "" || privilege !== "")
+                if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
                 {
-                    await addEmployee(null, firstName, lastName, null, null, null, privilege, companyId);
+                    await addEmployee(null, firstName, lastName, null, null, type, privilege, companyId);
                 }
             }
 
@@ -92,10 +93,19 @@ export default function RegisterCreateEmployees(){
                             </select>
                         </div>
                         <br />
+                        <div>
+                            <label>Employee Type:</label>
+                            &nbsp;&nbsp;
+                            <select name='type' onChange={event => handleChangeInput(index, event)}>
+                                <option>Casual</option>
+                                <option>Part-time</option>
+                                <option>Full-time</option>
+                            </select>
+                        </div>
+                        <br />
                         <div className='buttonDiv'>
                             <button className="w-20 btn btn-lg" id="removeButton" onClick={() => handleRemove(index)}>Remove Employee</button>
                         </div>
-                        <br />
                     </div>
                 )}
                 <br />

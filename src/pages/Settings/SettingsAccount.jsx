@@ -137,7 +137,7 @@ export default function SettingsAccount(){
                          display={hiddenStatus[0]}>
                         <Grid container spacing={3}>
                             <Grid item xs={12} display='flex'>
-                                <Avatar {...stringAvatar('user name')} ></Avatar>
+                                <Avatar {...stringAvatar('Adam pwans')} ></Avatar>
                                 <h3>User Name</h3>
                             </Grid>
 
