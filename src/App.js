@@ -11,8 +11,9 @@ import ManagerEditRoster from "./pages/ManagerEditRoster";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
 import RosterTest from "./pages/RosterTest";
 import MainHub from "./pages/MainHub";
-import EmployeeView from "./pages/EmployeeView";
 import ChangeAvailability from "./pages/ChangeAvailability";
+import ViewEmployee from "./pages/ManagerViewAvailability";
+import RequestLeave from './pages/RequestLeave';
 
 export default function App() {
   return (
@@ -29,8 +30,9 @@ export default function App() {
             <Route path="/settings" element={<SettingsAccount/>}/>
             <Route path="/mainhub" element ={<MainHub/>} />
             <Route path="/test" element={<RosterTest/>}/> 
-            <Route path="/EmployeeView" element={<EmployeeView/>} />
             <Route path="/ChangeAvailability" element={<ChangeAvailability/>} />
+            <Route path="/ViewEmployee" element={<ViewEmployee/>} />
+            <Route path="/RequestLeave" element={<RequestLeave/>} />
         </Routes>
       </BrowserRouter>
   );
