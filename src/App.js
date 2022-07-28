@@ -12,6 +12,7 @@ import SettingsAccount from "./pages/Settings/SettingsAccount";
 import MainHub from "./pages/MainHub";
 import ChangeAvailability from "./pages/ChangeAvailability";
 import ViewEmployee from "./pages/ManagerViewAvailability";
+import RequestLeave from './pages/RequestLeave';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/mainhub" element={<MainHub/>} />
             <Route path="/ChangeAvailability" element={<ChangeAvailability/>} />
             <Route path="/ViewEmployee" element={<ViewEmployee/>} />
+            <Route path="/RequestLeave" element={<RequestLeave/>} />
         </Routes>
       </BrowserRouter>
   );
