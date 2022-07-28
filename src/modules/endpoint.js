@@ -132,8 +132,6 @@ const getAvailability = async (emp_id, avail_date) => {
     var res;
     var hasAvailability = false;
 
-    console.log(avail_date);
-
     await axios.get("http://localhost:2420/getAvailability/" + emp_id + "&" + avail_date).then((response) => {
         var dataLength = response.data.length;
         res = response;
@@ -170,6 +168,37 @@ const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_i
     }).catch((err) => {
         console.log(err);
     });
+}
+
+const getRoster = async (emp_id, week_start) => {
+    var res;
+    var hasRoster;
+    const week_start_sql = week_start.toISOString().split('T')[0].replace(/-/g, '/');
+
+    await axios.get("http://localhost:2420/getRoster/" + emp_id, {week_start: week_start_sql}).then((response) => {
+        var dataLength = response.data.length;
+        res = response;
+
+        if(dataLength !== 0)
+        {
+            hasRoster = true;
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    let rostDate;
+    let rostStart;
+    let rostEnd;
+
+    if(hasRoster)
+    {
+        rostDate = res.data[0].rost_date;
+        rostStart = res.data[0].rost_start;
+        rostEnd = res.data[0].rost_end;
+    }
+
+    return {hasRoster: hasRoster, rostDate: rostDate, rostStart: rostStart, rostEnd: rostEnd};
 }
 
 const createRoster = async (emp_id, week_start) => {
@@ -223,3 +252,4 @@ module.exports.addRegularAvailability = addRegularAvailability;
 module.exports.addAvailability = addAvailability;
 module.exports.getAvailability = getAvailability;
 module.exports.createRoster = createRoster;
+module.exports.getRoster = getRoster;
