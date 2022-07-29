@@ -9,6 +9,8 @@ import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
 import ManagerEditRoster from "./pages/ManagerEditRoster";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
+import SettingsAccessability from "./pages/Settings/SettingsAccessability";
+import SettingsThemes from "./pages/Settings/SettingsThemes";
 import MainHub from "./pages/MainHub";
 import ChangeAvailability from "./pages/ChangeAvailability";
 import ViewEmployee from "./pages/ManagerViewAvailability";
@@ -26,7 +28,9 @@ export default function App() {
             <Route path="/*" element={<NoPage/>}/>
             <Route path="/employeelist" element={<EmployeeList/>}/>
             <Route path="/ManagerEditRoster" element={<ManagerEditRoster/>}/>
-            <Route path="/settings" element={<SettingsAccount/>}/>
+            <Route path="/settings/Account" element={<SettingsAccount/>}/>
+            <Route path="/settings/Accessability" element={<SettingsAccessability/>}/>
+            <Route path="/settings/Themes" element={<SettingsThemes/>}/>
             <Route path="/mainhub" element={<MainHub/>} />
             <Route path="/ChangeAvailability" element={<ChangeAvailability/>} />
             <Route path="/ViewEmployee" element={<ViewEmployee/>} />
