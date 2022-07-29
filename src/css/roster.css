@@ -1,8 +1,9 @@
-.roster-container {
-    margin: 50px;
-    margin-left: 300px;
+thead {
+    background-color: aquamarine;
+    text-align: center;
 }
 
-.empty {
-    padding: 20px;
+th, td {
+    padding: 15px;
+    border: 1px solid black;
 }

@@ -11,6 +11,7 @@ import ManagerEditRoster from "./pages/ManagerEditRoster";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
 import SettingsAccessability from "./pages/Settings/SettingsAccessability";
 import SettingsThemes from "./pages/Settings/SettingsThemes";
+import RosterTest from "./pages/RosterTest";
 import MainHub from "./pages/MainHub";
 import ChangeAvailability from "./pages/ChangeAvailability";
 import ViewEmployee from "./pages/ManagerViewAvailability";
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/settings/Accessability" element={<SettingsAccessability/>}/>
             <Route path="/settings/Themes" element={<SettingsThemes/>}/>
             <Route path="/mainhub" element={<MainHub/>} />
+            <Route path="/test" element={<RosterTest/>}/> 
             <Route path="/ChangeAvailability" element={<ChangeAvailability/>} />
             <Route path="/ViewEmployee" element={<ViewEmployee/>} />
             <Route path="/RequestLeave" element={<RequestLeave/>} />
