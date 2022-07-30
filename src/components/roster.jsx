@@ -87,7 +87,7 @@ class Roster extends Component {
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
-        const res = await axios.get("http://localhost:2420/getRoster/" + "big14&" + week_start_sql).catch((err) => {
+        const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_id') + "&" + week_start_sql).catch((err) => {
             console.log(err);
         });
 
