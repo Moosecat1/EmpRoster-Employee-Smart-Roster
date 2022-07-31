@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DatePicker from "react-datepicker";
 import Container from 'react-bootstrap/Container';
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
@@ -30,7 +31,7 @@ export default function RegisterCreateEmployees(){
     }
 
     const handleAdd = () => {
-        setInputFields([...inputFields, {firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]);
+        setInputFields([...inputFields, {firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'}]);
     }
 
     const handleRemove = (index) => {
@@ -46,17 +47,17 @@ export default function RegisterCreateEmployees(){
                 const employee = inputFields[i];
                 const firstName = employee.firstName;
                 const lastName = employee.lastName;
+                const email = employee.email;
                 const privilege = employee.privilege;
                 const type = employee.type;
 
                 console.log(privilege + ":" + type + ": " + firstName + " " + lastName);
 
-                //change later
                 const companyId = sessionStorage.getItem('company_id');
 
                 if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
                 {
-                    await addEmployee(null, firstName, lastName, null, null, type, privilege, companyId);
+                    await addEmployee("password", firstName, lastName, null, null, type, privilege, companyId);
                 }
             }
 
@@ -83,8 +84,13 @@ export default function RegisterCreateEmployees(){
                             <input type={"text"} className={"form-control"} name={"lastName"} value={inputField.lastName} onChange={event => handleChangeInput(index, event)}/>
                         </div>
                         <br />
+                        <div className={"form-floating"}>
+                            <label className="email">Employee Email</label>
+                            <input type={"text"} className={"form-control"} name={"email"} value={inputField.email} onChange={event => handleChangeInput(index, event)}/>
+                        </div>
+                        <br />
                         <div>
-                            <label>Employee Type:</label>
+                            <label>Employee Privilege:</label>
                             &nbsp;&nbsp;
                             <select name='privilege' onChange={event => handleChangeInput(index, event)}>
                                 <option>Employee</option>

@@ -212,6 +212,7 @@ const createRoster = async (emp_id, week_start) => {
     for(let i = 0; i < 7; i++)
     {
         const sqlDate = dayLooper.toISOString().split('T')[0];
+        console.log(sqlDate);
 
         //get availability and regular availability for the current date
         const availRes = await getAvailability(emp_id, sqlDate);

@@ -26,6 +26,7 @@ export default function Login(){
 
             if(empExists){
                 sessionStorage.setItem('emp_id', empId);
+                sessionStorage.setItem('emp_view', empId);
                 sessionStorage.setItem('emp_fName', empfName);
                 sessionStorage.setItem('emp_privilege', empPrivilege);
                 sessionStorage.setItem('company_id', companyId);
