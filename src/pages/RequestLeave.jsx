@@ -11,7 +11,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import DatePicker from "react-datepicker";
 import {Container,Button, Box} from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css"
-import { getAvailabilities, getCompanyEvents } from "../modules/endpoint";
+import { getAvailabilities, getCompanyEvents, addAvailability } from "../modules/endpoint";
 
 const locales = {
     "en-AU": require("date-fns/locale/en-AU")
@@ -25,17 +25,55 @@ const localizer = dateFnsLocalizer({
     locales
 })
 
+const months = new Map([
+    ["Jan", 0], ["Feb", 1], ["Mar", 2], ["Apr", 3],
+    ["May", 4], ["Jun", 5], ["Jul", 6], ["Aug", 7],
+    ["Sep", 8], ["Oct", 9], ["Nov", 10], ["Dec", 11]
+]);
+
 //Make a function to push into this events array
 const events = [];
 
+//we need to change colour based on type of leave: eg. pending approval by manager: yellow, approved: green, denied: red, public holiday: some other colour etc..
+
 export default function RequestLeave(){
 
-    const [newEvent, setNewEvent] = useState({title:"", start:"",end:""})
+    const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
     const [allEvents, setallEvents] = useState(events);
     const [hasLoaded, setHasLoaded] = useState(false);
 
-    function handleAddEvent() {
-        setallEvents([...allEvents,newEvent]);
+    async function handleAddEvent() {
+        await setallEvents([...allEvents, newEvent]);
+        const newEventObject = newEvent;
+        
+        if((newEventObject.start !== "" && newEventObject.end !== "") && !(newEventObject.start > newEventObject.end))
+        {
+            if(newEventObject.start.getTime() === newEventObject.end.getTime())
+            {
+                const date = newEventObject.start;
+                date.setDate(date.getDate() + 1);
+                const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
+                await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+            }
+            else
+            {
+                let dayLooper = newEventObject.start;
+                dayLooper.setDate(dayLooper.getDate() + 1);
+
+                let endDate = newEventObject.end;
+                endDate.setDate(endDate.getDate() + 1);
+
+                while(dayLooper.getTime() !== endDate.getTime())
+                {
+                    const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
+                    console.log(sqlDate);
+                    await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                    dayLooper.setDate(dayLooper.getDate() + 1);
+                }
+            }
+
+            document.location.reload();
+        }
     }
 
     useEffect(() => {
@@ -46,8 +84,6 @@ export default function RequestLeave(){
 
             const employeeAvailabilities = await getAvailabilities(sessionStorage.getItem('emp_id'));
             const companyEvents = await getCompanyEvents(sessionStorage.getItem('company_id'));
-
-            console.log(companyEvents);
 
             if(employeeAvailabilities.hasAvailabilities)
             {
