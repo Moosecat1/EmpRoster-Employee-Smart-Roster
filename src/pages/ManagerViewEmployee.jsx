@@ -82,7 +82,7 @@ export default function ManagerViewEmployee(){
                             flexDirection="column"
                             justifyContent="center"
                             alignItems="flex-start"
-                            sx ={{borderStyle:"solid", height:"700px", width:"1000px"}}
+                            sx ={{height:"700px", width:"1000px"}}
                         >
                             <Roster/>
                         </Box>
