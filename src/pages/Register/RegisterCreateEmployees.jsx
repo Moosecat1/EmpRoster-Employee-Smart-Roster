@@ -90,7 +90,7 @@ export default function RegisterCreateEmployees(){
                         </div>
                         <br />
                         <div>
-                            <label>Employee Type:</label>
+                            <label>Employee Privilege:</label>
                             &nbsp;&nbsp;
                             <select name='privilege' onChange={event => handleChangeInput(index, event)}>
                                 <option>Employee</option>

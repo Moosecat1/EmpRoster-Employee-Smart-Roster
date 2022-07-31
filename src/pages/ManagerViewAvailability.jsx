@@ -39,7 +39,6 @@ function stringAvatar(name: string) { //function to split avatar name
 
 
 export default function ViewAvailability(){
-
     return(
         <main>
             <Navbar/>

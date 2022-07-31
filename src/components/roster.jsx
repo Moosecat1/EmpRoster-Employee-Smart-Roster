@@ -87,7 +87,7 @@ class Roster extends Component {
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
-        const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_id') + "&" + week_start_sql).catch((err) => {
+        const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
             console.log(err);
         });
 
@@ -102,9 +102,10 @@ class Roster extends Component {
 
         for(let i = 0; i < res.data.length; i++)
         {
-            let date = res.data[i].rost_date;
-            date = parseInt(date.substring(8, 10)) + 1;
-            empRostDates.push(date);
+            let date = new Date();
+            let dateString = res.data[i].rost_date;
+            date.setDate(parseInt(dateString.substring(8, 10)) + 1);
+            empRostDates.push(date.getDate());
         }
 
         let empRostTimes = [];

@@ -165,7 +165,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 app.get("/getEmployeesList/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT emp_fName, emp_lName, emp_type FROM Employee WHERE (company_id = ?)",
+    db.query("SELECT emp_id, emp_fName, emp_lName, emp_type FROM Employee WHERE (company_id = ?)",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
