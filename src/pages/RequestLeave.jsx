@@ -11,7 +11,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import DatePicker from "react-datepicker";
 import {Container,Button, Box} from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css"
-import { getAvailabilities, getCompanyEvents, addAvailability } from "../modules/endpoint";
+const { getAvailabilities, getCompanyEvents, addAvailability } = require("../modules/endpoint");
 
 const locales = {
     "en-AU": require("date-fns/locale/en-AU")
