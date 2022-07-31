@@ -53,21 +53,6 @@ app.post("/addCompany", (req, res) => {
     });
 });
 
-app.post("/addOperatingTime", (req, res) => {
-    const day_name = req.body.day_name;
-    const start_time = req.body.start_time;
-    const end_time = req.body.end_time;
-    const company_id = req.body.company_id;
-
-    db.query("INSERT INTO OperatingTime (day_name, start_time, end_time, company_id) \n\
-        VALUES (?, ?, ?, ?)",
-        [day_name, start_time, end_time, company_id],
-        (err, result) => {
-            if(err){console.log(err);}
-            else{res.send(result);}
-    });
-});
-
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
 app.post("/addEmployee", (req, res) => {
     const emp_password = req.body.emp_password;
@@ -147,6 +132,33 @@ app.post("/addRoster", (req, res) => {
     });
 });
 
+app.post("/addCompanyEvent", (req, res) => {
+    const event_date = req.body.event_date;
+    const event_start = req.body.event_start;
+    const event_end = req.body.event_end;
+    const event_name = req.body.event_name;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO CompanyEvent (event_date, event_start, event_end, event_name, company_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [event_date, event_start, event_end, event_name, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getCompanyEvents/:company_id", (req, res) => {
+    const company_id = req.params.company_id;
+
+    db.query("SELECT * FROM CompanyEvent WHERE company_id = ?",
+        [company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 //verify employee endpoint, which will just get an employee from the db to confirm it exists so it can log in.
 //this is just a select statement
 app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
@@ -205,6 +217,17 @@ app.get("/getAvailability/:emp_id&:avail_date", (req, res) => {
 
     db.query("SELECT * FROM Availability WHERE (emp_id = ? AND avail_date = ?)",
         [emp_id, avail_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getAvailabilities/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT * FROM Availability WHERE emp_id = ?",
+        [emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
