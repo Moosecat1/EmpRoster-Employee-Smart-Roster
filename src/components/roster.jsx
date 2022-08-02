@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import '../css/roster.css'
 import Table from 'react-bootstrap/Table';
 import { getRoster } from '../modules/endpoint';
-
+import '../css/roster.css'
 const axios = require('axios');
 
 //make time only when they rostered, change colour of cell, make cell onClick etc., use getRoster function
@@ -18,11 +17,16 @@ let sunBool, monBool, tueBool, wedBool, thuBool, friBool, satBool = false;
 
 let dayBool = [sunBool, monBool, tueBool, wedBool, thuBool, friBool, satBool];
 
+
+
+
 class Roster extends Component {
     state = {
         data : [],
-        isLoaded : false
+        isLoaded : false,
+        isRostered : false
     }
+
 
     checkTime(dayIndex, timeIndex){
         const {data} = this.state;
@@ -52,30 +56,30 @@ class Roster extends Component {
     }
 
     processTimes(){
-        return times.map((time, index) => 
-            <tr>
-                <td>
+        return times.map((time, index) =>
+            <tr style={{border: "1px solid black"}}>
+                <td style={{border: "1px solid black"}}>
                     {time}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(0, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(1, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(2, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(3, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(4, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(5, index)}
                 </td>
-                <td>
+                <td className={"isrostered"} style={{border: "1px solid black"}}>
                     {this.checkTime(6, index)}
                 </td>
             </tr>
@@ -136,8 +140,21 @@ class Roster extends Component {
         this.setState({data: empRostTimes, isLoaded: true});
     }
 
+    //function that should turn the background colour of each td red or green
+    //  cellColor(){
+    //
+    //         let x = document.getElementsByClassName("isrostered");
+    //         if(x.innerHTML === "Rostered"){
+    //             x[0].bgColor = "Green";
+    //         }else{
+    //             x[0].bgColor = "Red";
+    //         }
+    //     }
+
+
     render(){
         const {isLoaded} = this.state;
+
 
         if(isLoaded){
             return(

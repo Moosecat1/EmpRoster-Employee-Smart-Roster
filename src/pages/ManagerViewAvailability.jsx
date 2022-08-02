@@ -6,6 +6,10 @@ import {Avatar, Box,Button,Container, Grid} from "@mui/material";
 import Calendar from 'react-calendar';
 const axios = require('axios');
 
+document.title = "View Employee Availability";
+
+
+
 function stringToColour(string: string) { // This function is to make a string to a colour
     let hash = 0;
     let i;
@@ -50,7 +54,7 @@ export default function ViewAvailability(){
                         flexDirection="column"
                         justifyContent="flex-start"
                         alignItems="flex-start"
-                        sx ={{borderStyle:"solid", height:"600px", width:"1200px"}}
+                        sx ={{ height:"600px", width:"1200px"}}
                     >
                         <Box>
                             <Grid item xs={12} display='flex'>
