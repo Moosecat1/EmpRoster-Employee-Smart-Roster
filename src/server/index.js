@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
-const { random } = require("../modules/random");
 
 const app = express();
 app.use(cors());
@@ -194,10 +193,15 @@ app.get("/getEmployees", (req, res) => {
     });
 });
 
-app.get("/getEmployee/:emp_id", (req, res) => {
+app.get("/getEmployeeName/:emp_id", (req, res) => {
     const emp_id = req.params.emp_id;
 
-    db.query()
+    db.query("SELECT emp_fName, emp_lName FROM Employee WHERE emp_id = ?",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
 });
 
 app.get("/getEmployeeRoster/:emp_id", (req, res) => {
@@ -250,8 +254,44 @@ app.get("/getRoster/:emp_id&:week_start", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_week_start = req.params.week_start;
 
-    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?)",
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_date ASC",
         [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getEarliestRoster/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_start",
+        [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_end DESC",
+        [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_date = req.params.rost_date;
+
+    db.query("DELETE FROM Roster WHERE (emp_id = ? AND rost_date = ?)",
+        [emp_id, rost_date],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

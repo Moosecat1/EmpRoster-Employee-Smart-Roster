@@ -11,7 +11,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import DatePicker from "react-datepicker";
 import {Container,Button, Box} from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css"
-const { getAvailabilities, getCompanyEvents, addAvailability } = require("../modules/endpoint");
+const { getAvailabilities, getCompanyEvents, addAvailability, removeRosterDate } = require("../modules/endpoint");
 
 const locales = {
     "en-AU": require("date-fns/locale/en-AU")
@@ -23,13 +23,7 @@ const localizer = dateFnsLocalizer({
     startOfWeek,
     getDay,
     locales
-})
-
-const months = new Map([
-    ["Jan", 0], ["Feb", 1], ["Mar", 2], ["Apr", 3],
-    ["May", 4], ["Jun", 5], ["Jul", 6], ["Aug", 7],
-    ["Sep", 8], ["Oct", 9], ["Nov", 10], ["Dec", 11]
-]);
+});
 
 //Make a function to push into this events array
 const events = [];
@@ -37,7 +31,6 @@ const events = [];
 //we need to change colour based on type of leave: eg. pending approval by manager: yellow, approved: green, denied: red, public holiday: some other colour etc..
 
 export default function RequestLeave(){
-
     const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
     const [allEvents, setallEvents] = useState(events);
     const [hasLoaded, setHasLoaded] = useState(false);
@@ -66,8 +59,9 @@ export default function RequestLeave(){
                 while(dayLooper.getTime() !== endDate.getTime())
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
-                    console.log(sqlDate);
+                    const removeSqlDate = dayLooper.toISOString().split('T')[0];
                     await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                    await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }
             }
