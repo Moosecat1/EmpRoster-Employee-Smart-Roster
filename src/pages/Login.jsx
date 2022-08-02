@@ -30,7 +30,7 @@ export default function Login(){
                 sessionStorage.setItem('emp_fName', empfName);
                 sessionStorage.setItem('emp_privilege', empPrivilege);
                 sessionStorage.setItem('company_id', companyId);
-                window.location.href = "/";
+                window.location.href = "/mainhub";
             } else{
                 setMessage("Incorrect email or password");
             }

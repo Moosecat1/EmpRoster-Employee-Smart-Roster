@@ -10,7 +10,7 @@ function Sidebar() {
 
     const idList = ['dashboard', 'employees', 'settings', 'requestLeave'];
     const urlList = [
-        "http://localhost:3000/",
+        "http://localhost:3000/mainhub",
         "http://localhost:3000/employeelist",
         "http://localhost:3000/settings/Account",
         "http://localhost:3000/RequestLeave"
@@ -45,7 +45,7 @@ function Sidebar() {
                     <hr />
                     <ul className="side-pills flex-column mb-auto">
                         <li className="side-item">
-                            <a id='dashboard' href="/" className="side-link active" aria-current="page">
+                            <a id='dashboard' href="/mainhub" className="side-link active" aria-current="page">
                                     <i className="bi bi-house-door"></i>
                                     DashBoard
                             </a>
