@@ -14,6 +14,8 @@
     /* A very pale blue, used as the general background for large containers or even the whole page */
     --bg-light : #DDE2FF
 
+    /* A blue a bit darker than --bg-light, used as the general background for large containers or even the whole page */
+    --bg-light-darker #c5ceff
 }
 
 .navbar-light{

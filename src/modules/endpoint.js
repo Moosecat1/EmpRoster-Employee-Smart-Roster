@@ -251,6 +251,10 @@ const getRoster = async (emp_id, week_start) => {
     return {hasRoster: hasRoster, rostDate: rostDate, rostStart: rostStart, rostEnd: rostEnd};
 }
 
+const getLatestRoster = async (emp_id, week_start) => {
+    
+}
+
 const createRoster = async (emp_id, week_start) => {
     const week_start_sql = week_start.toISOString().split('T')[0].replace(/-/g, '/');
 
@@ -294,6 +298,12 @@ const createRoster = async (emp_id, week_start) => {
     }
 }
 
+const removeRosterDate = async (emp_id, rost_date) => {
+    await axios.delete("http://localhost:2420/removeRosterDate/" + emp_id + "&" + rost_date).catch((err) => {
+        console.log(err);
+    });
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
@@ -306,3 +316,4 @@ module.exports.getAvailabilities = getAvailabilities;
 module.exports.getCompanyEvents = getCompanyEvents;
 module.exports.createRoster = createRoster;
 module.exports.getRoster = getRoster;
+module.exports.removeRosterDate = removeRosterDate;

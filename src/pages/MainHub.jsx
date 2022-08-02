@@ -8,18 +8,15 @@ import {Container, Box, Typography, Avatar,List,ListItem,ListItemText} from "@mu
 
 const axios = require('axios');
 
-
-
 var UserName = () => {
-    var user = sessionStorage.getItem("emp_fName")
-    return user
+    var user = sessionStorage.getItem("emp_fName");
+    return user;
 }
-
 
 var displayTodaysDate = () => {  // displays the current date
     var showDate = new Date();
-    var displayTodayDate = showDate.getDate() + '/' + (showDate.getMonth() + parseInt(1)) +'/'+ showDate.getFullYear()
-    return displayTodayDate
+    var displayTodayDate = showDate.getDate() + '/' + (showDate.getMonth() + parseInt(1)) +'/'+ showDate.getFullYear();
+    return displayTodayDate;
 };
 
 function showTime(date) { // shows the current time with am or pm
@@ -37,7 +34,9 @@ function showTime(date) { // shows the current time with am or pm
 
 export default function MainHub() {
 
-   return(
+    sessionStorage.setItem('emp_view', sessionStorage.getItem('emp_id'));
+
+    return(
     <main>
         <Navbar/>
 
@@ -78,6 +77,7 @@ export default function MainHub() {
                         <Roster/>
                     </Box>
             </Box>
+            <br />
 
         </Container>
     </main>
