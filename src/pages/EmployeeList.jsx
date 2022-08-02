@@ -1,7 +1,7 @@
 import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import '../css/EmployeeList.css';
-import React from "react";
+import React, {Component} from 'react';
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Container } from "@mui/system";
@@ -19,14 +19,93 @@ var checker = false;
     -for now it works, but roster needs to integrate props 
 */
 
-export default function EmployeeList() {
-    var employeeList;
+class EmployeeList extends Component {
+    state = {
+        data : [],
+        isLoaded : false
+    }
 
-    function viewEmployeeRoster (emp_id) {
+    viewEmployeeRoster(emp_id) {
         sessionStorage.setItem('emp_view', emp_id);
         document.location.href = '/ViewEmployee';
     }
 
+    processTimes(){
+        return times.map((time, index) =>
+            <tr>
+                <td>
+                    {time}
+                </td>
+                <td>
+                    {this.checkTime(0, index)}
+                </td>
+                <td>
+                    {this.checkTime(1, index)}
+                </td>
+                <td>
+                    {this.checkTime(2, index)}
+                </td>
+                <td>
+                    {this.checkTime(3, index)}
+                </td>
+                <td>
+                    {this.checkTime(4, index)}
+                </td>
+                <td>
+                    {this.checkTime(5, index)}
+                </td>
+                <td>
+                    {this.checkTime(6, index)}
+                </td>
+            </tr>
+        );
+    }
+
+    async componentDidMount(){
+        const res = await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem("company_id")).then((response) => {
+            console.log(err);
+        });
+
+        let empList = [];
+
+        for(let i = 0; i < res.data.length; i++)
+        {
+            empList.push(res.data[i]);
+        }
+
+
+        console.log(empList);
+
+        this.setState({data: empList, isLoaded: true});
+    }
+
+    render(){
+        const {isLoaded} = this.state;
+
+        if(isLoaded){
+            return(
+                <div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Sunday</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.processTimes()}
+                        </tbody>
+                    </table>
+                </div>
+            )
+        }
+    }
     function employeeListGet() {
         (async () => {
             await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem("company_id")).then((response) => {

@@ -131,7 +131,6 @@ class Roster extends Component {
             }
         }
 
-        //console.log(empRostTimes);
 
         this.setState({data: empRostTimes, isLoaded: true});
     }
