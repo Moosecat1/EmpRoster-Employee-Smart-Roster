@@ -8,7 +8,7 @@ function Navi() {
   return (
     <Navbar collapseOnSelect expand="lg" variant="light">
       <Container>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand href="/">
             <img
               src={Logo}
               width="90"
@@ -21,12 +21,12 @@ function Navi() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#About">About</Nav.Link>
-            <Nav.Link href="#FAQ">FAQ</Nav.Link>
+            <Nav.Link href="/About">About</Nav.Link>
+            <Nav.Link href="/FAQ">FAQ</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#login">Login</Nav.Link>
-            <Nav.Link href="#signup">
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/register/createcompany">
               Sign-up
             </Nav.Link>
           </Nav>

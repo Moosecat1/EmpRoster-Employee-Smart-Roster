@@ -38,7 +38,8 @@ export default function Login(){
     }
    
     if(sessionStorage.getItem('emp_id') != null) {
-        window.location.href = "/";
+        alert("you have already Logged in")
+        window.location.href = "/MainHub";
     }else {
         return(
             <main>

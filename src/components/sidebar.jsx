@@ -45,7 +45,7 @@ function Sidebar() {
                     <hr />
                     <ul className="side-pills flex-column mb-auto">
                         <li className="side-item">
-                            <a id='dashboard' href="/" className="side-link active" aria-current="page">
+                            <a id='dashboard' href="/mainhub" className="side-link active" aria-current="page">
                                     <i className="bi bi-house-door"></i>
                                     DashBoard
                             </a>
@@ -88,7 +88,7 @@ function Sidebar() {
                     <hr />
                     <ul className="side-pills flex-column mb-auto">
                         <li className="side-item">
-                            <a href="/" className="side-link active" aria-current="page">
+                            <a href="/mainhub" className="side-link active" aria-current="page">
                                 <i className="bi bi-house-door"></i>
                                 DashBoard
                             </a>
