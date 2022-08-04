@@ -7,6 +7,15 @@ CREATE TABLE Company(
     PRIMARY KEY(company_id)
 );
 
+CREATE TABLE CompanyEvent(
+    event_date DATE,
+    event_start TIME,
+    event_end TIME,
+    event_name VARCHAR(225),
+    company_id VARCHAR(50),
+    FOREIGN KEY(company_id) REFERENCES Company(company_id)
+);
+
 CREATE TABLE Employee(
     emp_id VARCHAR(50) NOT NULL,
     emp_password VARCHAR(255),

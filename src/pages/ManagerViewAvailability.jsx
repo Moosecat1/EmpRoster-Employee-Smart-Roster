@@ -1,4 +1,4 @@
-import * as React from "react";
+import {React, useState, useEffect} from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import Roster from "../components/roster";
@@ -6,7 +6,9 @@ import {Avatar, Box,Button,Container, Grid} from "@mui/material";
 import Calendar from 'react-calendar';
 const axios = require('axios');
 
-function stringToColour(string: string) { // This function is to make a string to a colour
+document.title = "View Employee Availability";
+
+function stringToColour(string) { // This function is to make a string to a colour
     let hash = 0;
     let i;
 
@@ -26,7 +28,7 @@ function stringToColour(string: string) { // This function is to make a string t
     return colour;
 }
 
-function stringAvatar(name: string) { //function to split avatar name
+function stringAvatar(name) { //function to split avatar name
     return {
         sx: {
             bgcolor: stringToColour(name),
@@ -39,34 +41,50 @@ function stringAvatar(name: string) { //function to split avatar name
 
 
 export default function ViewAvailability(){
-    return(
-        <main>
-            <Navbar/>
-            <Sidebar/>
+    const [empName, setEmpName] = useState("");
+    const [hasLoaded, setHasLoaded] = useState(false);
 
-            <Container >
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        sx ={{borderStyle:"solid", height:"600px", width:"1200px"}}
-                    >
-                        <Box>
-                            <Grid item xs={12} display='flex'>
-                            <Avatar {...stringAvatar('User Name')} ></Avatar>
-                             <h3>User Name</h3>
-                            </Grid>
+    useEffect(() => {
+        const getEmpName = async () => {
+            const res = await axios.get("http://localhost:2420/getEmployeeName/" + sessionStorage.getItem('emp_view'));
+            const fname = res.data[0].emp_fName;
+            const lname = res.data[0].emp_lName;
+
+            setEmpName(fname + " " + lname);
+            setHasLoaded(true);
+        }
+
+        getEmpName();
+    }, []);
+
+    if(hasLoaded)
+    {
+        return(
+            <main>
+                <Navbar/>
+                <Sidebar/>
+    
+                <Container >
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            sx ={{ height:"600px", width:"1200px"}}
+                        >
+                            <Box>
+                                <Grid item xs={12} display='flex'>
+                                <Avatar {...stringAvatar(empName)} ></Avatar>
+                                 <h3>{empName}</h3>
+                                </Grid>
+                            </Box>
+                            <Box>
+                                <Roster/> {/*this will be the availability roster  */}
+                            </Box>
+    
                         </Box>
-                        <Box>
-                            <Roster/> {/*this will be the availability roster  */}
-                        </Box>
-
-                    </Box>
-            </Container>
-        </main>
-    )
-
-
-
+                </Container>
+            </main>
+        )
+    }
 }

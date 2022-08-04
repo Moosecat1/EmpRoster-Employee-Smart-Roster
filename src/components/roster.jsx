@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import '../css/roster.css'
 import Table from 'react-bootstrap/Table';
 import { getRoster } from '../modules/endpoint';
-
+import '../css/roster.css'
 const axios = require('axios');
 
 //make time only when they rostered, change colour of cell, make cell onClick etc., use getRoster function
@@ -15,68 +14,92 @@ const times = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "0
 ];
 
 let sunBool, monBool, tueBool, wedBool, thuBool, friBool, satBool = false;
-
 let dayBool = [sunBool, monBool, tueBool, wedBool, thuBool, friBool, satBool];
+
+const posStyle = {
+    backgroundColor: '#c5ceff',
+    border: '1px solid black'
+}
+
+const negStyle = {
+    backgroundColor: '#F7F8FC',
+    border: '1px solid black'
+}
+
+let earliestStart = "08:00";
+let lastestFinish = "18:00";
+
+let displayTimes = [];
 
 class Roster extends Component {
     state = {
         data : [],
-        isLoaded : false
+        isLoaded : false,
+        isRostered : false
     }
 
     checkTime(dayIndex, timeIndex){
         const {data} = this.state;
         //console.log(data[dayIndex]);
 
-        if(data[dayIndex].startTime === times[timeIndex])
+        if(data[dayIndex].startTime === displayTimes[timeIndex])
         {
             dayBool[dayIndex] = true;
         }
-        else if(data[dayIndex].endTime === times[timeIndex])
+        else if(data[dayIndex].endTime === displayTimes[timeIndex])
         {            
             dayBool[dayIndex] = false;
         }
 
         if(dayBool[dayIndex])
         {
-            return(
-                "Rostered"
-            );
+            return({
+                text: "Rostered",
+                style: posStyle
+            });
         }
         else
         {
-            return(
-                "Not Rostered"
-            );
+            return({
+                text: "Not Rostered",
+                style: negStyle
+            });
         }
     }
 
     processTimes(){
-        return times.map((time, index) => 
-            <tr>
-                <td>
+        //make subset of times that only is working hours
+        const startIndex = times.indexOf(earliestStart);
+        const endIndex = times.indexOf(lastestFinish);
+
+        displayTimes = times.slice(startIndex, endIndex);
+        console.log(earliestStart);
+
+        return displayTimes.map((time, index) =>
+            <tr style={{border: "1px solid black"}}>
+                <td style={{border: "1px solid black"}}>
                     {time}
                 </td>
-                <td>
-                    {this.checkTime(0, index)}
+                <td style={this.checkTime(0, index).style}>
+                    {this.checkTime(0, index).text}
                 </td>
-                <td>
-                    {this.checkTime(1, index)}
+                <td style={this.checkTime(1, index).style}>
+                    {this.checkTime(1, index).text}
                 </td>
-                <td>
-                    {this.checkTime(2, index)}
+                <td style={this.checkTime(2, index).style}>
+                    {this.checkTime(2, index).text}
                 </td>
-                <td>
-                    {this.checkTime(3, index)}
+                <td style={this.checkTime(3, index).style}>
+                    {this.checkTime(3, index).text}
                 </td>
-                <td>
-                    {this.checkTime(4, index)}
+                <td style={this.checkTime(4, index).style}>
+                    {this.checkTime(4, index).text}
                 </td>
-                <td>
-                    {this.checkTime(5, index)}
+                <td style={this.checkTime(5, index).style}>
+                    {this.checkTime(5, index).text}
                 </td>
-                <td>
-                    {this.checkTime(6, index)}
+                <td style={this.checkTime(6, index).style}>
+                    {this.checkTime(6, index).text}
                 </td>
             </tr>
         );
@@ -131,6 +154,21 @@ class Roster extends Component {
             }
         }
 
+
+
+        const res1 = await axios.get("http://localhost:2420/getEarliestRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
+            console.log(err);
+        });
+
+        const res2 = await axios.get("http://localhost:2420/getLatestRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
+            console.log(err);
+        });
+
+        if(res1.data.length !== 0 && res2.data.length !== 0)
+        {
+            earliestStart = res1.data[0].rost_start.substring(0, 5);
+            lastestFinish = res2.data[0].rost_end.substring(0, 5);
+        }
 
         this.setState({data: empRostTimes, isLoaded: true});
     }

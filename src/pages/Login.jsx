@@ -30,7 +30,7 @@ export default function Login(){
                 sessionStorage.setItem('emp_fName', empfName);
                 sessionStorage.setItem('emp_privilege', empPrivilege);
                 sessionStorage.setItem('company_id', companyId);
-                window.location.href = "/";
+                window.location.href = "/mainhub";
             } else{
                 setMessage("Incorrect email or password");
             }
@@ -38,7 +38,8 @@ export default function Login(){
     }
    
     if(sessionStorage.getItem('emp_id') != null) {
-        window.location.href = "/";
+        alert("you have already Logged in")
+        window.location.href = "/mainhub";
     }else {
         return(
             <main>

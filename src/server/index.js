@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
-const { random } = require("../modules/random");
 
 const app = express();
 app.use(cors());
@@ -50,21 +49,6 @@ app.post("/addCompany", (req, res) => {
                     else{res.send([result, company_id]);}
                 });
             }
-    });
-});
-
-app.post("/addOperatingTime", (req, res) => {
-    const day_name = req.body.day_name;
-    const start_time = req.body.start_time;
-    const end_time = req.body.end_time;
-    const company_id = req.body.company_id;
-
-    db.query("INSERT INTO OperatingTime (day_name, start_time, end_time, company_id) \n\
-        VALUES (?, ?, ?, ?)",
-        [day_name, start_time, end_time, company_id],
-        (err, result) => {
-            if(err){console.log(err);}
-            else{res.send(result);}
     });
 });
 
@@ -147,6 +131,33 @@ app.post("/addRoster", (req, res) => {
     });
 });
 
+app.post("/addCompanyEvent", (req, res) => {
+    const event_date = req.body.event_date;
+    const event_start = req.body.event_start;
+    const event_end = req.body.event_end;
+    const event_name = req.body.event_name;
+    const company_id = req.body.company_id;
+
+    db.query("INSERT INTO CompanyEvent (event_date, event_start, event_end, event_name, company_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [event_date, event_start, event_end, event_name, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getCompanyEvents/:company_id", (req, res) => {
+    const company_id = req.params.company_id;
+
+    db.query("SELECT * FROM CompanyEvent WHERE company_id = ?",
+        [company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 //verify employee endpoint, which will just get an employee from the db to confirm it exists so it can log in.
 //this is just a select statement
 app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
@@ -182,10 +193,15 @@ app.get("/getEmployees", (req, res) => {
     });
 });
 
-app.get("/getEmployee/:emp_id", (req, res) => {
+app.get("/getEmployeeName/:emp_id", (req, res) => {
     const emp_id = req.params.emp_id;
 
-    db.query()
+    db.query("SELECT emp_fName, emp_lName FROM Employee WHERE emp_id = ?",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
 });
 
 app.get("/getEmployeeRoster/:emp_id", (req, res) => {
@@ -211,6 +227,17 @@ app.get("/getAvailability/:emp_id&:avail_date", (req, res) => {
     });
 });
 
+app.get("/getAvailabilities/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT * FROM Availability WHERE emp_id = ?",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getRegularAvailability/:emp_id&:day_name", (req, res) => {
     const emp_id = req.params.emp_id;
     const day_name = req.params.day_name;
@@ -227,8 +254,44 @@ app.get("/getRoster/:emp_id&:week_start", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_week_start = req.params.week_start;
 
-    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?)",
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_date ASC",
         [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getEarliestRoster/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_start",
+        [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_end DESC",
+        [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_date = req.params.rost_date;
+
+    db.query("DELETE FROM Roster WHERE (emp_id = ? AND rost_date = ?)",
+        [emp_id, rost_date],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

@@ -1,10 +1,43 @@
-import React from 'react';
+import { useEffect } from 'react';
+import {React, useState, useLayoutEffect} from 'react';
 import '../css/sidebar.css';
 
 function Sidebar() {
     localStorage.setItem('type', 'manager');
     var empType = localStorage.getItem('type');
-    if (empType = 'manager') {
+
+    const [hasLoaded, setHasLoaded] = useState(false);
+
+    const idList = ['dashboard', 'employees', 'settings', 'requestLeave'];
+    const urlList = [
+        "http://localhost:3000/mainhub",
+        "http://localhost:3000/employeelist",
+        "http://localhost:3000/settings/Account",
+        "http://localhost:3000/RequestLeave"
+    ]
+
+    const url = window.location.href;
+    
+    if(hasLoaded)
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            if(url === urlList[i])
+            {
+                document.getElementById(idList[i]).className = "side-link active";
+            }
+            else
+            {
+                document.getElementById(idList[i]).className = "side-link text-black";
+            }
+        }
+    }
+
+    useEffect(() => {
+        setHasLoaded(true);
+    }, []);
+
+    if (empType === 'manager') {
         return (
             <div className="d-flex flex-nowrap">
                 <div className="side d-flex flex-column flex-shrink-0 p-2">
@@ -12,33 +45,33 @@ function Sidebar() {
                     <hr />
                     <ul className="side-pills flex-column mb-auto">
                         <li className="side-item">
-                            <a href="/" className="side-link active" aria-current="page">
-                                <i className="bi bi-house-door"></i>
-                                DashBoard
+                            <a id='dashboard' href="/mainhub" className="side-link active" aria-current="page">
+                                    <i className="bi bi-house-door"></i>
+                                    DashBoard
                             </a>
                         </li>
                         <li>
-                            <a href="/employeelist" className="side-link text-black">
+                            <a id='employees' href="/employeelist" className="side-link text-black">
                                 <i className="bi bi-people-fill"></i>
                                 Employees
                             </a>
                         </li>
                         <li>
-                            <a href="/settings/Account" className="side-link text-black">
+                            <a id='settings' href="/settings/Account" className="side-link text-black">
                                 <i className="bi bi-gear"></i>
                                 Settings
                             </a>
                         </li>
-                        <li>
-                            <a href="/" className="side-link text-black">
+                        {/*<li>
+                            <a id='messageStaff' href="/" className="side-link text-black">
                                 <i className="bi bi-envelope"></i>
                                 Message Staff
                             </a>
-                        </li>
+                        </li>*/}
                         <li>
-                            <a href="/ManagerEditRoster" className="side-link text-black">
+                            <a id='requestLeave' href="/RequestLeave" className="side-link text-black">
                                 <i className="bi bi-calendar"></i>
-                                Edit Roster
+                                Request Leave
                             </a>
                         </li>
                     </ul>
@@ -47,7 +80,7 @@ function Sidebar() {
             </div>
         )
     }
-    else if (empType = 'employee') {
+    /*else if (empType === 'employee') {
         return (
             <div className="d-flex flex-nowrap">
                 <div className="side d-flex flex-column flex-shrink-0 p-1 col-1">
@@ -55,7 +88,7 @@ function Sidebar() {
                     <hr />
                     <ul className="side-pills flex-column mb-auto">
                         <li className="side-item">
-                            <a href="/" className="side-link active" aria-current="page">
+                            <a href="/mainhub" className="side-link active" aria-current="page">
                                 <i className="bi bi-house-door"></i>
                                 DashBoard
                             </a>
@@ -83,7 +116,7 @@ function Sidebar() {
                 </div>
             </div>
         )
-    }
+    }*/
 
 }
 export default Sidebar;

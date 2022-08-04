@@ -158,6 +158,44 @@ const getAvailability = async (emp_id, avail_date) => {
     return {hasAvailability: hasAvailability, availStart: availStart, availEnd: availEnd, availType: availType};
 }
 
+const getAvailabilities = async (emp_id) => {
+    var res;
+    var hasAvailabilities = false;
+
+    await axios.get("http://localhost:2420/getAvailabilities/" + emp_id).then((response) => {
+        var dataLength = response.data.length;
+        res = response;
+
+        if(dataLength !== 0)
+        {
+            hasAvailabilities = true;
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return {hasAvailabilities: hasAvailabilities, availabilities: res.data};
+}
+
+const getCompanyEvents = async (company_id) => {
+    var res;
+    var hasEvents = false;
+
+    await axios.get("http://localhost:2420/getCompanyEvents/" + company_id).then((response) => {
+        var dataLength = response.data.length;
+        res = response;
+
+        if(dataLength !== 0)
+        {
+            hasEvents = true;
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return {hasEvents: hasEvents, events: res.data};
+}
+
 const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_id) => {
     await axios.post("http://localhost:2420/addRoster", {
         rost_date: rost_date,
@@ -165,6 +203,18 @@ const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_i
         rost_end: rost_end,
         rost_week_start: rost_week_start,
         emp_id: emp_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const addCompanyEvent = async (event_date, event_start, event_end, event_name, company_id) => {
+    await axios.post("http://localhost:2420/addCompanyEvent", {
+        event_date: event_date,
+        event_start: event_start,
+        event_end: event_end,
+        event_name: event_name,
+        company_id: company_id
     }).catch((err) => {
         console.log(err);
     });
@@ -201,6 +251,10 @@ const getRoster = async (emp_id, week_start) => {
     return {hasRoster: hasRoster, rostDate: rostDate, rostStart: rostStart, rostEnd: rostEnd};
 }
 
+const getLatestRoster = async (emp_id, week_start) => {
+    
+}
+
 const createRoster = async (emp_id, week_start) => {
     const week_start_sql = week_start.toISOString().split('T')[0].replace(/-/g, '/');
 
@@ -212,7 +266,6 @@ const createRoster = async (emp_id, week_start) => {
     for(let i = 0; i < 7; i++)
     {
         const sqlDate = dayLooper.toISOString().split('T')[0];
-        console.log(sqlDate);
 
         //get availability and regular availability for the current date
         const availRes = await getAvailability(emp_id, sqlDate);
@@ -245,12 +298,22 @@ const createRoster = async (emp_id, week_start) => {
     }
 }
 
+const removeRosterDate = async (emp_id, rost_date) => {
+    await axios.delete("http://localhost:2420/removeRosterDate/" + emp_id + "&" + rost_date).catch((err) => {
+        console.log(err);
+    });
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
+module.exports.addCompanyEvent = addCompanyEvent;
 module.exports.addRegularAvailability = addRegularAvailability;
 module.exports.addAvailability = addAvailability;
 module.exports.getAvailability = getAvailability;
+module.exports.getAvailabilities = getAvailabilities;
+module.exports.getCompanyEvents = getCompanyEvents;
 module.exports.createRoster = createRoster;
 module.exports.getRoster = getRoster;
+module.exports.removeRosterDate = removeRosterDate;

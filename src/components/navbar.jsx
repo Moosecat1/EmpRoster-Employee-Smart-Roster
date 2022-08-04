@@ -1,21 +1,39 @@
-import emprlogo from '../resources/logo.png';
-import "../css/Navbar.css"
+import '../css/Navbar.css'
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Logo from '../resources/navLogo.svg';
 
-export default function Navbar()
-{
-    return <nav className="nav">
-        <a href="/" className="site-name">
-            EmpRoster
-            <img className="logo-holder" src={emprlogo} alt="logo"></img>
-        </a>
-        <ul>
-            <li>
-                <a href="/login">Login</a>
-            </li>
-            <li>
-                {/*TODO: Link to create account page when made*/}
-                <a href="/register/createcompany">Register</a>
-            </li>
-        </ul>
-    </nav>
+function Navi() {
+  return (
+    <Navbar collapseOnSelect expand="lg" variant="light">
+      <Container>
+          <Navbar.Brand href="/">
+            <img
+              src={Logo}
+              width="90"
+              height="50"
+              className="d-inline-block align-top"
+              alt="React Bootstrap logo"
+            />
+          </Navbar.Brand>
+        
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/About">About</Nav.Link>
+            <Nav.Link href="/FAQ">FAQ</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/register/createcompany">
+              Sign-up
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 }
+
+export default Navi;

@@ -1,4 +1,37 @@
-* {
+:root {
+    /* Used for text. */
+    --dark : #363740
+
+    /* Just default white. Used for button text and wherever else needed */
+    --white : #FFFFFF
+
+    /* A little easier to look at, less strain on the eyes with the darker tone. Use for filling bg of non-button components  */
+    --darker-white: #F7F8FC
+
+    /* Used for button backgrounds and mouseover text, paired with --white as the button text if used for a button. */
+    --blue : #3751FF
+
+    /* A very pale blue, used as the general background for large containers or even the whole page */
+    --bg-light : #DDE2FF
+
+    /* A blue a bit darker than --bg-light, used as the general background for large containers or even the whole page */
+    --bg-light-darker #c5ceff
+}
+
+.navbar-light{
+    background-color: #F7F8FC
+    
+}
+
+.logo-holder {
+    color: black;
+    width: 4.5rem;
+    position: relative;
+    padding-left: 1rem;
+}
+
+
+/* {
     box-sizing: border-box;
 }
 
@@ -7,7 +40,7 @@ body {
 }
 
 .nav {
-    background: #EEEEEE;
+    background: var(--dark);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,16 +51,11 @@ body {
 .site-name {
     display: flex;
     font-size: 2rem;
-}
+} */
 
-.logo-holder {
-    color: black;
-    width: 4.5rem;
-    position: relative;
-    padding-left: 1rem;
-}
 
-.nav ul {
+
+/* .nav ul {
     padding: 0;
     margin: 0;
     list-style: none;
@@ -48,5 +76,6 @@ body {
 }
 
 .nav li:hover {
-    background-color: gray;
-}
+    background-color: var(--blue);
+} */
+

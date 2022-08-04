@@ -1,5 +1,5 @@
 const { random, randomName, randomCompanyName, randomDomain, randomPhoneNumber, randomType, randomPrivilege } = require('../modules/random');
-const { addCompany, addEmployee, addRegularAvailability, addAvailability, createRoster } = require('../modules/endpoint');
+const { addCompany, addCompanyEvent, addEmployee, addRegularAvailability, addAvailability, createRoster } = require('../modules/endpoint');
 
 var companyNo;
 
@@ -32,6 +32,14 @@ else
         weekDates.push(dayLooper);
     }
 
+    const companyEvents = [
+        {event_date: "2022-12-25", event_start: "00:00", event_end: "23:59", event_name: "Christmas"},
+        {event_date: "2022-08-01", event_start: "00:00", event_end: "23:59", event_name: "Bank Holiday"},
+        {event_date: "2022-10-03", event_start: "00:00", event_end: "23:59", event_name: "Labour Day"},
+        {event_date: "2022-12-26", event_start: "00:00", event_end: "23:59", event_name: "Boxing Day"},
+        {event_date: "2022-04-25", event_start: "00:00", event_end: "23:59", event_name: "ANZAC Day"},
+        {event_date: "2022-01-26", event_start: "00:00", event_end: "23:59", event_name: "Australia Day"}
+    ];
 
     //generate companies
     for(let i = 0; i < companyNo; i++)
@@ -40,6 +48,13 @@ else
         const companyId = await addCompany(companyName);
 
         const employeeNo = random(0, 100);
+
+        //add company events
+        for(let i2 = 0; i2 < companyEvents.length; i2++)
+        {
+            const companyEvent = companyEvents[i2];
+            await addCompanyEvent(companyEvent.event_date, companyEvent.event_start, companyEvent.event_end, companyEvent.event_name, companyId);
+        }
 
         //generate employees for company
         for(let i2 = 0; i2 < employeeNo; i2++)

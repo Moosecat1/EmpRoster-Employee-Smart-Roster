@@ -30,7 +30,7 @@ class EmployeeList extends Component {
 
     viewEmployeeRoster(emp_id) {
         sessionStorage.setItem('emp_view', emp_id);
-        document.location.href = '/ViewEmployee';
+        document.location.href = '/ViewEmployeeAvailability';
     }
 
     processEmps(){
