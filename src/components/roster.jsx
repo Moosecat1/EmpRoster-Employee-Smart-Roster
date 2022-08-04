@@ -154,6 +154,8 @@ class Roster extends Component {
             }
         }
 
+
+
         const res1 = await axios.get("http://localhost:2420/getEarliestRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
             console.log(err);
         });
