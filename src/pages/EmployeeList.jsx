@@ -6,8 +6,10 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Container } from "@mui/system";
+import {Container} from "@mui/material";
 import ManagerViewAvailability from './ManagerViewAvailability';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 const axios = require('axios');
 
@@ -33,16 +35,19 @@ class EmployeeList extends Component {
 
     processEmps(){
         return this.state.data.map((employee) =>
-            <Card>
-                <Card.Img variant="top" src="Placeholder" />
-                <Card.Body>
-                    <Card.Title>
-                        {employee.emp_fName + " " + employee.emp_lName}
-                    </Card.Title>
-                    {employee.emp_type}
-                </Card.Body>
-                <Button variant="primary" onclick="viewEmployeeRoster(employee.emp_id)">See More</Button>
-            </Card>
+            <Col>
+                <Card>
+                    {/*<Card.Img variant="top" src="Placeholder" /> */ }
+                    <Card.Body>
+                        <Card.Title>
+                            {employee.emp_fName + " " + employee.emp_lName}
+                        </Card.Title>
+                        {employee.emp_type}
+                    </Card.Body>
+                    <Button variant="primary" onClick={function(){sessionStorage.setItem('emp_view', employee.emp_id);
+                        document.location.href = '/ViewEmployee';}}>See More</Button>
+                </Card>
+            </Col>
         );
     }
 
@@ -71,9 +76,11 @@ class EmployeeList extends Component {
             return(
                 <div className='flex'>
                     <Navbar/> <Sidebar/>
-                    <div className='d-flex flex-nowrap justify-content-center'>
-                        {this.processEmps()}
-                    </div>
+                    <Container>
+                        <Row xs={1} md={2} className="g-4">
+                            {this.processEmps()}
+                        </Row>
+                    </Container>
                 </div>
             )
         }
