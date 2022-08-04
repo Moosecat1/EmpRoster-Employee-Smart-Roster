@@ -1,9 +1,14 @@
-input[type="text"] {
-    padding: 1rem;
+h1, form {
+    text-align: center;
 }
 
-h1 {
-    text-align: center;
+#addButton {
+    background-color: #c5ceff;
+}
+
+#removeButton {
+    background-color: #363740;
+    color: #FFFFFF;
 }
 
 .buttonDiv {
@@ -11,10 +16,6 @@ h1 {
     justify-content: center;
 }
 
-#addButton {
-    background-color:teal;
-}
-
-#removeButton {
-    background-color: maroon;
+span {
+    font-weight: bold;
 }
