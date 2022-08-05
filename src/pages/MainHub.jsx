@@ -2,7 +2,6 @@ import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import Roster from "../components/roster";
 import 'react-calendar/dist/Calendar.css';
-import '../css/EmployeeList.css';
 import React from "react";
 import {Container, Box, Typography, Avatar,List,ListItem,ListItemText} from "@mui/material";
 

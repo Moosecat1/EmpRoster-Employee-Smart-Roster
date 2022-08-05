@@ -21,7 +21,7 @@ export default function RegisterCreateCompany() {
 
     if (sessionStorage.getItem('emp_id') != null) {
         alert("your company is already registered")
-        window.location.href = "/MainHub";
+        window.location.href = "/mainhub";
     } else {
         return (
             <>

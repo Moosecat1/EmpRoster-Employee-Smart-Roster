@@ -65,11 +65,11 @@ export default function SettingsThemes() {
                         </ListItem>
 
                         <ListItem disablePadding>
-                            <ListItemButton component="a" href="/settings/Accessability" >
+                            <ListItemButton component="a" href="/settings/Accessibility" >
                                 <ListItemIcon>
                                     <Camera/>
                                 </ListItemIcon>
-                                <ListItemText primary="Accessability" >
+                                <ListItemText primary="Accessibility" >
                                 </ListItemText>
                             </ListItemButton>
                         </ListItem>

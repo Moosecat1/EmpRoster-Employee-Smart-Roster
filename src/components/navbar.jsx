@@ -2,20 +2,20 @@ import '../css/Navbar.css'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Logo from '../resources/navLogo.svg';
+import Logo from '../resources/lo.png';
+import {Box} from "@mui/material";
 
 function Navi() {
   return (
     <Navbar collapseOnSelect expand="lg" variant="light">
       <Container>
           <Navbar.Brand href="/">
-            <img
+              <img
               src={Logo}
-              width="90"
-              height="50"
+              width="194"
+              height="55"
               className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+              alt="React Bootstrap logo" />
           </Navbar.Brand>
         
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

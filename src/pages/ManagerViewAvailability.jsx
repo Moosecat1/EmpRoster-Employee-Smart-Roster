@@ -79,6 +79,7 @@ export default function ViewAvailability(){
                                 </Grid>
                             </Box>
                             <Box>
+                                <br />
                                 <Roster/> {/*this will be the availability roster  */}
                             </Box>
     
