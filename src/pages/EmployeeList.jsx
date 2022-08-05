@@ -1,6 +1,5 @@
 import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
-import '../css/EmployeeList.css';
 import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';

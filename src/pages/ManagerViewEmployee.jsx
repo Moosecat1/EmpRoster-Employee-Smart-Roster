@@ -91,6 +91,8 @@ export default function ManagerViewEmployee(){
                             display="flex"
                             flexDirection="row"
                             justifyContent="flex-start"
+                            alignItems="center"
+                            p={1}
                         >
                             <Avatar {...stringAvatar(empName)} ></Avatar>
                             &nbsp;
@@ -99,7 +101,9 @@ export default function ManagerViewEmployee(){
 
                         <Box display="flex"
                              flexDirection="column"
-                             justifyContent="flex-start">
+                             justifyContent="flex-start"
+                             p={1}
+                        >
                             <List sx={{fontWeight:'bold'}}>
                                 <ListItem>
                                     <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster:</Typography>} />
@@ -118,7 +122,7 @@ export default function ManagerViewEmployee(){
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
-                            alignItems="flex-start"
+                            alignItems="center"
                             sx ={{width:"1000px"}}
                         >
                             <Roster/>
