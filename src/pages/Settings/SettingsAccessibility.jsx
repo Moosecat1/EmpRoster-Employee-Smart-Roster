@@ -17,7 +17,7 @@ const label = { inputProps: { 'aria-label': 'Colour-Blind-Switch' } }; //simple 
 
 
 
-function valuetext(value: number) { //font size value
+function valuetext(value) { //font size value
     return `${value}px`;
 }
 
@@ -59,11 +59,11 @@ export default function SettingsAccessability() {
                         </ListItem>
 
                         <ListItem disablePadding>
-                            <ListItemButton component="a" href={"/settings/Accessability"} >
+                            <ListItemButton component="a" href={"/settings/Accessibility"} >
                                 <ListItemIcon>
                                     <Camera/>
                                 </ListItemIcon>
-                                <ListItemText primary="Accessability" >
+                                <ListItemText primary="Accessibility" >
                                 </ListItemText>
                             </ListItemButton>
                         </ListItem>

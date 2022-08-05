@@ -16,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which h
 }));
 
 
-function stringToColour(string: string) { // This function is to make a string to a colour
+function stringToColour(string) { // This function is to make a string to a colour
     let hash = 0;
     let i;
 
@@ -36,7 +36,7 @@ function stringToColour(string: string) { // This function is to make a string t
     return colour;
 }
 
-function stringAvatar(name: string) { //function to split avatar name
+function stringAvatar(name) { //function to split avatar name
     return {
         sx: {
             bgcolor: stringToColour(name),
@@ -89,11 +89,11 @@ export default function SettingsAccount(){
                 </ListItem>
 
                 <ListItem disablePadding>
-                    <ListItemButton component="a" href={"/settings/Accessability"} >
+                    <ListItemButton component="a" href={"/settings/Accessibility"} >
                         <ListItemIcon>
                             <Camera/>
                         </ListItemIcon>
-                        <ListItemText primary="Accessability" >
+                        <ListItemText primary="Accessibility" >
                         </ListItemText>
                     </ListItemButton>
                 </ListItem>

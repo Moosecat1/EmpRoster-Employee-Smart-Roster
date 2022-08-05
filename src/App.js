@@ -9,7 +9,7 @@ import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
 import ManagerEditRoster from "./pages/ManagerEditRoster";
 import SettingsAccount from "./pages/Settings/SettingsAccount";
-import SettingsAccessability from "./pages/Settings/SettingsAccessability";
+import SettingsAccessibility from "./pages/Settings/SettingsAccessibility";
 import SettingsThemes from "./pages/Settings/SettingsThemes";
 import RosterTest from "./pages/RosterTest";
 import MainHub from "./pages/MainHub";
@@ -31,7 +31,7 @@ export default function App() {
             <Route path="/employeelist" element={<EmployeeList/>}/>
             <Route path="/ManagerEditRoster" element={<ManagerEditRoster/>}/>
             <Route path="/settings/Account" element={<SettingsAccount/>}/>
-            <Route path="/settings/Accessability" element={<SettingsAccessability/>}/>
+            <Route path="/settings/Accessibility" element={<SettingsAccessibility/>}/>
             <Route path="/settings/Themes" element={<SettingsThemes/>}/>
             <Route path="/mainhub" element={<MainHub/>} />
             <Route path="/test" element={<RosterTest/>}/> 

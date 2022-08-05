@@ -17,12 +17,12 @@ const lastNames = [
 ];
 
 const companyNames = [
-    "Joe's Megacorp", "Gaming Limited", "Anime Lovers", "JV BigCorp", "BigFart Incorporated", "Yellow Pages",
+    "Joe's Megacorp", "Gaming Limited", "Anime Lovers", "JV BigCorp", "League of Legends", "Yellow Pages",
     "Daniel's Donuts", "Peter's Peaches", "Menulawg", "Fernando's Dry Cleaning", "Peter's Pooches", "Carmando Farnando"
 ];
 
 const emailDomain = [
-    "gmail.com", "outlook.com", "uowmail.edu.au", "anime.gov", "hotmail.com", "protonmail.com", "joemother.biz"
+    "gmail.com", "outlook.com", "uowmail.edu.au", "anime.gov", "hotmail.com", "protonmail.com", "sugoina.biz"
 ];
 
 const empTypes = [

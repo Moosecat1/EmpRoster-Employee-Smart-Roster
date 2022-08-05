@@ -14,7 +14,6 @@ import Row from 'react-bootstrap/Row';
 const axios = require('axios');
 
 document.title = "Employee List";
-sessionStorage.setItem("company_id", 1);
 /*this page needs to change quite a bit:
     -use props when loading roster instead of this sessionstorage thing
     -use componentdidmount and state to get initial data
@@ -26,11 +25,6 @@ class EmployeeList extends Component {
     state = {
         data : [],
         isLoaded : false
-    }
-
-    viewEmployeeRoster(emp_id) {
-        sessionStorage.setItem('emp_view', emp_id);
-        document.location.href = '/ViewEmployeeAvailability';
     }
 
     processEmps(){
@@ -45,7 +39,7 @@ class EmployeeList extends Component {
                         {employee.emp_type}
                     </Card.Body>
                     <Button variant="primary" onClick={function(){sessionStorage.setItem('emp_view', employee.emp_id);
-                        document.location.href = '/ViewEmployee';}}>See More</Button>
+                        document.location.href = '/ManagerViewEmployee';}}>See More</Button>
                 </Card>
             </Col>
         );
