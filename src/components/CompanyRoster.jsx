@@ -1,5 +1,21 @@
 import React, {Component} from "react";
 import axios from "axios";
+import '../css/roster.css'
+
+const nameStyle = {
+    backgroundColor: '#c5ceff',
+    border: '1px solid black'
+}
+
+const posStyle = {
+    backgroundColor: '#eaf3fc',
+    border: '1px solid black'
+}
+
+const negStyle = {
+    backgroundColor: '#F7F8FC',
+    border: '1px solid black'
+}
 
 class CompanyRoster extends Component {
     state = {
@@ -13,15 +29,53 @@ class CompanyRoster extends Component {
 
     checkDay(dayIndex, empIndex){
         const {weekDates, employeeList, employeeRoster} = this.state;
-        console.log(employeeRoster);
+
+        function timesString(empRosterIndex){
+            const rostDay = empRoster[empRosterIndex];
+            const startString = "Start Time: " + rostDay.rost_start;
+            const endString = "End Time: " + rostDay.rost_end;
+
+            return(
+                <>
+                    <p>{startString}</p>
+                    <p>{endString}</p>
+                </>
+            )
+        }
 
         const employee = employeeList[empIndex];
         const empRoster = employeeRoster[empIndex];
 
-        /*console.log("Week Date: " + weekDates[dayIndex]);
-        console.log("EmpRoster: " + empRoster);
-        const empWorking = empRoster.some((rost) => rost.rost_date === weekDates[dayIndex]);
-        console.log(empWorking);*/
+
+        //const empWorking = empRoster.some((rost) => rost.rost_date === weekDates[dayIndex]);
+
+        let empWorking = false;
+        let empRosterIndex;
+
+        for(let i = 0; i < empRoster.length; i++)
+        {
+            if(empRoster[i].rost_date === weekDates[dayIndex])
+            {
+                empWorking = true;
+                empRosterIndex = i;
+                break;
+            }
+        }
+        
+        if(empWorking)
+        {
+            return({
+                text: (timesString(empRosterIndex)),
+                style: posStyle
+            });
+        }
+        else
+        {
+            return({
+                text: (<span>Not Rostered</span>),
+                style: negStyle
+            });
+        }
     }
 
     processEmployeeTimes(){
@@ -29,14 +83,14 @@ class CompanyRoster extends Component {
 
         return employeeList.map((employee, index) => 
             <tr>
-                <td>{employee.emp_id}</td>
-                <td>{this.checkDay(0, index)}</td>
-                <td>{this.checkDay(1, index)}</td>
-                <td>{this.checkDay(2, index)}</td>
-                <td>{this.checkDay(3, index)}</td>
-                <td>{this.checkDay(4, index)}</td>
-                <td>{this.checkDay(5, index)}</td>
-                <td>{this.checkDay(6, index)}</td>
+                <td style={nameStyle}>{employee.emp_fName + " " + employee.emp_lName}</td>
+                <td style={this.checkDay(0, index).style}>{this.checkDay(0, index).text}</td>
+                <td style={this.checkDay(1, index).style}>{this.checkDay(1, index).text}</td>
+                <td style={this.checkDay(2, index).style}>{this.checkDay(2, index).text}</td>
+                <td style={this.checkDay(3, index).style}>{this.checkDay(3, index).text}</td>
+                <td style={this.checkDay(4, index).style}>{this.checkDay(4, index).text}</td>
+                <td style={this.checkDay(5, index).style}>{this.checkDay(5, index).text}</td>
+                <td style={this.checkDay(6, index).style}>{this.checkDay(6, index).text}</td>
             </tr>
         );
     }
@@ -45,10 +99,12 @@ class CompanyRoster extends Component {
         const currentDate = new Date();
         let weekStart = new Date();
         weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
+        const weekStartSQL = weekStart.toISOString().split('T')[0];
 
         let weekDates = [];
 
-        let dayLooper = weekStart;
+        let dayLooper = new Date();
+        dayLooper.setDate(currentDate.getDate() - (currentDate.getDay()));
 
         for(let i = 0; i < 7; i++){
             const dateString = dayLooper.toISOString().substring(0, 10);
@@ -65,14 +121,15 @@ class CompanyRoster extends Component {
 
         for(let i = 0; i < employeeList.length; i++){
             const employeeId = employeeList[i].emp_id;
-            const weekStartSQL = weekStart.toISOString().split('T')[0];
             
             let res1 = await axios.get("http://localhost:2420/getRoster/" + employeeId + "&" + weekStartSQL).catch((err) => {console.log(err);})
-            console.log(weekStartSQL);
             let employeeRoster = res1.data;
             
             for(let i2 = 0; i2 < employeeRoster.length; i2++){
-                employeeRoster[i2].rost_date = employeeRoster[i2].rost_date.substring(0, 10);
+                let rostDate = new Date(employeeRoster[i2].rost_date);
+                rostDate.setDate(rostDate.getDate() + 1);
+
+                employeeRoster[i2].rost_date = rostDate.toISOString().substring(0, 10);
             }
 
             employeeRosters.push(employeeRoster);
