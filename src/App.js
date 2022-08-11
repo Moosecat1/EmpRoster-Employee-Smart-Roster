@@ -17,6 +17,7 @@ import ChangeAvailability from "./pages/ChangeAvailability";
 import ViewEmployeeAvailability from "./pages/ManagerViewAvailability";
 import RequestLeave from './pages/RequestLeave';
 import ManagerViewEmployee from './pages/ManagerViewEmployee';
+import ViewCompanyRoster from "./pages/ViewCompanyRoster";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/ViewEmployeeAvailability" element={<ViewEmployeeAvailability/>} />
             <Route path="/ManagerViewEmployee" element={<ManagerViewEmployee/>} />
             <Route path="/RequestLeave" element={<RequestLeave/>} />
+            <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
         </Routes>
       </BrowserRouter>
   );
