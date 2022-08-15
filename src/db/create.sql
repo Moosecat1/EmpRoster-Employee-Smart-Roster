@@ -59,3 +59,21 @@ CREATE TABLE Roster(
     emp_id VARCHAR(50) NOT NULL,
     FOREIGN KEY(emp_id) REFERENCES Employee(emp_id)
 );
+
+CREATE TABLE Leave(
+    leave_date DATE,
+    leave_start TIME,
+    leave_end TIME,
+    emp_id VARCHAR(50) NOT NULL,
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id)
+);
+
+CREATE TABLE LeaveRequest(
+    req_date Date,
+    req_start TIME,
+    req_end TIME,
+    emp_id VARCHAR(50) NOT NULL,
+    req_privilege VARCHAR(50),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id),
+    CONSTRAINT privileges CHECK(req_privilege="Employee" OR req_privilege="Manager" OR req_privilege="Admin")
+);

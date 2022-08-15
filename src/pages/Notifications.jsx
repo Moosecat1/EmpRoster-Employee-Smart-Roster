@@ -12,51 +12,52 @@ import Row from 'react-bootstrap/Row';
 
 const axios = require('axios');
 
-document.title = "Employee List";
-/*this page needs to change quite a bit:
-    -use props when loading roster instead of this sessionstorage thing
-    -use componentdidmount and state to get initial data
-    -when creating each employee thing use react format and not html/js (ie. use a map with jsx tags instead of pill.append thing)
-    -for now it works, but roster needs to integrate props 
-*/
+document.title = "Notifications";
 
-class EmployeeList extends Component {
+class Notifications extends Component {
     state = {
         data : [],
         isLoaded : false
     }
 
-    processEmps(){
-        return this.state.data.map((employee) =>
+    processNotifs(){
+        (async () => {
+            const res = await getEmployee(emp_id);
+            emp_fName = res.data.emp_fName;
+            emp_lName = res.data.emp_lName;
+        })();
+        return this.state.data.map((notification) =>
             <Col>
                 <Card>
-                    {/*<Card.Img variant="top" src="Placeholder" /> */ }
                     <Card.Body>
                         <Card.Title>
-                            {employee.emp_fName + " " + employee.emp_lName}
+                            {"Request Leave"}
                         </Card.Title>
-                        {employee.emp_type}
+                        {emp_fName + " " + emp_lName + " is requesting leave"}
                     </Card.Body>
                     <Button variant="primary" onClick={function(){sessionStorage.setItem('emp_view', employee.emp_id);
                         document.location.href = '/ManagerViewEmployee';}}>See More</Button>
+                    <Button variant="primary" onClick={}
                 </Card>
             </Col>
         );
     }
 
     async componentDidMount(){
-        const res = await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem("company_id")).catch((err) => {
+        const res = await axios.get("http://localhost:2420/getNotifications/" + sessionStorage.getItem("emp_privilege")).catch((err) => {
             console.log(err);
         });
         console.log(res);
-        let empList = [];
+        let notiList = [];
 
         for(let i = 0; i < res.data.length; i++)
         {
-            empList.push(res.data[i]);
+            notiList.push(res.data[i]);
         }
 
-        this.setState({data: empList, isLoaded: true});
+        console.log(notiList);
+
+        this.setState({data: notiList, isLoaded: true});
     }
 
     render(){
@@ -68,7 +69,7 @@ class EmployeeList extends Component {
                     <Navbar/> <Sidebar/>
                     <Container>
                         <Row xs={1} md={2} className="g-4">
-                            {this.processEmps()}
+                            {this.processNotifs()}
                         </Row>
                     </Container>
                 </div>

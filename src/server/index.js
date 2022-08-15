@@ -297,3 +297,68 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
             else{res.send(result);}
     });
 });
+
+app.get("/getNotifications/:req_privilege", (req, res) => {
+    const req_privilege = req.params.req_privilege;
+
+    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ?",
+        [req_privilege],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.post("/addLeave", (req, res) => {
+    const leave_date = req.body.leave_date;
+    const leave_start = req.body.leave_start;
+    const leave_end = req.body.leave_end;
+    const emp_id = req.body.emp_id;
+
+    db.query("INSERT INTO Leave (leave_date, leave_start, leave_end, emp_id) \n\
+        VALUES (?, ?, ?, ?)",
+        [leave_date, leave_start, leave_end, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.post("/addNotification", (req, res) => {
+    const req_date = req.body.req_date;
+    const req_start = req.body.req_start;
+    const req_end = req.body.req_end;
+    const emp_id = req.body.emp_id;
+    const req_privilege = req.body.req_privilege;
+
+    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, req_privilege) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [req_date, req_start,req_end, emp_id, req_privilege],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.get("/getLeave/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT * FROM Leave WHERE emp_id = ?",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.delete("/removeNotification/:emp_id&:req_date", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const req_date = req.params.req_date;
+
+    db.query("DELETE * FROM LeaveRequest WHERE (emp_id = ? AND req_date = ?)",
+        [emp_id, req_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});

@@ -304,6 +304,70 @@ const removeRosterDate = async (emp_id, rost_date) => {
     });
 }
 
+const getNotifications = async (req_privilege) => {
+    var res;
+
+    await axios.get("http://localhost:2420/getNotifications/" + req_privilege).then((response) => {
+        res = response;
+
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return {notifications: res.data};
+}
+
+const addLeave = async (leave_date, leave_start, leave_end, emp_id) => {
+    await axios.post("http://localhost:2420/addLeave", {
+        leave_date: leave_date,
+        leave_start: leave_start,
+        leave_end: leave_end,
+        emp_id: emp_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const addNotification = async (req_date, req_start, req_end, emp_id, req_privilege) => {
+    await axios.post("http://localhost:2420/addNotification", {
+        req_date: req_date,
+        req_start: req_start,
+        req_end: req_end,
+        emp_id: emp_id,
+        req_privilege: req_prvilege
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const getLeave = async (emp_id) => {
+    var res;
+
+    await axios.get("http://localhost:2420/getLeave/" + emp_id).then((response) => {
+        res = response;
+
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return {leave: res.data};
+}
+
+const removeNotification = async (emp_id, req_date) => {
+    await axios.delete("http://localhost:2420/removeNotification/" + emp_id + "&" + req_date).catch((err) => {
+        console.log(err);
+    });
+}
+
+const getEmployeeName = async (emp_id) => {
+    await axios.get("http://localhost:2420/getEmployeeName/" + emp_id).then((response) => {
+        res = response;
+    }).catch((err) => {
+        console.log(err);
+    });
+    return {emp_fName: res.data.emp_fName, emp_lName: res.data.emp_lName};
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
@@ -317,3 +381,9 @@ module.exports.getCompanyEvents = getCompanyEvents;
 module.exports.createRoster = createRoster;
 module.exports.getRoster = getRoster;
 module.exports.removeRosterDate = removeRosterDate;
+module.exports.getNotifications = getNotifications;
+module.exports.addLeave = addLeave;
+module.exports.addNotification = getNotification;
+module.exports.getLeave = getLeave;
+module.exports.removeNotification = removeNotification;
+module.exports.getEmployeeName = getEmployeeName;
