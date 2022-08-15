@@ -10,6 +10,10 @@ import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
+const { addLeave } = require('../modules/endpoint');
+const { removeNotification } = require('../modules/endpoint');
+const { addLeave } = require('../modules/endpoint');
+
 const axios = require('axios');
 
 document.title = "Notifications";
@@ -35,7 +39,7 @@ class Notifications extends Component {
                         </Card.Title>
                         {emp_fName + " " + emp_lName + " is requesting leave"}
                     </Card.Body>
-                    <Button variant="primary" onClick={function(){sessionStorage.setItem('emp_view', employee.emp_id);
+                    <Button variant="primary" onClick={function(){addLeave(notification.req_date, notification.req_start, notification.req_end, notification.emp_id);
                         document.location.href = '/ManagerViewEmployee';}}>See More</Button>
                     <Button variant="primary" onClick={}
                 </Card>
