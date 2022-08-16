@@ -61,7 +61,7 @@ CREATE TABLE Roster(
 );
 
 CREATE TABLE LeaveRequest(
-    req_date Date,
+    req_date DATE,
     req_start TIME,
     req_end TIME,
     emp_id VARCHAR(50) NOT NULL,
