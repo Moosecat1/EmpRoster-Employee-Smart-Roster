@@ -317,40 +317,17 @@ const getNotifications = async (req_privilege) => {
     return {notifications: res.data};
 }
 
-const addLeave = async (leave_date, leave_start, leave_end, emp_id) => {
-    await axios.post("http://localhost:2420/addLeave", {
-        leave_date: leave_date,
-        leave_start: leave_start,
-        leave_end: leave_end,
-        emp_id: emp_id
-    }).catch((err) => {
-        console.log(err);
-    });
-}
-
-const addNotification = async (req_date, req_start, req_end, emp_id, req_privilege) => {
+const addNotification = async (req_date, req_start, req_end, emp_id, req_desc, req_privilege) => {
     await axios.post("http://localhost:2420/addNotification", {
         req_date: req_date,
         req_start: req_start,
         req_end: req_end,
         emp_id: emp_id,
-        req_privilege: req_prvilege
+        req_desc: req_desc,
+        req_privilege: req_privilege
     }).catch((err) => {
         console.log(err);
     });
-}
-
-const getLeave = async (emp_id) => {
-    var res;
-
-    await axios.get("http://localhost:2420/getLeave/" + emp_id).then((response) => {
-        res = response;
-
-    }).catch((err) => {
-        console.log(err);
-    });
-
-    return {leave: res.data};
 }
 
 const removeNotification = async (emp_id, req_date) => {
@@ -360,6 +337,7 @@ const removeNotification = async (emp_id, req_date) => {
 }
 
 const getEmployeeName = async (emp_id) => {
+    var res;
     await axios.get("http://localhost:2420/getEmployeeName/" + emp_id).then((response) => {
         res = response;
     }).catch((err) => {
@@ -382,8 +360,6 @@ module.exports.createRoster = createRoster;
 module.exports.getRoster = getRoster;
 module.exports.removeRosterDate = removeRosterDate;
 module.exports.getNotifications = getNotifications;
-module.exports.addLeave = addLeave;
-module.exports.addNotification = getNotification;
-module.exports.getLeave = getLeave;
+module.exports.addNotification = addNotification;
 module.exports.removeNotification = removeNotification;
 module.exports.getEmployeeName = getEmployeeName;

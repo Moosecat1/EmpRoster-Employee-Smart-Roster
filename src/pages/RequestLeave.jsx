@@ -11,7 +11,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import DatePicker from "react-datepicker";
 import {Container,Button, Box} from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css"
-const { getAvailabilities, getCompanyEvents, addAvailability, removeRosterDate } = require("../modules/endpoint");
+const { getAvailabilities, getCompanyEvents, addNotification, removeRosterDate } = require("../modules/endpoint");
 
 const locales = {
     "en-AU": require("date-fns/locale/en-AU")
@@ -46,7 +46,7 @@ export default function RequestLeave(){
                 const date = newEventObject.start;
                 date.setDate(date.getDate() + 1);
                 const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
-                await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), " ", "Manager");
             }
             else
             {
@@ -60,7 +60,7 @@ export default function RequestLeave(){
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
                     const removeSqlDate = dayLooper.toISOString().split('T')[0];
-                    await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), " ", "Manager");
                     await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }

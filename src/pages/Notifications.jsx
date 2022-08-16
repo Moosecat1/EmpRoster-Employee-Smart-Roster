@@ -10,9 +10,9 @@ import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-const { addLeave } = require('../modules/endpoint');
+const { addAvailability } = require('../modules/endpoint');
 const { removeNotification } = require('../modules/endpoint');
-const { addLeave } = require('../modules/endpoint');
+const { getEmployeeName } = require('../modules/endpoint');
 
 const axios = require('axios');
 
@@ -25,11 +25,6 @@ class Notifications extends Component {
     }
 
     processNotifs(){
-        (async () => {
-            const res = await getEmployee(emp_id);
-            emp_fName = res.data.emp_fName;
-            emp_lName = res.data.emp_lName;
-        })();
         return this.state.data.map((notification) =>
             <Col>
                 <Card>
@@ -37,11 +32,11 @@ class Notifications extends Component {
                         <Card.Title>
                             {"Request Leave"}
                         </Card.Title>
-                        {emp_fName + " " + emp_lName + " is requesting leave"}
+                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave due to " + notification.req_desc}
                     </Card.Body>
-                    <Button variant="primary" onClick={function(){addLeave(notification.req_date, notification.req_start, notification.req_end, notification.emp_id);
-                        document.location.href = '/ManagerViewEmployee';}}>See More</Button>
-                    <Button variant="primary" onClick={}
+                    <Button variant="primary" onClick={function(){console.log("meow");addAvailability(notification.req_date, notification.req_start, notification.req_end, "Unavailable", notification.emp_id);
+                        removeNotification(notification.emp_id, notification.req_date);}}>Accept</Button>
+                    <Button variant="primary" onClick={function(){console.log("meow");removeNotification(notification.emp_id, notification.req_date);}}>Deny</Button>
                 </Card>
             </Col>
         );
@@ -53,6 +48,7 @@ class Notifications extends Component {
         });
         console.log(res);
         let notiList = [];
+        let empList = [];
 
         for(let i = 0; i < res.data.length; i++)
         {
@@ -66,7 +62,7 @@ class Notifications extends Component {
 
     render(){
         const {isLoaded} = this.state;
-
+        console.log(isLoaded);
         if(isLoaded){
             return(
                 <div className='flex'>
@@ -81,4 +77,4 @@ class Notifications extends Component {
         }
     }
 }
-export default EmployeeList;
+export default Notifications;
