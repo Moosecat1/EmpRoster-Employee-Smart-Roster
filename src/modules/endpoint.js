@@ -26,6 +26,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
 
     let empId;
     let empfName;
+    let emplName;
     let empPrivilege;
     let companyId;
 
@@ -34,11 +35,12 @@ const verifyEmployee = async (emp_id, emp_password) => {
     {
         empId = res.data[0].emp_id;
         empfName = res.data[0].emp_fName;
+        emplName = res.data[0].emp_lName;
         empPrivilege = res.data[0].emp_privilege;
         companyId = res.data[0].company_id;
     }
 
-    return {empExists: empExists, empId: empId, empfName: empfName, empPrivilege: empPrivilege, companyId: companyId};
+    return {empExists: empExists, empId: empId, empfName: empfName, emplName: emplName, empPrivilege: empPrivilege, companyId: companyId};
 }
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
@@ -317,12 +319,14 @@ const getNotifications = async (req_privilege) => {
     return {notifications: res.data};
 }
 
-const addNotification = async (req_date, req_start, req_end, emp_id, req_desc, req_privilege) => {
+const addNotification = async (req_date, req_start, req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege) => {
     await axios.post("http://localhost:2420/addNotification", {
         req_date: req_date,
         req_start: req_start,
         req_end: req_end,
         emp_id: emp_id,
+        emp_fName: emp_fName,
+        emp_lName: emp_lName,
         req_desc: req_desc,
         req_privilege: req_privilege
     }).catch((err) => {

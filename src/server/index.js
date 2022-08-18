@@ -164,7 +164,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     const emp_id = req.params.emp_id;
     const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password, emp_fName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
+    db.query("SELECT emp_id, emp_password, emp_fName, emp_lName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
         (err, result) => {
             if(err){console.log(err);}
@@ -314,12 +314,14 @@ app.post("/addNotification", (req, res) => {
     const req_start = req.body.req_start;
     const req_end = req.body.req_end;
     const emp_id = req.body.emp_id;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
     const req_desc = req.body.req_desc;
     const req_privilege = req.body.req_privilege;
 
-    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, req_desc, req_privilege) \n\
-        VALUES (?, ?, ?, ?, ?, ?)",
-        [req_date, req_start,req_end, emp_id, req_desc, req_privilege],
+    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [req_date, req_start,req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -330,7 +332,7 @@ app.delete("/removeNotification/:emp_id&:req_date", (req, res) => {
     const emp_id = req.params.emp_id;
     const req_date = req.params.req_date;
 
-    db.query("DELETE * FROM LeaveRequest WHERE (emp_id = ? AND req_date = ?)",
+    db.query("DELETE FROM LeaveRequest WHERE (emp_id = ? AND req_date = ?)",
         [emp_id, req_date],
         (err, result) => {
             if(err){console.log(err);}

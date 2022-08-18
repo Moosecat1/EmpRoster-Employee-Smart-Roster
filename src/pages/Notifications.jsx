@@ -25,14 +25,14 @@ class Notifications extends Component {
     }
 
     async acceptRequest(notification) {
-        console.log("meow");
-        await addAvailability(notification.req_date, notification.req_start, notification.req_end, "Unavailable", notification.emp_id);
-        await removeNotification(notification.emp_id, notification.req_date);
+        await addAvailability(notification.req_date.split('T')[0], notification.req_start, notification.req_end, "Unavailable", notification.emp_id);
+        await removeNotification(notification.emp_id, notification.req_date.split('T')[0]);
+        document.location.reload();
     }
 
     async denyRequest(notification) {
-        console.log("meow");
-        await removeNotification(notification.emp_id, notification.req_date);
+        await removeNotification(notification.emp_id, notification.req_date.split('T')[0]);
+        document.location.reload();
     }
 
     processNotifs(){
@@ -45,8 +45,8 @@ class Notifications extends Component {
                         </Card.Title>
                         {notification.emp_fName + " " + notification.emp_lName + " is requesting leave due to " + notification.req_desc}
                     </Card.Body>
-                    <Button variant="primary" onClick={function(){acceptRequest(notification)}}>Accept</Button>
-                    <Button variant="primary" onClick={function(){denyRequest(notification)}}>Deny</Button>
+                    <Button variant="primary" onClick={() =>this.acceptRequest(notification)}>Accept</Button>
+                    <Button variant="primary" onClick={() =>this.denyRequest(notification)}>Deny</Button>
                 </Card>
             </Col>
         );

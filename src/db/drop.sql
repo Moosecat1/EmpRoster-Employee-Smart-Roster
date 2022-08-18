@@ -6,3 +6,4 @@ DROP TABLE RegularAvailability;
 DROP TABLE Employee;
 DROP TABLE CompanyEvent;
 DROP TABLE Company;
+DROP TABLE LeaveRequest;

@@ -60,7 +60,7 @@ export default function RequestLeave(){
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
                     const removeSqlDate = dayLooper.toISOString().split('T')[0];
-                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), " ", "Manager");
+                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), "I'm cringe ", "Manager");
                     await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }
