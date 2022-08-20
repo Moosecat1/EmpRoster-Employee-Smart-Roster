@@ -77,57 +77,66 @@ export default function ManagerViewEmployee(){
     return(
         <main>
             <Navbar/>
-            <Sidebar/>
-
-            <Container disableGutters>
 
 
-                <Box display="flex"
-                     flexDirection="row"
-                     justifyContent="flex-start">
+            <Container >
+                <Box
+                    display={"flex"}
+                    direction={"row"}>
 
-                    <Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            justifyContent="flex-start"
-                            alignItems="center"
-                            p={1}
-                        >
-                            <Avatar {...stringAvatar(empName)} ></Avatar>
-                            &nbsp;
-                                <h3>{empName}</h3>
-                        </Box>
+                    <Box >
+                        <Sidebar/>
+                    </Box>
 
+                    <Box m={2}>
                         <Box display="flex"
-                             flexDirection="column"
-                             justifyContent="flex-start"
-                             p={1}
-                        >
-                            <List sx={{fontWeight:'bold'}}>
-                                <ListItem>
-                                    <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster:</Typography>} />
-                                </ListItem>
-                                <ListItem>
-                                    {"Date: " + displayTodaysDate()}
-                                </ListItem>
-                                <ListItem>
-                                    { "Time: " + showTime(new Date())}
-                                </ListItem>
-                            </List>
-                        </Box>
+                             flexDirection="row"
+                             justifyContent="flex-start">
 
-                        <Box
+                            <Box>
+                                <Box
+                                    display="flex"
+                                    flexDirection="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    p={1}
+                                >
+                                    <Avatar {...stringAvatar(empName)} ></Avatar>
+                                    &nbsp;
+                                        <h3>{empName}</h3>
+                                </Box>
 
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="center"
-                            alignItems="center"
-                            sx ={{width:"1000px"}}
-                        >
-                            <Roster/>
+                                <Box display="flex"
+                                     flexDirection="column"
+                                     justifyContent="flex-start"
+                                     p={1}
+                                >
+                                    <List sx={{fontWeight:'bold'}}>
+                                        <ListItem>
+                                            <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster:</Typography>} />
+                                        </ListItem>
+                                        <ListItem>
+                                            {"Date: " + displayTodaysDate()}
+                                        </ListItem>
+                                        <ListItem>
+                                            { "Time: " + showTime(new Date())}
+                                        </ListItem>
+                                    </List>
+                                </Box>
+
+                                <Box
+
+                                    display="flex"
+                                    flexDirection="column"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    sx ={{width:"1000px"}}
+                                >
+                                    <Roster/>
+                                </Box>
+                            </Box >
                         </Box>
-                    </Box >
+                    </Box>
                 </Box>
             </Container>
         </main>

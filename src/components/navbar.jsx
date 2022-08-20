@@ -12,7 +12,7 @@ if(sessionStorage.getItem("emp_id")!= null) {
     return(
         <Navbar collapseOnSelect expand="lg" variant="light">
             <Container>
-                <Navbar.Brand href="/">
+                <Navbar.Brand href="/mainhub">
                     <img
                         src={Logo}
                         width="194"
