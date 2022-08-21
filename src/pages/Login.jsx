@@ -28,7 +28,7 @@ export default function Login(){
                 sessionStorage.setItem('emp_id', empId);
                 sessionStorage.setItem('emp_view', empId);
                 sessionStorage.setItem('emp_fName', empfName);
-                sessionStorage.setItem('emp_lName', emplName);
+                //sessionStorage.setItem('emp_lName', emplName);
                 sessionStorage.setItem('emp_privilege', empPrivilege);
                 sessionStorage.setItem('company_id', companyId);
                 window.location.href = "/mainhub";

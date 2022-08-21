@@ -17,6 +17,7 @@ const { getEmployeeName } = require('../modules/endpoint');
 const axios = require('axios');
 
 document.title = "Notifications";
+sessionStorage.setItem('emp_privilege', 'Manager');
 
 class Notifications extends Component {
     state = {
