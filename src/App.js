@@ -2,7 +2,8 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 
-import EmployeeList from "./pages/EmployeeList"
+import Test from './pages/Test';
+import EmployeeList from "./pages/EmployeeList";
 import RegisterCreateCompany from "./pages/Register/RegisterCreateCompany";
 import NoPage from "./pages/NoPage";
 import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/ManagerViewEmployee" element={<ManagerViewEmployee/>} />
             <Route path="/RequestLeave" element={<RequestLeave/>} />
             <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
+            <Route path="/test" element={<Test/>}/>
         </Routes>
       </BrowserRouter>
   );

@@ -79,6 +79,7 @@ class CompanyRoster extends Component {
 
     processEmployeeTimes(){
         const {employeeList} = this.state;
+        console.log(employeeList);
 
         return employeeList.map((employee, index) => 
             <tr>
@@ -115,6 +116,9 @@ class CompanyRoster extends Component {
 
         const res = await axios.get("http://localhost:2420/getEmployeesList/" + companyId).catch((err) => {console.log(err);})
         const employeeList = res.data;
+
+        console.log("http://localhost:2420/getEmployeesList/" + companyId);
+        console.log(employeeList);
 
         let employeeRosters = [];
 

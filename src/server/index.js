@@ -262,11 +262,56 @@ app.get("/getRoster/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.put("/updateRoster", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const rost_date = req.body.rost_date;
+    const rost_start = req.body.rost_start;
+    const rost_end = req.body.rost_end;
+
+    db.query("UPDATE Roster SET rost_start = ?, rost_end = ? WHERE emp_id = ? AND rost_date = ?",
+        [rost_start, rost_end, emp_id, rost_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getCompanyRoster/:company_id&:week_start", (req, res) => {
+    const company_id = req.params.company_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT Roster.rost_date, Roster.rost_start, Roster.rost_end, Roster.rost_week_start, Roster.emp_id FROM Roster \n\
+        LEFT OUTER JOIN Employee ON Roster.emp_id = Employee.emp_id WHERE Employee.company_id = ? AND Roster.rost_week_start = ? \n\
+        ORDER BY CAST(SUBSTR(Roster.emp_id, 4, LENGTH(Roster.emp_id)) AS UNSIGNED) ASC, rost_date ASC",
+        [company_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getUnrosteredEmployees/:company_id&:week_start", (req, res) => {
+    const company_id = req.params.company_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT * FROM Employee WHERE emp_id NOT IN \n\
+	            (SELECT Roster.emp_id FROM Roster \n\
+	            LEFT OUTER JOIN Employee ON Roster.emp_id = Employee.emp_id \n\
+                WHERE Employee.company_id = ? AND Roster.rost_week_start = ?) \n\
+            AND company_id = ? \n\
+            ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
+        [company_id, rost_week_start, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getEarliestRoster/:emp_id&:week_start", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_week_start = req.params.week_start;
 
-    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_start",
+    db.query("SELECT * FROM Roster WHERE (rost_start OR rost_end) IS NOT NULL AND (emp_id = ? AND rost_week_start = ?) ORDER BY rost_start LIMIT 1",
         [emp_id, rost_week_start],
         (err, result) => {
             if(err){console.log(err);}
@@ -278,7 +323,7 @@ app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_week_start = req.params.week_start;
 
-    db.query("SELECT * FROM Roster WHERE (emp_id = ? AND rost_week_start = ?) ORDER BY rost_end DESC",
+    db.query("SELECT * FROM Roster WHERE (rost_start OR rost_end) IS NOT NULL AND (emp_id = ? AND rost_week_start = ?) ORDER BY rost_end DESC LIMIT 1",
         [emp_id, rost_week_start],
         (err, result) => {
             if(err){console.log(err);}

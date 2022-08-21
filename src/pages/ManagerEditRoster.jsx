@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Navbar from '../components/navbar';
-import Roster from '../components/roster';
+import EditableRoster from '../components/EditableRoster';
 import Sidebar from '../components/sidebar';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
+import { addWeeklyRoster } from '../modules/endpoint';
 
 const modalStyle = {
     position: 'absolute',
@@ -41,7 +41,12 @@ export default function ManagerEditRoster(){
     React.useEffect(() => {
         const getEmployeeData = async () => {
             const company_id = sessionStorage.getItem('company_id')
-            const res = await axios.get('http://localhost:2420/getEmployeesList/' + company_id).catch((err) => {console.log(err);});
+
+            let weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            const week_start_sql = weekStart.toISOString().split('T')[0];
+
+            const res = await axios.get('http://localhost:2420/getUnrosteredEmployees/' + company_id + "&" + week_start_sql).catch((err) => {console.log(err);});
             const employeeList = res.data;
 
             setEmployeeList(employeeList);
@@ -53,7 +58,7 @@ export default function ManagerEditRoster(){
 
     const generateModal = () => {
         return employeeList.map((employee, index) => 
-            <div>
+            <div key={index}>
                 <input type={'checkbox'} id={index} className={'employeeCheck'} name={employee.emp_id} onChange={event => addEmployee(event.target)}/>
                 &nbsp;&nbsp;
                 <label for={index}>{" " + employee.emp_id + ": " + employee.emp_fName + " " + employee.emp_lName}</label>
@@ -73,10 +78,19 @@ export default function ManagerEditRoster(){
         }
     }
 
-    const addEmployees = () => {
-        console.log(checkedEmployees);
+    const addEmployees = async () => {
+        const currentDate = new Date();
+
+        let weekStart = new Date();
+        weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
+        const weekStartSQL = weekStart.toISOString().split('T')[0].replace(/-/g, '/');
+
+        for(let i = 0; i < checkedEmployees.length; i++){
+            await addWeeklyRoster(weekStartSQL, checkedEmployees[i]);
+        }
 
         handleClose();
+        document.location.reload();
     }
 
     if(isLoaded)
@@ -92,7 +106,9 @@ export default function ManagerEditRoster(){
                         flexDirection="row"
                         justifyContent="center"
                         alignItems="flex-start"
-                        sx ={{borderStyle:"solid", height:"700px", width:"1200px"}}>
+                        sx ={{borderStyle:"solid", width:"1200px", overflowY: 'scroll', maxHeight: "800px"}}>
+
+                            <EditableRoster/>
                     </Box>
 
                         <Box
