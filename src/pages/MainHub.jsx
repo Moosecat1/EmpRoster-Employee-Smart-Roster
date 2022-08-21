@@ -39,9 +39,15 @@ export default function MainHub() {
     <main>
         <Navbar/>
 
-        <Sidebar/>
+
+
 
         <Container >
+            <Box
+            display={"flex"}
+            flexdirection={"row"}>
+
+            <Sidebar/>
 
             <Box m={1} >
 
@@ -76,9 +82,12 @@ export default function MainHub() {
                         <Roster/>
                     </Box>
             </Box>
-            <br />
 
+            <br />
+            </Box>
         </Container>
+
+
     </main>
 )
 }

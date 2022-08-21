@@ -128,47 +128,52 @@ export default function RequestLeave(){
     
     
                 <Navbar/>
-                <Box
-                    flex={.7}
-                    bgcolor={"gray"}>
-                    <Sidebar/>
-                </Box>
+
                     <Container >
-                        <h1>Request Leave</h1>
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="flex-start"
-                            m={1}
-                        >
-    
-                            <input type="text" placeholder={"Leave Description"} value={newEvent.title}
-                                   onChange={(e) => setNewEvent({...newEvent, title:e.target.value}) }/>
-    
-                            <DatePicker placeholderText="Start Date" style={{marginBottom:'10px'}}
-                                        selected={newEvent.start} onChange={(start) => setNewEvent({...newEvent,start})} />
-    
-                            <DatePicker placeholderText="End Date"
-                                        selected={newEvent.end} onChange={(end) => setNewEvent({...newEvent,end})} />
+                        <Box display={"flex"}
+                             flexDirection={"row"}>
+
+                        <Box>
+                            <Sidebar/>
                         </Box>
-    
-    
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="flex-start"
-                            m={1}>
-                            <Button onClick={handleAddEvent} variant="contained">Request Leave</Button>
+
+                        <Box>
+                            <h1>Request Leave</h1>
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                m={1}
+                            >
+
+                                <input type="text" placeholder={"Leave Description"} value={newEvent.title}
+                                       onChange={(e) => setNewEvent({...newEvent, title:e.target.value}) }/>
+
+                                <DatePicker placeholderText="Start Date" style={{marginBottom:'10px'}}
+                                            selected={newEvent.start} onChange={(start) => setNewEvent({...newEvent,start})} />
+
+                                <DatePicker placeholderText="End Date"
+                                            selected={newEvent.end} onChange={(end) => setNewEvent({...newEvent,end})} />
+                            </Box>
+
+
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                m={1}>
+                                <Button onClick={handleAddEvent} variant="contained">Request Leave</Button>
+                            </Box>
+
+                            <Calendar
+                                localizer={localizer}
+                                events={allEvents}
+                                startAccessor="start"
+                                endAccessor="end"
+
+                                style={{height:800,width:'100%', margin:"50px"}} />
                         </Box>
-    
-                        <Calendar
-                            localizer={localizer}
-                            events={allEvents}
-                            startAccessor="start"
-                            endAccessor="end"
-    
-                            style={{height:800, margin:"50px"}} />
-    
+                        </Box>
                     </Container>
     
             </div>
