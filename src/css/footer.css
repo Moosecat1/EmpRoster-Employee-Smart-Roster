@@ -1,4 +1,4 @@
-/* .footer {
+.footer {
     display: flex;
     flex-direction: column;
     font-weight: bold;
@@ -116,4 +116,4 @@
     width: 200px;
     height: 35px;
 
-} */
+}
