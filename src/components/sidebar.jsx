@@ -7,9 +7,6 @@ import PropTypes from "prop-types";
 
 export default function Sidebar() {
 
-    localStorage.setItem('type', 'manager');
-    var empType = localStorage.getItem('type');
-
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
 
@@ -30,7 +27,7 @@ export default function Sidebar() {
 
 
 
-    if (empType === 'manager') {
+    if (sessionStorage.getItem("emp_privilege")  === 'Manager' || 'Admin') {
         return (
             <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
                 <Divider/>
@@ -92,60 +89,56 @@ export default function Sidebar() {
             </Box>
 
         )
-    }
-    else if (empType === 'employee') {
-        return (
+    } else if(sessionStorage.getItem("emp_privilege") === 'Employee'){
+        return(
+                <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
+        <Divider/>
+            <List >
 
+            <ListItemButton  selected={selectedIndex === 0}
+            onClick={(event) => handleListItemClick(event, 0)}
+            href={"/MainHub"}>
+                <ListItemIcon >
+                <Home/>
+                </ListItemIcon>
+            <ListItemText primary="Dashboard">
+            </ListItemText>
+        </ListItemButton>
 
-            <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
-                <Divider/>
-                <List >
+            <ListItemButton selected={selectedIndex === 1}
+                            onClick={(event) => handleListItemClick(event, 1)}
+                            href={"/RequestLeave"}>
+                <ListItemIcon>
+                    <People/>
+                </ListItemIcon>
+                <ListItemText primary="Request Leave" >
+                </ListItemText>
+            </ListItemButton>
 
-                    <ListItemButton  selected={selectedIndex === 0}
-                                     onClick={(event) => handleListItemClick(event, 0)}
-                                     href={"/MainHub"}>
-                        <ListItemIcon >
-                            <Home/>
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard">
-                        </ListItemText>
-                    </ListItemButton>
+            <ListItemButton  selected={selectedIndex === 2}
+                             onClick={(event) => handleListItemClick(event, 2)}
+                             href={"/settings"}>
+                <ListItemIcon>
+                    <Settings/>
+                </ListItemIcon>
+                <ListItemText primary="Settings">
+                </ListItemText>
+            </ListItemButton>
 
-                    <ListItemButton selected={selectedIndex === 1}
-                                    onClick={(event) => handleListItemClick(event, 1)}
-                                    href={"/RequestLeave"}>
-                        <ListItemIcon>
-                            <People/>
-                        </ListItemIcon>
-                        <ListItemText primary="Request Leave" >
-                        </ListItemText>
-                    </ListItemButton>
+            <ListItemButton  selected={selectedIndex === 3}
+                             onClick={(event) => handleListItemClick(event, 3)}
+                             href={"/ChangeAvailability"}>
+                <ListItemIcon>
+                    <Edit/>
+                </ListItemIcon>
+                <ListItemText primary="Change Availability">
+                </ListItemText>
+            </ListItemButton>
 
-                    <ListItemButton  selected={selectedIndex === 2}
-                                     onClick={(event) => handleListItemClick(event, 2)}
-                                     href={"/settings"}>
-                        <ListItemIcon>
-                            <Settings/>
-                        </ListItemIcon>
-                        <ListItemText primary="Settings">
-                        </ListItemText>
-                    </ListItemButton>
+        </List>
+            <Divider/>
 
-                    <ListItemButton  selected={selectedIndex === 3}
-                                     onClick={(event) => handleListItemClick(event, 3)}
-                                     href={"/ChangeAvailability"}>
-                        <ListItemIcon>
-                            <Settings/>
-                        </ListItemIcon>
-                        <ListItemText primary="Change Availability">
-                        </ListItemText>
-                    </ListItemButton>
-
-                </List>
-                <Divider/>
-
-            </Box>
-
+        </Box>
         )
     }
 

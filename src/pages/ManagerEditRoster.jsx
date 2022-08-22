@@ -98,76 +98,85 @@ export default function ManagerEditRoster(){
         return(
             <>
                 <Navbar/>
-                <Sidebar/>
+
                     <Container>
-
-                    <Box
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="center"
-                        alignItems="flex-start"
-                        sx ={{borderStyle:"solid", width:"1200px", overflowY: 'scroll', maxHeight: "800px"}}>
-
-                            <EditableRoster/>
-                    </Box>
-
                         <Box
-                            display="flex"
-                            flexDirection="row"
-                            justifyContent="center"
-                            alignItems="flex-start"
-                            sx ={{width:"1200px"}}
-                        >
-                        <Box
-                            p={1}
-                            m={1}
-                            order={1}
-                        >
-                            <Button variant="contained" onClick={handleOpen}>
-                                Add Employee
-                            </Button>
-                        </Box>
-                            <Box
-                                p={1}
-                                m={1}
-                                order={2}
-                            sx={{color:"white"}}>
-                                ---------------
+                            display={"flex"}
+                            flexdirection={"row"}>
+                            <Box>
+                                <Sidebar/>
                             </Box>
-                        <Box
-                            p={1}
-                            m={1}
-                            order={3}>
-                            <Button variant="contained" disabled>
-                                Remove Employee
-                            </Button>
-                        </Box>
-                        </Box>
 
-                        <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={modalStyle}>
-                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Employee List
-                                </Typography>
-                                <br />
-                                <div className="row">
-                                    {generateModal()}
-                                </div>
-                                <br />
+                            <Box>
                                 <Box
                                     display="flex"
+                                    flexDirection="row"
                                     justifyContent="center"
-                                    alignItems="center"
-                                    >
-                                    <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
+                                    alignItems="flex-start"
+                                    sx ={{borderStyle:"solid", width:"1155px", overflowY: 'scroll', maxHeight: "700px"}}>
+
+                                        <EditableRoster/>
                                 </Box>
-                            </Box>
-                        </Modal>
+
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        justifyContent="center"
+                                        alignItems="flex-start"
+                                        sx ={{width:"1200px"}}
+                                    >
+                                    <Box
+                                        p={1}
+                                        m={1}
+                                        order={1}
+                                    >
+                                        <Button variant="contained" onClick={handleOpen}>
+                                            Add Employee
+                                        </Button>
+                                    </Box>
+                                        <Box
+                                            p={1}
+                                            m={1}
+                                            order={2}
+                                        sx={{color:"white"}}>
+                                            ---------------
+                                        </Box>
+                                    <Box
+                                        p={1}
+                                        m={1}
+                                        order={3}>
+                                        <Button variant="contained" disabled>
+                                            Remove Employee
+                                        </Button>
+                                    </Box>
+                                    </Box>
+
+                                    <Modal
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={modalStyle}>
+                                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                Employee List
+                                            </Typography>
+                                            <br />
+                                            <div className="row">
+                                                {generateModal()}
+                                            </div>
+                                            <br />
+                                            <Box
+                                                display="flex"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                >
+                                                <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
+                                            </Box>
+                                        </Box>
+                                    </Modal>
+                                </Box>
+                        </Box>
                     </Container>
             </>
         )
