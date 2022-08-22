@@ -290,6 +290,21 @@ app.get("/getCompanyRoster/:company_id&:week_start", (req, res) => {
     });
 });
 
+app.get("/getRosteredEmployees/:company_id&:week_start", (req, res) => {
+    const company_id = req.params.company_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("SELECT DISTINCT Roster.emp_id, Employee.emp_fName, Employee.emp_lName FROM Roster \n\
+        LEFT OUTER JOIN Employee ON Roster.emp_id = Employee.emp_id \n\
+        WHERE Employee.company_id = ? AND Roster.rost_week_start = ? \n\
+        ORDER BY CAST(SUBSTR(Roster.emp_id, 4, LENGTH(Roster.emp_id)) AS UNSIGNED)",
+        [company_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getUnrosteredEmployees/:company_id&:week_start", (req, res) => {
     const company_id = req.params.company_id;
     const rost_week_start = req.params.week_start;
@@ -337,6 +352,18 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
 
     db.query("DELETE FROM Roster WHERE (emp_id = ? AND rost_date = ?)",
         [emp_id, rost_date],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
+    const emp_id = req.params.emp_id;
+    const rost_week_start = req.params.week_start;
+
+    db.query("DELETE FROM Roster WHERE (emp_id = ? AND rost_week_start = ?)",
+        [emp_id, rost_week_start],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
