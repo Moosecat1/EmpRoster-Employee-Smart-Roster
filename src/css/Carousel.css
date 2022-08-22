@@ -1,0 +1,33 @@
+.Carousel {
+    /* display: flex;
+    flex-direction: row;
+    height: 900px; */
+    
+    /* @media (max-width: 900px) {
+        .carousel {
+          width:auto;
+          height:auto;
+        }
+    } */
+  }
+
+  .hero-padding{
+    
+  }
+
+  .Carousel-color{
+    color: #3751FF;
+  }
+
+  .Carousel-bar{
+    background-color: #3751FF;
+  }
+
+  .Carousel-image{
+   
+    }
+  
+    .w-100 {
+        width: 80% !important;
+        height: 100vh;
+      }
