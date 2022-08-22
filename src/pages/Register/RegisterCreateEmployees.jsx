@@ -11,11 +11,7 @@ document.title = "Add Employees";
 export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([
         {
-            firstName: '', lastName: '', privilege: 'Employee', type: 'Casual',
-            SundayStart: 'N/A', SundayEnd: 'N/A', MondayStart: 'N/A', MondayEnd: 'N/A', 
-            TuesdayStart: 'N/A', TuesdayEnd: 'N/A', WednesdayStart: 'N/A', WednesdayEnd: 'N/A', 
-            ThursdayStart: 'N/A', ThursdayEnd: 'N/A', FridayStart: 'N/A', FridayEnd: 'N/A', 
-            SaturdayStart: 'N/A', SaturdayEnd: 'N/A'
+            firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'
         }
     ]);
 
@@ -46,12 +42,7 @@ export default function RegisterCreateEmployees(){
     }
 
     const handleAdd = () => {
-        setInputFields([...inputFields, {firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual',
-                                        SundayStart: 'N/A', SundayEnd: 'N/A', MondayStart: 'N/A', MondayEnd: 'N/A', 
-                                        TuesdayStart: 'N/A', TuesdayEnd: 'N/A', WednesdayStart: 'N/A', WednesdayEnd: 'N/A', 
-                                        ThursdayStart: 'N/A', ThursdayEnd: 'N/A', FridayStart: 'N/A', FridayEnd: 'N/A', 
-                                        SaturdayStart: 'N/A', SaturdayEnd: 'N/A'
-        }]);
+        setInputFields([...inputFields, {firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'}]);
     }
 
     const handleRemove = (index) => {
@@ -79,38 +70,6 @@ export default function RegisterCreateEmployees(){
                 {
                     empId = await addEmployee("password", firstName, lastName, email, null, type, privilege, companyId);
                 }
-
-                const SundayStart = employee.SundayStart;
-                const SundayEnd = employee.SundayEnd;
-                const MondayStart = employee.MondayStart;
-                const MondayEnd = employee.MondayEnd;
-                const TuesdayStart = employee.TuesdayStart;
-                const TuesdayEnd = employee.TuesdayEnd;
-                const WednesdayStart = employee.WednesdayStart;
-                const WednesdayEnd = employee.WednesdayEnd;
-                const ThursdayStart = employee.ThursdayStart;
-                const ThursdayEnd = employee.ThursdayEnd;
-                const FridayStart = employee.FridayStart;
-                const FridayEnd = employee.FridayEnd;
-                const SaturdayStart = employee.SaturdayStart;
-                const SaturdayEnd = employee.SaturdayEnd;
-
-                const starts = [SundayStart, MondayStart, TuesdayStart, WednesdayStart, ThursdayStart, FridayStart, SaturdayStart];
-                const ends = [SundayEnd, MondayEnd, TuesdayEnd, WednesdayEnd, ThursdayEnd, FridayEnd, SaturdayEnd];
-
-                for(let i = 0; i < 7; i++)
-                {
-                    if(!(starts[i] === 'N/A' || ends[i] === 'N/A'))
-                    {
-                        await addRegularAvailability(days[i], starts[i], ends[i], empId);
-                    }
-                }
-
-                const currentDate = new Date();
-                let weekStart = new Date();
-                weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
-
-                await createRoster(empId, weekStart);
             }
 
             document.location.href = "/";
@@ -159,28 +118,6 @@ export default function RegisterCreateEmployees(){
                                         <option>Part-time</option>
                                         <option>Full-time</option>
                                     </select>
-                                </div>
-                                <br />
-                                <div>
-                                    <span>Regular Working Hours (start - end):</span>
-                                    <br /><br />
-                                    {days.map(day =>
-                                        <>
-                                            <label>{day}</label>
-                                            &nbsp;&nbsp;
-                                            <select name={day + 'Start'} onChange={event => handleChangeInput(index, event)}>
-                                                {times.map(time => 
-                                                    <option>{time}</option>
-                                                )}
-                                            </select>
-                                            <select name={day + 'End'} onChange={event => handleChangeInput(index, event)}>
-                                                {times.map(time => 
-                                                    <option>{time}</option>
-                                                )}
-                                            </select>
-                                            <br />
-                                        </>
-                                    )}
                                 </div>
                                 <br />
                                 <div className='buttonDiv'>
