@@ -11,20 +11,17 @@ function Footer() {
 
     return (
         <Container fluid className="text-center footer-body">
-
             <Container className="footer">
-
-                <Row><p style={{ color: "grey" }}>Emproster</p></Row>
                 <Row>
                     <Col>
                     <h2>About</h2>
-                    <p>FAQ</p>
-                    <p>Products</p>
-                    <p>Licensing</p>
+                    <p className='footer-text'>FAQ</p>
+                    <p className='footer-text'>Products</p>
+                    <p className='footer-text'>Licensing</p>
                     </Col>
                     <Col>
                     <h2>Contact Us</h2>
-                    <p>Email</p>
+                    <p className='footer-text'>Email</p>
                     </Col>
                     <Col>
                     <h2>Social Media</h2>
@@ -34,7 +31,7 @@ function Footer() {
                     </Col>
                 </Row>
                 <Row><img src={Logo} alt="logo" width="194" height="55"></img></Row>
-                <Row className="text-center"> &copy;{new Date().getFullYear()} EmpRoster - All Rights Reserved </Row>
+                <Row className="text-center"><p>&copy;{new Date().getFullYear()} EmpRoster - All Rights Reserved </p></Row>
             </Container>
         </Container>
     );

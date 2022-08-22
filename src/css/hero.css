@@ -1,6 +1,6 @@
 .hero-body {
     display: flex;
     flex-direction: column;
-    margin-bottom: 60px;
-    padding-bottom: 120px;
+    margin-bottom: 100px;
+    padding-bottom: 100px;
   }
