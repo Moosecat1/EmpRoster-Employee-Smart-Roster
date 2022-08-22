@@ -27,7 +27,7 @@ export default function Sidebar() {
 
 
 
-    if (sessionStorage.getItem("emp_privilege")  === 'Manager' || 'Admin') {
+    if (sessionStorage.getItem("emp_privilege")  === 'Manager' || sessionStorage.getItem("emp_privilege")  === 'Admin') {
         return (
             <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
                 <Divider/>
