@@ -1,18 +1,41 @@
 import React from 'react';
-import emprlogo from '../resources/logo.png';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import '../css/footer.css'
+import Logo from '../resources/NavLogoSvg.svg';
+import twitter from '../resources/twitter.svg';
+import facebook from '../resources/facebook.svg';
+import instagram from '../resources/instagram.svg';
 function Footer() {
 
-
     return (
-        <Container fluid class="d-flex justify-content-center">
-            <Row class="text-center">
-                <Col>1 of 1</Col>
-                <Col>2 of 2</Col>
-                <Col>3 of 3</Col>
-            </Row>
+        <Container fluid className="text-center footer-body">
+
+            <Container className="footer">
+
+                <Row><p style={{ color: "grey" }}>Emproster</p></Row>
+                <Row>
+                    <Col>
+                    <h2>About</h2>
+                    <p>FAQ</p>
+                    <p>Products</p>
+                    <p>Licensing</p>
+                    </Col>
+                    <Col>
+                    <h2>Contact Us</h2>
+                    <p>Email</p>
+                    </Col>
+                    <Col>
+                    <h2>Social Media</h2>
+                    <img src={twitter} alt="logo" width="30" height="30"></img>
+                    <img src={facebook} alt="logo" width="30" height="30"></img>
+                    <img src={instagram} alt="logo" width="30" height="30"></img>
+                    </Col>
+                </Row>
+                <Row><img src={Logo} alt="logo" width="194" height="55"></img></Row>
+                <Row className="text-center"> &copy;{new Date().getFullYear()} EmpRoster - All Rights Reserved </Row>
+            </Container>
         </Container>
     );
 }

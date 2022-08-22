@@ -1,24 +1,28 @@
-import { Button, ButtonGroup, ButtonToolbar } from "react-bootstrap";
+import { Button, ButtonGroup} from "react-bootstrap";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import '../css/hero.css'
 export default function Hero() {
     
     return (
         //    <div className="container-fluid text-sm-center p-5 bg-white">
-        <Container fluid class="d-flex justify-content-center">
+        <Container fluid className="hero-body">
+            <Container>
             <Row>
-                <Col>
-                    <h1 className="display-2">Emproster</h1>
+                <Col >
+                    <h1 className="display-2 text-center">Emproster</h1>
                 </Col>
             </Row>
-            <Row class="d-flex justify-content-center">
-                <Col>
+
+            <Row>
+                <Col className="text-center">
                     <p className="lead">A sleek, easy to learn Employee management application</p>
                 </Col>
             </Row>
-            <Row class="d-flex justify-content-center">
-                <Col>
+            
+            <Row>
+                <Col className="text-center">
                 <ButtonGroup className="me-2" aria-label="First group">
                     <Button>About</Button>
                 </ButtonGroup>
@@ -27,6 +31,7 @@ export default function Hero() {
                 </ButtonGroup>
                 </Col>
             </Row>
+        </Container>
         </Container>
         // </div>
 
