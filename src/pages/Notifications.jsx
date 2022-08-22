@@ -22,6 +22,7 @@ sessionStorage.setItem('emp_privilege', 'Manager');
 class Notifications extends Component {
     state = {
         data : [],
+        dates : [],
         isLoaded : false
     }
 
@@ -37,14 +38,15 @@ class Notifications extends Component {
     }
 
     processNotifs(){
-        return this.state.data.map((notification) =>
+        return this.state.data.map((notification, index) =>
             <Col>
                 <Card>
                     <Card.Body>
                         <Card.Title>
                             {"Request Leave"}
                         </Card.Title>
-                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave due to " + notification.req_desc}
+                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
+                            this.state.dates[index].getFullYear() + " from " + notification.req_start + "-" + notification.req_end + " due to " + notification.req_desc}
                     </Card.Body>
                     <Button variant="primary" onClick={() =>this.acceptRequest(notification)}>Accept</Button>
                     <Button variant="primary" onClick={() =>this.denyRequest(notification)}>Deny</Button>
@@ -59,16 +61,18 @@ class Notifications extends Component {
         });
         console.log(res);
         let notiList = [];
-        let empList = [];
+        let dateList = [];
 
         for(let i = 0; i < res.data.length; i++)
         {
             notiList.push(res.data[i]);
+            let date = new Date(res.data[i].req_date);
+            dateList.push(date);
         }
 
         console.log(notiList);
 
-        this.setState({data: notiList, isLoaded: true});
+        this.setState({data: notiList, dates: dateList, isLoaded: true});
     }
 
     render(){
