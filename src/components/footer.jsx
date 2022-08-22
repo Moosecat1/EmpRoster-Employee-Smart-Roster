@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/footer.css';
 import emprlogo from '../resources/logo.png';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,7 +7,7 @@ function Footer() {
 
 
     return (
-        <Container fluid class="text-center">
+        <Container fluid class="d-flex justify-content-center">
             <Row class="text-center">
                 <Col>1 of 1</Col>
                 <Col>2 of 2</Col>

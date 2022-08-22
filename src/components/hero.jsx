@@ -8,17 +8,17 @@ export default function Hero() {
         //    <div className="container-fluid text-sm-center p-5 bg-white">
         <Container fluid class="d-flex justify-content-center">
             <Row>
-                <Col class="text-center">
+                <Col>
                     <h1 className="display-2">Emproster</h1>
                 </Col>
             </Row>
-            <Row>
-                <Col class="text-center">
+            <Row class="d-flex justify-content-center">
+                <Col>
                     <p className="lead">A sleek, easy to learn Employee management application</p>
                 </Col>
             </Row>
-            <Row>
-                <Col class="text-center">
+            <Row class="d-flex justify-content-center">
+                <Col>
                 <ButtonGroup className="me-2" aria-label="First group">
                     <Button>About</Button>
                 </ButtonGroup>
