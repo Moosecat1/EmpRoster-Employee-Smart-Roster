@@ -176,7 +176,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 app.get("/getEmployeesList/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT emp_id, emp_fName, emp_lName, emp_type FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
+    db.query("SELECT emp_id, emp_fName, emp_lName, emp_email, emp_type FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
@@ -346,6 +346,17 @@ app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.get("/getCompanyName/:company_id", (req, res) => {
+    const company_id = req.params.company_id;
+
+    db.query("SELECT company_name FROM company WHERE company_id = ?",
+        [company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_date = req.params.rost_date;
@@ -364,6 +375,18 @@ app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
 
     db.query("DELETE FROM Roster WHERE (emp_id = ? AND rost_week_start = ?)",
         [emp_id, rost_week_start],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.put("/updatePassword", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_password = req.body.emp_password;
+
+    db.query("UPDATE Employee SET emp_password = ? WHERE emp_id = ?",
+        [emp_password, emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

@@ -8,6 +8,7 @@ import RegisterCreateCompany from "./pages/Register/RegisterCreateCompany";
 import NoPage from "./pages/NoPage";
 import RegisterCreateEmployees from "./pages/Register/RegisterCreateEmployees";
 import RegisterCreateAdmin from "./pages/Register/RegisterCreateAdmin";
+import CompanyInfo from "./pages/Register/CompanyInfo";
 import ManagerEditRoster from "./pages/ManagerEditRoster";
 import Settings from "./pages/Settings";
 import MainHub from "./pages/MainHub";
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/RequestLeave" element={<RequestLeave/>} />
             <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
             <Route path="/test" element={<Test/>}/>
+            <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
         </Routes>
       </BrowserRouter>
   );

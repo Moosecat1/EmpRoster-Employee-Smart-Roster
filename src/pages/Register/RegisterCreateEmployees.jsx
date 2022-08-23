@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import Container from 'react-bootstrap/Container';
+import axios from 'axios';
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
-
-const { addEmployee, addRegularAvailability, createRoster } = require('../../modules/endpoint');
 
 document.title = "Add Employees";
 
@@ -64,15 +63,23 @@ export default function RegisterCreateEmployees(){
 
                 const companyId = sessionStorage.getItem('company_id');
 
-                let empId;
-
                 if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
                 {
-                    empId = await addEmployee("password", firstName, lastName, email, null, type, privilege, companyId);
+                    await axios.post("http://localhost:2420/addEmployee", {
+                        emp_password: null,
+                        emp_fName: firstName,
+                        emp_lName: lastName,
+                        emp_email: email,
+                        emp_type: type,
+                        emp_privilege: privilege,
+                        company_id: companyId
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 }
             }
 
-            document.location.href = "/";
+            document.location.href = "/CompanyInfo";
         })();
     }
 
