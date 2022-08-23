@@ -49,6 +49,25 @@ function randomChar()
     return characters[indx];
 }
 
+function randomCharNumberSymbol()
+{
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_';
+    const indx = random(0, characters.length);
+
+    return characters[indx];
+}
+
+function randomOneTimePassword()
+{
+    let otp = '';
+
+    for(let i = 0; i < 8; i++){
+        otp += randomCharNumberSymbol();
+    }
+
+    return otp;
+}
+
 function randomName()
 {
     const firstIndex = random(0, firstNames.length);
@@ -99,4 +118,5 @@ module.exports.randomDomain = randomDomain;
 module.exports.randomPhoneNumber = randomPhoneNumber;
 module.exports.randomType = randomType;
 module.exports.randomPrivilege = randomPrivilege;
+module.exports.randomOneTimePassword = randomOneTimePassword;
 

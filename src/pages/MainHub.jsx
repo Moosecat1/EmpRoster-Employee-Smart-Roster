@@ -86,8 +86,6 @@ export default function MainHub() {
             <br />
             </Box>
         </Container>
-
-
     </main>
 )
 }
