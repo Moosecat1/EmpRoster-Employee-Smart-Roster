@@ -306,10 +306,10 @@ const removeRosterDate = async (emp_id, rost_date) => {
     });
 }
 
-const getNotifications = async (req_privilege) => {
+const getNotifications = async (req_privilege, company_id) => {
     var res;
 
-    await axios.get("http://localhost:2420/getNotifications/" + req_privilege).then((response) => {
+    await axios.get("http://localhost:2420/getNotifications/" + req_privilege + "&" + company_id).then((response) => {
         res = response;
 
     }).catch((err) => {
@@ -319,12 +319,13 @@ const getNotifications = async (req_privilege) => {
     return {notifications: res.data};
 }
 
-const addNotification = async (req_date, req_start, req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege) => {
+const addNotification = async (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) => {
     await axios.post("http://localhost:2420/addNotification", {
         req_date: req_date,
         req_start: req_start,
         req_end: req_end,
         emp_id: emp_id,
+        company_id: company_id,
         emp_fName: emp_fName,
         emp_lName: emp_lName,
         req_desc: req_desc,
@@ -334,8 +335,8 @@ const addNotification = async (req_date, req_start, req_end, emp_id, emp_fName, 
     });
 }
 
-const removeNotification = async (emp_id, req_date) => {
-    await axios.delete("http://localhost:2420/removeNotification/" + emp_id + "&" + req_date).catch((err) => {
+const removeNotification = async (req_id) => {
+    await axios.delete("http://localhost:2420/removeNotification/" + req_id).catch((err) => {
         console.log(err);
     });
 }

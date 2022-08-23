@@ -298,11 +298,12 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
     });
 });
 
-app.get("/getNotifications/:req_privilege", (req, res) => {
+app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
     const req_privilege = req.params.req_privilege;
+    const company_id = req.params.company_id;
 
-    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ?",
-        [req_privilege],
+    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ? AND company_id = ?",
+        [req_privilege, company_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -314,26 +315,26 @@ app.post("/addNotification", (req, res) => {
     const req_start = req.body.req_start;
     const req_end = req.body.req_end;
     const emp_id = req.body.emp_id;
+    const company_id = req.body.company_id;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
     const req_desc = req.body.req_desc;
     const req_privilege = req.body.req_privilege;
 
-    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [req_date, req_start,req_end, emp_id, emp_fName, emp_lName, req_desc, req_privilege],
+    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [req_date, req_start,req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
         });
 });
 
-app.delete("/removeNotification/:emp_id&:req_date", (req, res) => {
-    const emp_id = req.params.emp_id;
-    const req_date = req.params.req_date;
+app.delete("/removeNotification/:req_id", (req, res) => {
+    const req_id = req.params.req_id;
 
-    db.query("DELETE FROM LeaveRequest WHERE (emp_id = ? AND req_date = ?)",
-        [emp_id, req_date],
+    db.query("DELETE FROM LeaveRequest WHERE req_id = ?",
+        [req_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

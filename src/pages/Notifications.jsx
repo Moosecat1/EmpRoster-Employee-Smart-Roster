@@ -28,12 +28,12 @@ class Notifications extends Component {
 
     async acceptRequest(notification) {
         await addAvailability(notification.req_date.split('T')[0], notification.req_start, notification.req_end, "Unavailable", notification.emp_id);
-        await removeNotification(notification.emp_id, notification.req_date.split('T')[0]);
+        await removeNotification(notification.req_id);
         document.location.reload();
     }
 
     async denyRequest(notification) {
-        await removeNotification(notification.emp_id, notification.req_date.split('T')[0]);
+        await removeNotification(notification.req_id);
         document.location.reload();
     }
 
@@ -56,7 +56,7 @@ class Notifications extends Component {
     }
 
     async componentDidMount(){
-        const res = await axios.get("http://localhost:2420/getNotifications/" + sessionStorage.getItem("emp_privilege")).catch((err) => {
+        const res = await axios.get("http://localhost:2420/getNotifications/" + sessionStorage.getItem("emp_privilege") + "&" + sessionStorage.getItem("company_id")).catch((err) => {
             console.log(err);
         });
         console.log(res);
