@@ -1,5 +1,6 @@
 USE SMARTROSTER;
 
+DROP TABLE LeaveRequest;
 DROP TABLE Roster;
 DROP TABLE Availability;
 DROP TABLE RegularAvailability;

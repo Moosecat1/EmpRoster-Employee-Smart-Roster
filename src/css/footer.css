@@ -10,7 +10,7 @@
 .footer-body {
     display: flex;
     flex-direction: column;
-    min-height: 50vh;
+    min-height: 30vh;
     background-color: #F7F8FC;
   }
 
