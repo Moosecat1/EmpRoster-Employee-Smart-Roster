@@ -3,6 +3,7 @@ import Navbar from "../components/navbar";
 import "../css/custom.css";
 import Form from "react-bootstrap/Form";
 
+
 const { verifyEmployee } = require('../modules/endpoint');
 
 document.title = "Login";
