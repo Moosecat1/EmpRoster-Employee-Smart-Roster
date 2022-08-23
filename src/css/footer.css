@@ -1,4 +1,30 @@
+
+
+
 .footer {
+    background-color: #F7F8FC;
+    flex: 0 0 50px;
+    margin-top: auto;
+  }
+
+.footer-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 30vh;
+    background-color: #F7F8FC;
+  }
+
+  .footer-text{
+  margin-bottom: 10px;
+  font-size: 18px;
+
+  }
+
+  .footer-text:hover{
+    color: #3751FF;
+      transition: 200ms ease-in;
+  }
+/* .footer {
     display: flex;
     flex-direction: column;
     font-weight: bold;
@@ -116,4 +142,4 @@
     width: 200px;
     height: 35px;
 
-}
+} */

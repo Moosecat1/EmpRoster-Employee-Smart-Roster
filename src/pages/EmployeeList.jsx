@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {Container} from "@mui/material";
+import {Container,Box} from "@mui/material";
 import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -65,11 +65,15 @@ class EmployeeList extends Component {
         if(isLoaded){
             return(
                 <div className='flex'>
-                    <Navbar/> <Sidebar/>
+                    <Navbar/>
                     <Container>
-                        <Row xs={1} md={2} className="g-4">
+                        <Box display={"flex"}
+                             flexdirection={"row"}>
+                        <Sidebar/>
+                        <Box sx={{width:"1000px"}} >
                             {this.processEmps()}
-                        </Row>
+                        </Box>
+                        </Box>
                     </Container>
                 </div>
             )

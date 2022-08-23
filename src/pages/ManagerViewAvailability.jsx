@@ -62,28 +62,39 @@ export default function ViewAvailability(){
         return(
             <main>
                 <Navbar/>
-                <Sidebar/>
+
     
                 <Container >
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="flex-start"
-                            alignItems="flex-start"
-                            sx ={{ height:"600px", width:"1200px"}}
-                        >
-                            <Box>
-                                <Grid item xs={12} display='flex'>
-                                <Avatar {...stringAvatar(empName)} ></Avatar>
-                                 <h3>{empName}</h3>
-                                </Grid>
-                            </Box>
-                            <Box>
-                                <br />
-                                <Roster/> {/*this will be the availability roster  */}
-                            </Box>
-    
+
+                    <Box
+                        display={"flex"}
+                            direction={"row"}>
+
+                        <Box>
+                            <Sidebar/>
                         </Box>
+                       <Box>
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                sx ={{ height:"600px", width:"1200px"}}
+                            >
+                                <Box>
+                                    <Grid item xs={12} display='flex'>
+                                    <Avatar {...stringAvatar(empName)} ></Avatar>
+                                     <h3>{empName}</h3>
+                                    </Grid>
+                                </Box>
+                                <Box>
+                                    <br />
+                                    <Roster/> {/*this will be the availability roster  */}
+                                </Box>
+
+                            </Box>
+                        </Box>
+                    </Box>
                 </Container>
             </main>
         )

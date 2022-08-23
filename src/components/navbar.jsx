@@ -2,17 +2,17 @@ import '../css/Navbar.css'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Logo from '../resources/lo.png';
-import {Box} from "@mui/material";
+import Logo from '../resources/NavLogoSvg.svg';
+
 
 
 function Navi() {
 
 if(sessionStorage.getItem("emp_id")!= null) {
     return(
-        <Navbar collapseOnSelect expand="lg" variant="light">
-            <Container>
-                <Navbar.Brand href="/">
+        <Navbar collapseOnSelect expand="lg" className="navbar-light" >
+            <Container className="navbar-light">
+                <Navbar.Brand href="/mainhub">
                     <img
                         src={Logo}
                         width="194"
@@ -39,8 +39,8 @@ if(sessionStorage.getItem("emp_id")!= null) {
 }
 else{
         return (
-            <Navbar collapseOnSelect expand="lg" variant="light">
-                <Container>
+            <Navbar collapseOnSelect expand="lg" className="navbar-light">
+                <Container className="navbar-light">
                     <Navbar.Brand href="/">
                         <img
                             src={Logo}

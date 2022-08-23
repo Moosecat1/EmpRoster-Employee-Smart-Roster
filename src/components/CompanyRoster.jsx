@@ -46,7 +46,6 @@ class CompanyRoster extends Component {
         const employee = employeeList[empIndex];
         const empRoster = employeeRoster[empIndex];
 
-
         //const empWorking = empRoster.some((rost) => rost.rost_date === weekDates[dayIndex]);
 
         let empWorking = false;
@@ -56,9 +55,11 @@ class CompanyRoster extends Component {
         {
             if(empRoster[i].rost_date === weekDates[dayIndex])
             {
-                empWorking = true;
-                empRosterIndex = i;
-                break;
+                if(empRoster[i].rost_start !== null && empRoster[i].rost_end !== null){
+                    empWorking = true;
+                    empRosterIndex = i;
+                    break;
+                }
             }
         }
         

@@ -141,8 +141,13 @@ class Roster extends Component {
 
             if(empRostDates.includes(currentDate))
             {
-                const startTime = res.data[counter].rost_start.substring(0, 5);
-                const endTime = res.data[counter].rost_end.substring(0, 5);
+                let startTime = res.data[counter].rost_start;
+                let endTime = res.data[counter].rost_end;
+
+                if(!(startTime === null || endTime === null)){
+                    startTime = startTime.substring(0, 5);
+                    endTime = endTime.substring(0, 5);
+                }
 
                 counter++;
 
@@ -164,8 +169,10 @@ class Roster extends Component {
 
         if(res1.data.length !== 0 && res2.data.length !== 0)
         {
-            earliestStart = res1.data[0].rost_start.substring(0, 5);
-            lastestFinish = res2.data[0].rost_end.substring(0, 5);
+            if(!(res1.data[0].rost_start === null || res2.data[0].rost_end === null)){
+                earliestStart = res1.data[0].rost_start.substring(0, 5);
+                lastestFinish = res2.data[0].rost_end.substring(0, 5);
+            }
         }
 
         this.setState({data: empRostTimes, isLoaded: true});

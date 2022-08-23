@@ -210,6 +210,19 @@ const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_i
     });
 }
 
+const addWeeklyRoster = async (rost_week_start, emp_id) => {
+    const currentDate = new Date();
+
+    let dayLooper = new Date();
+    dayLooper.setDate(currentDate.getDate() - (currentDate.getDay()));
+
+    for(let i = 0; i < 7; i++){
+        const dateString = dayLooper.toISOString().substring(0, 10);
+        await addRoster(dateString, null, null, rost_week_start, emp_id);
+        dayLooper.setDate(dayLooper.getDate() + 1);
+    }
+}
+
 const addCompanyEvent = async (event_date, event_start, event_end, event_name, company_id) => {
     await axios.post("http://localhost:2420/addCompanyEvent", {
         event_date: event_date,
@@ -359,6 +372,7 @@ module.exports.addCompanyEvent = addCompanyEvent;
 module.exports.addRegularAvailability = addRegularAvailability;
 module.exports.addAvailability = addAvailability;
 module.exports.getAvailability = getAvailability;
+module.exports.addWeeklyRoster = addWeeklyRoster;
 module.exports.getAvailabilities = getAvailabilities;
 module.exports.getCompanyEvents = getCompanyEvents;
 module.exports.createRoster = createRoster;
