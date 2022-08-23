@@ -25,7 +25,7 @@ function CarouselComp() {
           <Carousel.Item className='Carousel-bar'>
             <img
             
-              className="d-block w-100 Carousel-image"
+              className="d-block width-100 Carousel-image"
               src={calculator}
               alt="Second slide"
             />
@@ -37,7 +37,7 @@ function CarouselComp() {
           </Carousel.Item>
           <Carousel.Item>
             <img
-              className="d-block w-100 Carousel-image"
+              className="d-block width-100 Carousel-image"
               src={pencils}
               alt="Third slide"
             />
