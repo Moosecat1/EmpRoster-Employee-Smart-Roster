@@ -164,7 +164,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     const emp_id = req.params.emp_id;
     const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password, emp_fName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
+    db.query("SELECT emp_id, emp_password, emp_fName, emp_lName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
         (err, result) => {
             if(err){console.log(err);}
@@ -358,6 +358,49 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
     });
 });
 
+app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
+    const req_privilege = req.params.req_privilege;
+    const company_id = req.params.company_id;
+
+    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ? AND company_id = ?",
+        [req_privilege, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.post("/addNotification", (req, res) => {
+    const req_date = req.body.req_date;
+    const req_start = req.body.req_start;
+    const req_end = req.body.req_end;
+    const emp_id = req.body.emp_id;
+    const company_id = req.body.company_id;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const req_desc = req.body.req_desc;
+    const req_privilege = req.body.req_privilege;
+
+    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [req_date, req_start,req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.delete("/removeNotification/:req_id", (req, res) => {
+    const req_id = req.params.req_id;
+
+    db.query("DELETE FROM LeaveRequest WHERE req_id = ?",
+        [req_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
 app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
     const emp_id = req.params.emp_id;
     const rost_week_start = req.params.week_start;
@@ -369,3 +412,4 @@ app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
             else{res.send(result);}
     });
 });
+

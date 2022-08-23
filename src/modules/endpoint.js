@@ -26,6 +26,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
 
     let empId;
     let empfName;
+    let emplName;
     let empPrivilege;
     let companyId;
 
@@ -34,11 +35,12 @@ const verifyEmployee = async (emp_id, emp_password) => {
     {
         empId = res.data[0].emp_id;
         empfName = res.data[0].emp_fName;
+        emplName = res.data[0].emp_lName;
         empPrivilege = res.data[0].emp_privilege;
         companyId = res.data[0].company_id;
     }
 
-    return {empExists: empExists, empId: empId, empfName: empfName, empPrivilege: empPrivilege, companyId: companyId};
+    return {empExists: empExists, empId: empId, empfName: empfName, emplName: emplName, empPrivilege: empPrivilege, companyId: companyId};
 }
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {
@@ -317,6 +319,51 @@ const removeRosterDate = async (emp_id, rost_date) => {
     });
 }
 
+const getNotifications = async (req_privilege, company_id) => {
+    var res;
+
+    await axios.get("http://localhost:2420/getNotifications/" + req_privilege + "&" + company_id).then((response) => {
+        res = response;
+
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    return {notifications: res.data};
+}
+
+const addNotification = async (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) => {
+    await axios.post("http://localhost:2420/addNotification", {
+        req_date: req_date,
+        req_start: req_start,
+        req_end: req_end,
+        emp_id: emp_id,
+        company_id: company_id,
+        emp_fName: emp_fName,
+        emp_lName: emp_lName,
+        req_desc: req_desc,
+        req_privilege: req_privilege
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const removeNotification = async (req_id) => {
+    await axios.delete("http://localhost:2420/removeNotification/" + req_id).catch((err) => {
+        console.log(err);
+    });
+}
+
+const getEmployeeName = async (emp_id) => {
+    var res;
+    await axios.get("http://localhost:2420/getEmployeeName/" + emp_id).then((response) => {
+        res = response;
+    }).catch((err) => {
+        console.log(err);
+    });
+    return {emp_fName: res.data.emp_fName, emp_lName: res.data.emp_lName};
+}
+
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
 module.exports.addEmployee = addEmployee;
@@ -331,3 +378,7 @@ module.exports.getCompanyEvents = getCompanyEvents;
 module.exports.createRoster = createRoster;
 module.exports.getRoster = getRoster;
 module.exports.removeRosterDate = removeRosterDate;
+module.exports.getNotifications = getNotifications;
+module.exports.addNotification = addNotification;
+module.exports.removeNotification = removeNotification;
+module.exports.getEmployeeName = getEmployeeName;

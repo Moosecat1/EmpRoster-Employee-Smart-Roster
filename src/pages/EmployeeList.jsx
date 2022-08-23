@@ -56,9 +56,6 @@ class EmployeeList extends Component {
             empList.push(res.data[i]);
         }
 
-
-        console.log(empList);
-
         this.setState({data: empList, isLoaded: true});
     }
 
