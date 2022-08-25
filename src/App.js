@@ -18,6 +18,7 @@ import RequestLeave from './pages/RequestLeave';
 import ManagerViewEmployee from './pages/ManagerViewEmployee';
 import ViewCompanyRoster from "./pages/ViewCompanyRoster";
 import Notifications from "./pages/Notifications";
+import EditCompany from "./pages/EditCompany";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/Notifications" element={<Notifications/>}/>
             <Route path="/test" element={<Test/>}/>
             <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+            <Route path="/EditCompany" element={<EditCompany/>}/>
         </Routes>
       </BrowserRouter>
   );
