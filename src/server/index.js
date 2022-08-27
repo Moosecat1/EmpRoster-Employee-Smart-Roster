@@ -424,6 +424,22 @@ app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.put("/updateEmployee", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_email = req.body.emp_email;
+    const emp_type = req.body.emp_type;
+    const emp_privilege = req.body.emp_privilege;
+
+    db.query("UPDATE Employee SET emp_fName = ?, emp_lName = ?, emp_email = ?, emp_type = ?, emp_privilege = ? \n\
+        WHERE emp_id = ?",
+        [emp_fName, emp_lName, emp_email, emp_type, emp_privilege, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
 
 app.put("/updatePassword", (req, res) => {
     const emp_id = req.body.emp_id;
