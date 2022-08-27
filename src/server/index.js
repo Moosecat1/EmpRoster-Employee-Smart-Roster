@@ -176,7 +176,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 app.get("/getEmployeesList/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT emp_id, emp_fName, emp_lName, emp_email, emp_type FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
+    db.query("SELECT emp_id, emp_fName, emp_lName, emp_email, emp_type, emp_privilege FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
@@ -349,7 +349,7 @@ app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
 app.get("/getCompanyName/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT company_name FROM company WHERE company_id = ?",
+    db.query("SELECT company_name FROM Company WHERE company_id = ?",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
@@ -424,6 +424,22 @@ app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.put("/updateEmployee", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_email = req.body.emp_email;
+    const emp_type = req.body.emp_type;
+    const emp_privilege = req.body.emp_privilege;
+
+    db.query("UPDATE Employee SET emp_fName = ?, emp_lName = ?, emp_email = ?, emp_type = ?, emp_privilege = ? \n\
+        WHERE emp_id = ?",
+        [emp_fName, emp_lName, emp_email, emp_type, emp_privilege, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
 
 app.put("/updatePassword", (req, res) => {
     const emp_id = req.body.emp_id;
