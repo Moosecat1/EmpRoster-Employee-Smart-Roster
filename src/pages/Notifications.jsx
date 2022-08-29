@@ -28,28 +28,49 @@ class Notifications extends Component {
 
     async acceptRequest(notification) {
         await addAvailability(notification.req_date.split('T')[0], notification.req_start, notification.req_end, "Unavailable", notification.emp_id);
+        await addNotification(notification.req_date.split('T')[0], notification.start_time, notification.end_time, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Accepted", "Employee", "leaveRequestAccept");
         await removeNotification(notification.req_id);
         document.location.reload();
     }
 
     async denyRequest(notification) {
+        await addNotification(notification.req_date.split('T')[0], notification.start_time, notification.end_time, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Denied", "Employee", "leaveRequestDeny");
         await removeNotification(notification.req_id);
+
+
         document.location.reload();
     }
 
+    notifType(notification, index) {
+        if (notification.noti_type == "leaveRequest") {
+            return(
+                <Card.Body>
+                    <Card.Title>
+                        {"Leave Request"}
+                    </Card.Title>
+                    {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
+                    this.state.dates[index].getFullYear() + " from " + notification.req_start + "-" + notification.req_end + " due to " + notification.req_desc}
+                </Card.Body>
+                <Button variant="primary" onClick={() =>this.acceptRequest(notification)}>Accept</Button>
+                <Button variant="primary" onClick={() =>this.denyRequest(notification)}>Deny</Button>
+            )
+        }
+        else if (notification.noti_type == "leaveRequestDeny") {
+            <Card.Body>
+                <Card.Title>
+                    {"Leave Request Denied"}
+                </Card.Title>
+                {"Your leave request for the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
+                    this.state.dates[index].getFullYear() + ". Please contact a manger if you want to know more."}
+            </Card.Body>
+            <Button variant="primary" onClick={() =>this.removeNotification(notification.noti_id)}>OK</Button>
+        }
+    }
     processNotifs(){
         return this.state.data.map((notification, index) =>
             <Col>
                 <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            {"Request Leave"}
-                        </Card.Title>
-                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
-                            this.state.dates[index].getFullYear() + " from " + notification.req_start + "-" + notification.req_end + " due to " + notification.req_desc}
-                    </Card.Body>
-                    <Button variant="primary" onClick={() =>this.acceptRequest(notification)}>Accept</Button>
-                    <Button variant="primary" onClick={() =>this.denyRequest(notification)}>Deny</Button>
+                    {notifType(notification, index)}
                 </Card>
             </Col>
         );
