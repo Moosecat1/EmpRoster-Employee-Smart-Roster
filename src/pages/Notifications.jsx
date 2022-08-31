@@ -61,7 +61,17 @@ class Notifications extends Component {
                     {"Leave Request Denied"}
                 </Card.Title>
                 {"Your leave request for the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
-                    this.state.dates[index].getFullYear() + ". Please contact a manger if you want to know more."}
+                    this.state.dates[index].getFullYear() + ". Has been denied. Please contact a manger if you want to know more."}
+            </Card.Body>
+            <Button variant="primary" onClick={() =>this.removeNotification(notification.noti_id)}>OK</Button>
+        }
+        else if (notification.noti_type == "leaveRequestAccept") {
+            <Card.Body>
+                <Card.Title>
+                    {"Leave Request Accepted"}
+                </Card.Title>
+                {"Your leave request for the " + this.state.dates[index].getDate() + "/" +  this.state.dates[index].getMonth() + "/" +
+                    this.state.dates[index].getFullYear() + ". Has been accepted."}
             </Card.Body>
             <Button variant="primary" onClick={() =>this.removeNotification(notification.noti_id)}>OK</Button>
         }
