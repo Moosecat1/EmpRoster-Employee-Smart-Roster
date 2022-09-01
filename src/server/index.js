@@ -405,8 +405,8 @@ app.post("/addNotification", (req, res) => {
 app.delete("/removeNotification/:noti_id", (req, res) => {
     const noti_id = req.params.noti_id;
 
-    db.query("DELETE FROM LeaveRequest WHERE req_id = ?",
-        [req_id],
+    db.query("DELETE FROM Notifications WHERE noti_id = ?",
+        [noti_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
