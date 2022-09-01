@@ -369,12 +369,12 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
     });
 });
 
-app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
-    const req_privilege = req.params.req_privilege;
+app.get("/getNotifications/:noti_privilege&:company_id", (req, res) => {
+    const noti_privilege = req.params.noti_privilege;
     const company_id = req.params.company_id;
 
-    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ? AND company_id = ?",
-        [req_privilege, company_id],
+    db.query("SELECT * FROM Notifications WHERE noti_privilege = ? AND company_id = ?",
+        [noti_privilege, company_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -382,30 +382,31 @@ app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
 });
 
 app.post("/addNotification", (req, res) => {
-    const req_date = req.body.req_date;
-    const req_start = req.body.req_start;
-    const req_end = req.body.req_end;
+    const noti_date = req.body.noti_date;
+    const noti_start = req.body.noti_start;
+    const noti_end = req.body.noti_end;
     const emp_id = req.body.emp_id;
     const company_id = req.body.company_id;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
-    const req_desc = req.body.req_desc;
-    const req_privilege = req.body.req_privilege;
+    const noti_desc = req.body.noti_desc;
+    const noti_privilege = req.body.noti_privilege;
+    const noti_type = req.body.noti_type;
 
-    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [req_date, req_start,req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege],
+    db.query("INSERT INTO Notifications (noti_date, noti_start, noti_end, emp_id, company_id, emp_fName, emp_lName, noti_desc, noti_privilege, noti_type) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [noti_date, noti_start, noti_end, emp_id, company_id, emp_fName, emp_lName, noti_desc, noti_privilege, noti_type],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
         });
 });
 
-app.delete("/removeNotification/:req_id", (req, res) => {
-    const req_id = req.params.req_id;
+app.delete("/removeNotification/:noti_id", (req, res) => {
+    const noti_id = req.params.noti_id;
 
-    db.query("DELETE FROM LeaveRequest WHERE req_id = ?",
-        [req_id],
+    db.query("DELETE FROM Notifications WHERE noti_id = ?",
+        [noti_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}

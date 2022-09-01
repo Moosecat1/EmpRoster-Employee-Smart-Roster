@@ -319,10 +319,10 @@ const removeRosterDate = async (emp_id, rost_date) => {
     });
 }
 
-const getNotifications = async (req_privilege, company_id) => {
+const getNotifications = async (noti_privilege, company_id) => {
     var res;
 
-    await axios.get("http://localhost:2420/getNotifications/" + req_privilege + "&" + company_id).then((response) => {
+    await axios.get("http://localhost:2420/getNotifications/" + noti_privilege + "&" + company_id).then((response) => {
         res = response;
 
     }).catch((err) => {
@@ -332,24 +332,25 @@ const getNotifications = async (req_privilege, company_id) => {
     return {notifications: res.data};
 }
 
-const addNotification = async (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) => {
+const addNotification = async (noti_date, noti_start, noti_end, emp_id, company_id, emp_fName, emp_lName, noti_desc, noti_privilege, noti_type) => {
     await axios.post("http://localhost:2420/addNotification", {
-        req_date: req_date,
-        req_start: req_start,
-        req_end: req_end,
+        noti_date: noti_date,
+        noti_start: noti_start,
+        noti_end: noti_end,
         emp_id: emp_id,
         company_id: company_id,
         emp_fName: emp_fName,
         emp_lName: emp_lName,
-        req_desc: req_desc,
-        req_privilege: req_privilege
+        noti_desc: noti_desc,
+        noti_privilege: noti_privilege,
+        noti_type: noti_type
     }).catch((err) => {
         console.log(err);
     });
 }
 
-const removeNotification = async (req_id) => {
-    await axios.delete("http://localhost:2420/removeNotification/" + req_id).catch((err) => {
+const removeNotification = async (noti_id) => {
+    await axios.delete("http://localhost:2420/removeNotification/" + noti_id).catch((err) => {
         console.log(err);
     });
 }
