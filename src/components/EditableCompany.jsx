@@ -29,7 +29,7 @@ const modalStyle = {
     p: 4,
 };
 
-export default function EditableCompany(){
+export default function EditableCompany({setEmployeeListParent}){
     const [employeeList, setEmployeeList] = useState([]);
     const [currentEmployee, setCurrentEmployee] = useState(-1);
     const [currentEmployeeData, setCurrentEmployeeData] = useState({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''});
@@ -44,9 +44,11 @@ export default function EditableCompany(){
         async function initialiseCompanyData(){
             const res = await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem('company_id')).catch((err) => {console.log(err);});
 
-            let employeeList = res.data;
+            const employeeList = res.data;
 
             setEmployeeList(employeeList);
+            setEmployeeListParent(employeeList);
+
             setIsLoaded(true);
         }
 
@@ -119,7 +121,9 @@ export default function EditableCompany(){
                     <input type='text' disabled={false} placeholder={employeeView.emp_fName} onChange={(event) => {handleInputChange('emp_fName', event.target.value)}}></input>
                     <label>Employee Last Name</label>
                     <input type='text' disabled={false} placeholder={employeeView.emp_lName} onChange={(event) => {handleInputChange('emp_lName', event.target.value)}}></input>
-                    <label>Employee Email</label>
+                    <br />
+                    <label>Employee Email:</label>
+                    <br />
                     <input type='text' disabled={false} placeholder={employeeView.emp_email} onChange={(event) => {handleInputChange('emp_email', event.target.value)}}></input>
                     <br /><br />
                     <label>Employee Type:</label>
