@@ -480,3 +480,14 @@ app.put("/updateRegularAvailability", (req, res) => {
             else{res.send(result);}
     });
 });
+
+app.delete("/removeEmployee/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("DELETE FROM Employee WHERE emp_id = ?",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
