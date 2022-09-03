@@ -21,6 +21,22 @@ import Notifications from "./pages/Notifications";
 import EditCompany from "./pages/EditCompany";
 
 export default function App() {
+  console.log(sessionStorage.getItem('emp_privilege'));
+
+  if(sessionStorage.getItem('emp_privilege') === null){
+    return(
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
+          <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
+          <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
+          <Route path="/*" element={<NoPage/>}/>
+        </Routes>
+      </BrowserRouter>
+    );
+  }
   return (
       <BrowserRouter>
         <Routes>
