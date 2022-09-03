@@ -90,6 +90,14 @@ const addRegularAvailability = async (day_name, reg_start, reg_end, emp_id) => {
     });
 }
 
+const addNullRegularAvailabilities = async (emp_id) => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    for(let i = 0; i < 7; i++){
+        await addRegularAvailability(days[i], null, null, emp_id);
+    }
+}
+
 const getRegularAvailability = async (emp_id, day_name) => {
     var res;
     var hasRegularAvailability= false;
@@ -370,6 +378,7 @@ module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
 module.exports.addCompanyEvent = addCompanyEvent;
 module.exports.addRegularAvailability = addRegularAvailability;
+module.exports.addNullRegularAvailabilities = addNullRegularAvailabilities;
 module.exports.addAvailability = addAvailability;
 module.exports.getAvailability = getAvailability;
 module.exports.addWeeklyRoster = addWeeklyRoster;

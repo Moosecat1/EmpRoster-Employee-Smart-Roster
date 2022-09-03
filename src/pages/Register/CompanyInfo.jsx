@@ -29,7 +29,7 @@ export default function CompanyInfo(){
 
             let employeeList = [];
 
-            for(let i = 0; i < res.data.length; i++){
+            for(let i = 1; i < res.data.length; i++){
                 let employee = res.data[i];
                 employee.emp_otp = randomOneTimePassword();
                 const hash = sha256(employee.emp_otp);

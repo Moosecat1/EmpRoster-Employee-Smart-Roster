@@ -44,8 +44,6 @@ const times = ["N/A", "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:
             "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
         ];
 
-let joe = false;
-
 class EditableRoster extends Component {
     state = {
         weekStart : new Date(),
