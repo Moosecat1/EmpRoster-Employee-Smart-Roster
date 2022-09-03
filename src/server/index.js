@@ -346,6 +346,18 @@ app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.get("/getRegularAvailabilities/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT * FROM RegularAvailability WHERE emp_id = ? \n\
+        ORDER BY FIELD(day_name, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getCompanyName/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
@@ -448,6 +460,21 @@ app.put("/updatePassword", (req, res) => {
 
     db.query("UPDATE Employee SET emp_password = ? WHERE emp_id = ?",
         [emp_password, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.put("/updateRegularAvailability", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const day_name = req.body.day_name;
+    const reg_start = req.body.reg_start;
+    const reg_end = req.body.reg_end;
+
+    db.query("UPDATE RegularAvailability SET reg_start = ?, reg_end = ? \n\
+        WHERE emp_id = ? AND day_name = ?",
+        [reg_start, reg_end, emp_id, day_name],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
