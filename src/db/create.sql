@@ -37,7 +37,7 @@ CREATE TABLE RegularAvailability(
     reg_start TIME,
     reg_end TIME,
     emp_id VARCHAR(50) NOT NULL,
-    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
     CONSTRAINT days CHECK(day_name="Sunday" OR day_name="Monday" OR day_name="Tuesday" OR day_name="Wednesday" OR day_name="Thursday" OR day_name="Friday" OR day_name="Saturday")
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE Availability(
     avail_end TIME,
     avail_type VARCHAR(225),
     emp_id VARCHAR(50) NOT NULL,
-    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
     CONSTRAINT avail_types CHECK(avail_type="Unavailable" OR avail_type="Available")
 );
 
@@ -57,22 +57,23 @@ CREATE TABLE Roster(
     rost_end TIME,
     rost_week_start DATE,
     emp_id VARCHAR(50) NOT NULL,
-    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id)
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE
 );
 
-CREATE TABLE LeaveRequest(
-    req_id INT NOT NULL AUTO_INCREMENT,
-    req_date DATE,
-    req_start TIME,
-    req_end TIME,
+CREATE TABLE Notifications(
+    noti_id INT NOT NULL AUTO_INCREMENT,
+    noti_date DATE,
+    noti_start TIME,
+    noti_end TIME,
     emp_id VARCHAR(50) NOT NULL,
     company_id VARCHAR(50) NOT NULL,
     emp_fName VARCHAR(255),
     emp_lName VARCHAR(255),
-    req_desc VARCHAR(2000),
-    req_privilege VARCHAR(50),
-    PRIMARY KEY (req_id),
-    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id),
+    noti_desc VARCHAR(2000),
+    noti_privilege VARCHAR(50),
+    noti_type VARCHAR(255),
+    PRIMARY KEY (noti_id),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
     FOREIGN KEY(company_id) REFERENCES Company(company_id),
-    CONSTRAINT reqPrivileges CHECK(req_privilege="Employee" OR req_privilege="Manager" OR req_privilege="Admin")
+    CONSTRAINT notiPrivileges CHECK(noti_privilege="Employee" OR noti_privilege="Manager" OR noti_privilege="Admin")
 );

@@ -176,7 +176,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
 app.get("/getEmployeesList/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT emp_id, emp_fName, emp_lName, emp_email, emp_type FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
+    db.query("SELECT emp_id, emp_fName, emp_lName, emp_email, emp_type, emp_privilege FROM Employee WHERE (company_id = ?) ORDER BY CAST(SUBSTR(emp_id, 4, LENGTH(emp_id)) AS UNSIGNED)",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
@@ -346,10 +346,22 @@ app.get("/getLatestRoster/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.get("/getRegularAvailabilities/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT * FROM RegularAvailability WHERE emp_id = ? \n\
+        ORDER BY FIELD(day_name, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')",
+        [emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getCompanyName/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT company_name FROM company WHERE company_id = ?",
+    db.query("SELECT company_name FROM Company WHERE company_id = ?",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
@@ -369,12 +381,12 @@ app.delete("/removeRosterDate/:emp_id&:rost_date", (req, res) => {
     });
 });
 
-app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
-    const req_privilege = req.params.req_privilege;
+app.get("/getNotifications/:noti_privilege&:company_id", (req, res) => {
+    const noti_privilege = req.params.noti_privilege;
     const company_id = req.params.company_id;
 
-    db.query("SELECT * FROM LeaveRequest WHERE req_privilege = ? AND company_id = ?",
-        [req_privilege, company_id],
+    db.query("SELECT * FROM Notifications WHERE noti_privilege = ? AND company_id = ?",
+        [noti_privilege, company_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -382,30 +394,31 @@ app.get("/getNotifications/:req_privilege&:company_id", (req, res) => {
 });
 
 app.post("/addNotification", (req, res) => {
-    const req_date = req.body.req_date;
-    const req_start = req.body.req_start;
-    const req_end = req.body.req_end;
+    const noti_date = req.body.noti_date;
+    const noti_start = req.body.noti_start;
+    const noti_end = req.body.noti_end;
     const emp_id = req.body.emp_id;
     const company_id = req.body.company_id;
     const emp_fName = req.body.emp_fName;
     const emp_lName = req.body.emp_lName;
-    const req_desc = req.body.req_desc;
-    const req_privilege = req.body.req_privilege;
+    const noti_desc = req.body.noti_desc;
+    const noti_privilege = req.body.noti_privilege;
+    const noti_type = req.body.noti_type;
 
-    db.query("INSERT INTO LeaveRequest (req_date, req_start, req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege) \n\
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [req_date, req_start,req_end, emp_id, company_id, emp_fName, emp_lName, req_desc, req_privilege],
+    db.query("INSERT INTO Notifications (noti_date, noti_start, noti_end, emp_id, company_id, emp_fName, emp_lName, noti_desc, noti_privilege, noti_type) \n\
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [noti_date, noti_start, noti_end, emp_id, company_id, emp_fName, emp_lName, noti_desc, noti_privilege, noti_type],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
         });
 });
 
-app.delete("/removeNotification/:req_id", (req, res) => {
-    const req_id = req.params.req_id;
+app.delete("/removeNotification/:noti_id", (req, res) => {
+    const noti_id = req.params.noti_id;
 
-    db.query("DELETE FROM LeaveRequest WHERE req_id = ?",
-        [req_id],
+    db.query("DELETE FROM Notifications WHERE noti_id = ?",
+        [noti_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
@@ -424,6 +437,22 @@ app.delete("/removeRosterWeek/:emp_id&:week_start", (req, res) => {
     });
 });
 
+app.put("/updateEmployee", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_fName = req.body.emp_fName;
+    const emp_lName = req.body.emp_lName;
+    const emp_email = req.body.emp_email;
+    const emp_type = req.body.emp_type;
+    const emp_privilege = req.body.emp_privilege;
+
+    db.query("UPDATE Employee SET emp_fName = ?, emp_lName = ?, emp_email = ?, emp_type = ?, emp_privilege = ? \n\
+        WHERE emp_id = ?",
+        [emp_fName, emp_lName, emp_email, emp_type, emp_privilege, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
 
 app.put("/updatePassword", (req, res) => {
     const emp_id = req.body.emp_id;
@@ -431,6 +460,32 @@ app.put("/updatePassword", (req, res) => {
 
     db.query("UPDATE Employee SET emp_password = ? WHERE emp_id = ?",
         [emp_password, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.put("/updateRegularAvailability", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const day_name = req.body.day_name;
+    const reg_start = req.body.reg_start;
+    const reg_end = req.body.reg_end;
+
+    db.query("UPDATE RegularAvailability SET reg_start = ?, reg_end = ? \n\
+        WHERE emp_id = ? AND day_name = ?",
+        [reg_start, reg_end, emp_id, day_name],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.delete("/removeEmployee/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("DELETE FROM Employee WHERE emp_id = ?",
+        [emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
