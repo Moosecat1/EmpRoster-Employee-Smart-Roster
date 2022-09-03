@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
-import Container from 'react-bootstrap/Container';
 import axios from 'axios';
+import {Alert, AlertTitle,TextField, Typography, Container} from "@mui/material";
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
 
 document.title = "Add Employees";
+
+var rgularExp = {
+    contains_alphaNumeric : /^(?!-)(?!.*-)[A-Za-z0-9-]+(?<!-)$/,
+    containsNumber : /\d+/,
+    containsAlphabet : /[a-zA-Z]/,
+
+    onlyLetters : /^[A-Za-z]+$/,
+    onlyNumbers : /^[0-9]+$/,
+    onlyMixOfAlphaNumeric : /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$/
+}
 
 export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([
@@ -50,6 +61,10 @@ export default function RegisterCreateEmployees(){
         setInputFields(values);
     }
 
+
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+
     const finalise = () => {
         (async() => {
             for(let i = 0; i < inputFields.length; i++)
@@ -63,19 +78,34 @@ export default function RegisterCreateEmployees(){
 
                 const companyId = sessionStorage.getItem('company_id');
 
-                if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
+                const errors = [];
+
+
+                if(firstName === "" || (/\d/.test(firstName)))
                 {
-                    await axios.post("http://localhost:2420/addEmployee", {
-                        emp_password: null,
-                        emp_fName: firstName,
-                        emp_lName: lastName,
-                        emp_email: email,
-                        emp_type: type,
-                        emp_privilege: privilege,
-                        company_id: companyId
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                    errors.push(" First Name: should not contain numbers or be left empty");
+                }if( lastName === "" || (/\d/.test(lastName))){
+                    errors.push(" Last Name: should not contain numbers or be left empty");
+                }if(email === "" || email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+                    errors.push(" Email: should not be left empty");
+                }if(privilege === "" || type === ""){
+                    errors.push(" Privilege or Type: should not be left empty");
+                }
+                if (errors.length === 0){
+                await axios.post("http://localhost:2420/addEmployee", {
+                    emp_password: null,
+                    emp_fName: firstName,
+                    emp_lName: lastName,
+                    emp_email: email,
+                    emp_type: type,
+                    emp_privilege: privilege,
+                    company_id: companyId
+                }).catch((err) => {
+                    console.log(err);
+                });
+            }else{
+                    setInvalidFields(errors);
+                    setShowAlert(true);
                 }
             }
 
@@ -88,7 +118,20 @@ export default function RegisterCreateEmployees(){
             <Navbar/>
             <br />
                 <h1>Add Employees:</h1>
-                <br />
+                {showAlert ?
+                    <Alert
+                        severity="warning"
+                        variant="outlined" >
+                        <AlertTitle>Error</AlertTitle>
+                        Your details have the following issues:
+                        <strong>{invalidFields.toString()}</strong>
+                    </Alert> :
+                    <Alert
+                        severity="info">
+                        Please fill out the following form for your Employee's Account(s)
+                    </Alert>
+                }
+                    <br />
                     <form onSubmit={handleSubmit}>
                         {inputFields.map((inputField, index) =>
                             <div className={"form-signin w-100 m-auto text-center"} key={index}>
