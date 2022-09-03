@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from '../components/navbar';
 import EditableCompany from '../components/EditableCompany';
 import { Modal, Typography, Box, Button } from '@mui/material';
+const { addNullRegularAvailabilities } = require('../modules/endpoint');
 
 const modalStyle = {
     position: 'absolute',
@@ -21,10 +22,27 @@ const modalStyle = {
 export default function EditCompany(){
     const [companyName, setCompanyName] = useState("");
     const [employeeList, setEmployeeList] = useState([]);
+    const [addOpen, setAddOpen] = useState(false);
     const [removeOpen, setRemoveOpen] = useState(false);
     const [checkedEmployees, setCheckedEmployees] = useState([]);
+    const [inputFields, setInputFields] = useState([
+        {
+            firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'
+        }
+    ]);
 
-    const handleRemoveOpen = () => {setRemoveOpen(true);};
+    const handleAddOpen = () => {setAddOpen(true);}
+    const handleAddClose = () => {
+        const string = "Are you sure you want to exit? All input data will be lost.";
+        let conf = window.confirm(string);
+
+        if(conf){
+            setInputFields([{firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]); 
+            setAddOpen(false);
+        }
+    }
+
+    const handleRemoveOpen = () => {setRemoveOpen(true);}
     const handleRemoveClose = () => {setCheckedEmployees([]); setRemoveOpen(false);}
 
     useEffect(() => {
@@ -39,6 +57,33 @@ export default function EditCompany(){
         initialiseCompanyData();
     }, []);
 
+    const handleChangeInput = (index, event) => {
+        var labels = document.getElementsByClassName(event.target.name);
+
+        for(let i = 0; i < labels.length; i++)
+        {
+            labels[i].innerHTML = "";
+        }
+
+        const values = [...inputFields];
+        values[index][event.target.name] = event.target.value;
+        setInputFields(values);
+    }
+
+    const handleAdd = () => {
+        setInputFields([...inputFields, {firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'}]);
+    }
+
+    const handleRemove = (index) => {
+        const values = [...inputFields];
+        values.splice(index, 1);
+        setInputFields(values);
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    }
+
     const generateRemoveModal = () => {
         if(employeeList.length !== 0){
             return employeeList.map((employee, index) => 
@@ -49,6 +94,60 @@ export default function EditCompany(){
                 </div>
             )
         }
+    }
+
+    const generateAddModal = () => {
+        return(
+            <form onSubmit={handleSubmit}>
+                {inputFields.map((inputField, index) =>
+                    <div className={"form-signin w-100 m-auto text-center"} key={index}>
+                        <div className={"form-floating"}>
+                            <label className="firstName">Employee First Name</label>
+                            <input type={"text"} className={"form-control"} name={"firstName"} value={inputField.firstName} onChange={event => handleChangeInput(index, event)}/>
+                        </div>
+                        <br />
+                        <div className={"form-floating"}>
+                            <label className="lastName">Employee Last Name</label>
+                            <input type={"text"} className={"form-control"} name={"lastName"} value={inputField.lastName} onChange={event => handleChangeInput(index, event)}/>
+                        </div>
+                        <br />
+                        <div className={"form-floating"}>
+                            <label className="email">Employee Email</label>
+                            <input type={"text"} className={"form-control"} name={"email"} value={inputField.email} onChange={event => handleChangeInput(index, event)}/>
+                        </div>
+                        <br />
+                        <div>
+                            <label>Employee Privilege:</label>
+                            &nbsp;&nbsp;
+                            <select name='privilege' onChange={event => handleChangeInput(index, event)}>
+                                <option>Employee</option>
+                                <option>Manager</option>
+                                <option>Admin</option>
+                            </select>
+                        </div>
+                        <br />
+                        <div>
+                            <label>Employee Type:</label>
+                            &nbsp;&nbsp;
+                            <select name='type' onChange={event => handleChangeInput(index, event)}>
+                                <option>Casual</option>
+                                <option>Part-time</option>
+                                <option>Full-time</option>
+                            </select>
+                        </div>
+                        <br />
+                        <div className='buttonDiv'>
+                            <button id="removeButton" onClick={() => handleRemove(index)}>Remove Employee</button>
+                        </div>
+                    </div>
+                )}
+                <br />
+                <div className='buttonDiv'>
+                    <button id="addButton" onClick={handleAdd}>Add Employee</button>
+                </div>
+                <br /><br/>
+            </form>
+        );
     }
 
     const addCheckedEmployees = (emp_id) => {
@@ -62,6 +161,42 @@ export default function EditCompany(){
             checkedEmployeesTemp.splice(empIndex, 1)
             setCheckedEmployees(checkedEmployeesTemp);
         }
+    }
+
+    const addEmployees = async () => {
+        for(let i = 0; i < inputFields.length; i++)
+        {
+            const employee = inputFields[i];
+            const firstName = employee.firstName;
+            const lastName = employee.lastName;
+            const email = employee.email;
+            const privilege = employee.privilege;
+            const type = employee.type;
+
+            const companyId = sessionStorage.getItem('company_id');
+
+            if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
+            {
+                const res = await axios.post("http://localhost:2420/addEmployee", {
+                    emp_password: "password",
+                    emp_fName: firstName,
+                    emp_lName: lastName,
+                    emp_email: email,
+                    emp_type: type,
+                    emp_privilege: privilege,
+                    company_id: companyId
+                }).catch((err) => {
+                    console.log(err);
+                });
+
+                const emp_id = res.data[1];
+                console.log(res);
+
+                await addNullRegularAvailabilities(emp_id);
+            }
+        }
+
+        document.location.reload();
     }
 
     const removeEmployees = async () => {
@@ -105,7 +240,7 @@ export default function EditCompany(){
             <EditableCompany setEmployeeListParent={setEmployeeList}/>
             <br />
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <Button variant='contained'>Add Employee</Button>
+                <Button variant='contained' onClick={() => handleAddOpen()}>Add Employee</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button variant='contained' onClick={() => handleRemoveOpen()}>Remove Employee</Button>
             </div>
@@ -123,6 +258,22 @@ export default function EditCompany(){
                         <br />
                         <div style={{display: 'flex', justifyContent: 'center'}}>
                             <Button variant='contained' onClick={removeEmployees}>Remove Employees</Button>
+                        </div>
+                    </Box>
+            </Modal>
+            <Modal
+                open={addOpen}
+                onClose={handleAddClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description">
+                    <Box sx={modalStyle}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Add Employees
+                        </Typography>
+                        <br />
+                        {generateAddModal()}
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                            <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
                         </div>
                     </Box>
             </Modal>
