@@ -78,12 +78,13 @@ export default function ChangeAvailability(){
     }
 
     const addRegularAvailability = async () => {
-        const startTime = document.getElementById("startTime").value;
-        const endTime = document.getElementById("endTime").value;
+        let startTime = document.getElementById("startTime").value;
+        let endTime = document.getElementById("endTime").value;
 
-        console.log(startTime + " " + endTime);
+        if(startTime === "N/A"){startTime = null;}
+        if(endTime === "N/A"){endTime = null;}
 
-        if(!(startTime === "N/A" || endTime === "N/A")){
+        if(!(startTime === null ^ endTime === null)){
             await axios.put("http://localhost:2420/updateRegularAvailability", {
                 emp_id: sessionStorage.getItem('emp_id'),
                 day_name: dayNames[currentDay],
