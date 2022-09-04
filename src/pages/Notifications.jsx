@@ -5,10 +5,11 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {Container} from "@mui/material";
+import {Container, Box} from "@mui/material";
 import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+
 
 const { addAvailability } = require('../modules/endpoint');
 const { removeNotification } = require('../modules/endpoint');
@@ -125,11 +126,24 @@ class Notifications extends Component {
         if(isLoaded){
             return(
                 <div className='flex'>
-                    <Navbar/> <Sidebar/>
+                    <Navbar/>
+
                     <Container>
-                        <Row xs={1} md={2} className="g-4">
-                            {this.processNotifs()}
-                        </Row>
+                        <Box display={'flex'}
+                             flexdirection={'row'}>
+
+                            <Box>
+                                <Sidebar/>
+                            </Box>
+
+
+                       <Box>
+                           <Row xs={1} md={2} className="g-4">
+                           {this.processNotifs()}
+                           </Row>
+                       </Box>
+
+                        </Box>
                     </Container>
                 </div>
             )
