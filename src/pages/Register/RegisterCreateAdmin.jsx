@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Navbar from '../../components/navbar';
 import {Alert,AlertTitle,TextField, Typography, Container} from "@mui/material";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-const { addAdmin, addEmployee } = require('../../modules/endpoint');
+const sha256 = require('crypto-js/sha256');
+const { addNullRegularAvailabilities } = require('../../modules/endpoint');
 
 document.title = "Create Admin Account";
-
-
 
 export default function RegisterCreateAdmin(){
     const [firstName, setFirstName] = useState("");
@@ -20,9 +20,6 @@ export default function RegisterCreateAdmin(){
 
     const [showAlert, setShowAlert] = useState(false);
     const [invalidFields, setInvalidFields] = useState([]);
-
-
-    
 
     const validateValues = () => {
         var fields = [];
@@ -49,23 +46,34 @@ export default function RegisterCreateAdmin(){
     }
 
     const submit = (event) => {
-
         if(validateValues()) {
-
-
+            event.preventDefault();
             const companyId = sessionStorage.getItem('company_id');
 
-
             (async() => {
-                await addEmployee(password, firstName, lastName, email, phoneNumber, type, "Admin", companyId);
+                //do not delete anything below they are CRUCIAL for the code to RUN 
+                const res = await axios.post("http://localhost:2420/addEmployee", {
+                    emp_password: sha256(password).toString(),
+                    emp_fName: firstName,
+                    emp_lName: lastName,
+                    emp_email: email,
+                    emp_type: type,
+                    emp_privilege: "Admin",
+                    company_id: companyId
+                }).catch((err) => {
+                    console.log(err);
+                });
+
+                const empId = res.data[1];
+                await addNullRegularAvailabilities(empId);
 
                 window.location.href = "/register/createemployees";
             })();
         }else {
+            console.log("BRUH");
             event.preventDefault();
             setShowAlert(true);
         }
-
     }
     
     return(

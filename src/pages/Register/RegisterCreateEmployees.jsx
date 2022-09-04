@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import DatePicker from "react-datepicker";
 import axios from 'axios';
-import {Alert, AlertTitle,TextField, Typography, Container} from "@mui/material";
-import Breadcrumbs from '@mui/material/Breadcrumbs';
+import {Alert, AlertTitle} from "@mui/material";
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
 const { addNullRegularAvailabilities } = require('../../modules/endpoint');
@@ -72,7 +70,6 @@ export default function RegisterCreateEmployees(){
 
                 const errors = [];
 
-
                 if(firstName === "" || (/\d/.test(firstName)))
                 {
                     errors.push(" First Name: should not contain numbers or be left empty");
@@ -84,18 +81,22 @@ export default function RegisterCreateEmployees(){
                     errors.push(" Privilege or Type: should not be left empty");
                 }
                 if (errors.length === 0){
-                await axios.post("http://localhost:2420/addEmployee", {
-                    emp_password: null,
-                    emp_fName: firstName,
-                    emp_lName: lastName,
-                    emp_email: email,
-                    emp_type: type,
-                    emp_privilege: privilege,
-                    company_id: companyId
-                }).catch((err) => {
-                    console.log(err);
-                });
-            }else{
+                    //do not delete anything below they are CRUCIAL for the code to RUN 
+                    const res = await axios.post("http://localhost:2420/addEmployee", {
+                        emp_password: null,
+                        emp_fName: firstName,
+                        emp_lName: lastName,
+                        emp_email: email,
+                        emp_type: type,
+                        emp_privilege: privilege,
+                        company_id: companyId
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+
+                    const empId = res.data[1];
+                    await addNullRegularAvailabilities(empId);
+            } else{
                     setInvalidFields(errors);
                     setShowAlert(true);
                 }
