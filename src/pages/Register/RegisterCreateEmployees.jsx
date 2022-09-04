@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
-import DatePicker from "react-datepicker";
 import axios from 'axios';
-import {Alert, AlertTitle,TextField, Typography, Container} from "@mui/material";
-import Breadcrumbs from '@mui/material/Breadcrumbs';
+import {Alert, AlertTitle} from "@mui/material";
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
 const { addNullRegularAvailabilities } = require('../../modules/endpoint');
 
 document.title = "Add Employees";
-
-var rgularExp = {
-    contains_alphaNumeric : /^(?!-)(?!.*-)[A-Za-z0-9-]+(?<!-)$/,
-    containsNumber : /\d+/,
-    containsAlphabet : /[a-zA-Z]/,
-
-    onlyLetters : /^[A-Za-z]+$/,
-    onlyNumbers : /^[0-9]+$/,
-    onlyMixOfAlphaNumeric : /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$/
-}
 
 export default function RegisterCreateEmployees(){
     const [inputFields, setInputFields] = useState([
@@ -78,7 +66,7 @@ export default function RegisterCreateEmployees(){
                     errors.push(" First Name: should not contain numbers or be left empty");
                 }if( lastName === "" || (/\d/.test(lastName))){
                     errors.push(" Last Name: should not contain numbers or be left empty");
-                }if(email === "" || email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+                }if(email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
                     errors.push(" Email: should not be left empty");
                 }if(privilege === "" || type === ""){
                     errors.push(" Privilege or Type: should not be left empty");

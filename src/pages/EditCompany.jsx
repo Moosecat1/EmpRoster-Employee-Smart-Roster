@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/navbar';
 import EditableCompany from '../components/EditableCompany';
-import { Modal, Typography, Box, Button } from '@mui/material';
+import { Modal, Typography, Box, Button, Container } from '@mui/material';
+import Sidebar from '../components/sidebar';
 const { addNullRegularAvailabilities } = require('../modules/endpoint');
 
 const modalStyle = {
@@ -234,49 +235,64 @@ export default function EditCompany(){
     return(
         <>
             <Navbar/>
-            <h1>Company Name: {companyName}</h1>
-            <h1 style={{fontSize: '30px'}}>Company ID: {sessionStorage.getItem('company_id')}</h1>
-            <br />
-            <EditableCompany setEmployeeListParent={setEmployeeList}/>
-            <br />
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-                <Button variant='contained' onClick={() => handleAddOpen()}>Add Employee</Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Button variant='contained' onClick={() => handleRemoveOpen()}>Remove Employee</Button>
-            </div>
-            <Modal
-                open={removeOpen}
-                onClose={handleRemoveClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description">
-                    <Box sx={modalStyle}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Employee List
-                        </Typography>
+            <Container>
+                <Box display={'flex'}
+                     flexdirection={'row'}>
+
+                    <Box>
+                        <Sidebar/>
+                    </Box>
+
+
+                    <Box>
+                        <h1>Company Name: {companyName}</h1>
+                        <h1 style={{fontSize: '30px'}}>Company ID: {sessionStorage.getItem('company_id')}</h1>
                         <br />
-                        {generateRemoveModal()}
+                        <EditableCompany setEmployeeListParent={setEmployeeList}/>
                         <br />
                         <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <Button variant='contained' onClick={removeEmployees}>Remove Employees</Button>
+                            <Button variant='contained' onClick={() => handleAddOpen()}>Add Employee</Button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button variant='contained' onClick={() => handleRemoveOpen()}>Remove Employee</Button>
                         </div>
+                        <Modal
+                            open={removeOpen}
+                            onClose={handleRemoveClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description">
+                            <Box sx={modalStyle}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Employee List
+                                </Typography>
+                                <br />
+                                {generateRemoveModal()}
+                                <br />
+                                <div style={{display: 'flex', justifyContent: 'center'}}>
+                                    <Button variant='contained' onClick={removeEmployees}>Remove Employees</Button>
+                                </div>
+                            </Box>
+                        </Modal>
+                        <Modal
+                            open={addOpen}
+                            onClose={handleAddClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description">
+                            <Box sx={modalStyle}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Add Employees
+                                </Typography>
+                                <br />
+                                {generateAddModal()}
+                                <div style={{display: 'flex', justifyContent: 'center'}}>
+                                    <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
+                                </div>
+                            </Box>
+                        </Modal>
+
                     </Box>
-            </Modal>
-            <Modal
-                open={addOpen}
-                onClose={handleAddClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description">
-                    <Box sx={modalStyle}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Add Employees
-                        </Typography>
-                        <br />
-                        {generateAddModal()}
-                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
-                        </div>
                     </Box>
-            </Modal>
+            </Container>
+
         </>
     )
 }
