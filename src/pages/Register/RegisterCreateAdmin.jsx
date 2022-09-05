@@ -57,6 +57,7 @@ export default function RegisterCreateAdmin(){
                     emp_fName: firstName,
                     emp_lName: lastName,
                     emp_email: email,
+                    emp_phNum: phoneNumber,
                     emp_type: type,
                     emp_privilege: "Admin",
                     company_id: companyId

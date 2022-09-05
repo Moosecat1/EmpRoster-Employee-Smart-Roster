@@ -127,10 +127,13 @@ class EditableRoster extends Component {
     }
 
     async addRosterTime(empId, selectedDate){
-        const startTime = document.getElementById("startTime").value;
-        const endTime = document.getElementById("endTime").value;
+        let startTime = document.getElementById("startTime").value;
+        let endTime = document.getElementById("endTime").value;
 
-        if(!(startTime === "N/A" || endTime === "N/A")){
+        if(startTime === "N/A"){startTime = null;}
+        if(endTime === "N/A"){endTime = null;}
+
+        if(!(startTime === null ^ endTime === null)){
             await axios.put("http://localhost:2420/updateRoster", {
                 emp_id: empId,
                 rost_date: selectedDate,
@@ -201,20 +204,19 @@ class EditableRoster extends Component {
     }
 
     async componentDidMount(){
+        const selectedDate = this.props.week_start_sql;
+
         const companyId = sessionStorage.getItem('company_id');
 
-        let weekStart = new Date();
-        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-        const week_start_sql = weekStart.toISOString().split('T')[0];
+        let weekStart = new Date(selectedDate.substring(0, 4), selectedDate.substring(5, 7) - 1, selectedDate.substring(8, 10));
 
         //GET companyroster from db
-        const res = await axios.get("http://localhost:2420/getCompanyRoster/" + companyId + "&" + week_start_sql);
+        const res = await axios.get("http://localhost:2420/getCompanyRoster/" + companyId + "&" + this.props.week_start_sql);
         const employeeRosters = res.data;
         
         let weekDates = [];
 
-        let weekStartPlaceholder = new Date();
-        weekStartPlaceholder.setDate(weekStartPlaceholder.getDate() - weekStartPlaceholder.getDay());
+        let weekStartPlaceholder = new Date(selectedDate.substring(0, 4), selectedDate.substring(5, 7) - 1, selectedDate.substring(8, 10));
 
         let dayLooper = weekStartPlaceholder;
 
