@@ -219,10 +219,9 @@ const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_i
 }
 
 const addWeeklyRoster = async (rost_week_start, emp_id) => {
-    const currentDate = new Date();
-
+    let weekStart = new Date(rost_week_start.substring(0, 4), rost_week_start.substring(5, 7) - 1, rost_week_start.substring(8, 10));
     let dayLooper = new Date();
-    dayLooper.setDate(currentDate.getDate() - (currentDate.getDay()));
+    dayLooper.setDate(weekStart.getDate() - (weekStart.getDay()));
 
     for(let i = 0; i < 7; i++){
         const dateString = dayLooper.toISOString().substring(0, 10);

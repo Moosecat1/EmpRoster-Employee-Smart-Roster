@@ -34,6 +34,8 @@ export default function ManagerEditRoster(){
     const [open, setOpen] = React.useState(false);
     const [openRostered, setOpenRostered] = React.useState(false);
     const [employeeList, setEmployeeList] = React.useState([]);
+    const [currentWeekStart, setCurrentWeekStart] = React.useState("");
+    const [weekStarts, setWeekStarts] = React.useState([]);
     const [rosteredEmployeeList, setRosteredEmployeeList] = React.useState([]);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
@@ -49,7 +51,14 @@ export default function ManagerEditRoster(){
 
             let weekStart = new Date();
             weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            const week_start_sql = weekStart.toISOString().split('T')[0];
+            const week_start_sql = sessionStorage.getItem('roster_week_start') === null ? weekStart.toISOString().split('T')[0] : sessionStorage.getItem('roster_week_start');
+
+            let weekStarts = [];
+
+            for(let i = 0; i < 3; i++){
+                weekStarts.push(weekStart.toISOString().split('T')[0]);
+                weekStart.setDate(weekStart.getDate() + 7);
+            }
 
             const res = await axios.get('http://localhost:2420/getUnrosteredEmployees/' + company_id + "&" + week_start_sql).catch((err) => {console.log(err);});
             const employeeList = res.data;
@@ -58,6 +67,8 @@ export default function ManagerEditRoster(){
             const rosteredEmployeeList = res1.data;
 
             setEmployeeList(employeeList);
+            setCurrentWeekStart(week_start_sql);
+            setWeekStarts(weekStarts);
             setRosteredEmployeeList(rosteredEmployeeList);
             setIsLoaded(true);
         }
@@ -109,14 +120,12 @@ export default function ManagerEditRoster(){
     }
 
     const addEmployees = async () => {
-        const currentDate = new Date();
-
         let weekStart = new Date();
-        weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
-        const weekStartSQL = weekStart.toISOString().split('T')[0].replace(/-/g, '/');
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        const week_start_sql = sessionStorage.getItem('roster_week_start') === null ? weekStart.toISOString().split('T')[0] : sessionStorage.getItem('roster_week_start');
 
         for(let i = 0; i < checkedEmployees.length; i++){
-            await addWeeklyRoster(weekStartSQL, checkedEmployees[i]);
+            await addWeeklyRoster(week_start_sql, checkedEmployees[i]);
         }
 
         handleClose();
@@ -124,17 +133,20 @@ export default function ManagerEditRoster(){
     }
 
     const removeEmployees = async () => {
-        const currentDate = new Date();
-
         let weekStart = new Date();
-        weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
-        const weekStartSQL = weekStart.toISOString().split('T')[0];
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        const week_start_sql = sessionStorage.getItem('roster_week_start') === null ? weekStart.toISOString().split('T')[0] : sessionStorage.getItem('roster_week_start');
 
         for(let i = 0; i < checkedRosteredEmployees.length; i++){
-            await axios.delete("http://localhost:2420/removeRosterWeek/" + checkedRosteredEmployees[i] + "&" + weekStartSQL).catch((err) => {console.log(err);});
+            await axios.delete("http://localhost:2420/removeRosterWeek/" + checkedRosteredEmployees[i] + "&" + week_start_sql).catch((err) => {console.log(err);});
         }
 
         handleClose();
+        document.location.reload();
+    }
+
+    const handleRosterChange = (roster_week_start) => {
+        sessionStorage.setItem('roster_week_start', roster_week_start);
         document.location.reload();
     }
 
@@ -153,6 +165,15 @@ export default function ManagerEditRoster(){
                             </Box>
 
                             <Box>
+                                <br />
+                                <label>Roster Week Start: </label>
+                                &nbsp;
+                                <select name="weekStart" defaultValue={currentWeekStart} onChange={(event) => handleRosterChange(event.target.value)}>
+                                    {weekStarts.map((weekStart, index) =>
+                                        <option name={weekStart} key={index}>{weekStart}</option>
+                                    )}
+                                </select>
+                                <br /><br />
                                 <Box
                                     display="flex"
                                     flexDirection="row"
@@ -160,7 +181,7 @@ export default function ManagerEditRoster(){
                                     alignItems="flex-start"
                                     sx ={{borderStyle:"solid", width:"1155px", overflowY: 'scroll', maxHeight: "700px"}}>
 
-                                        <EditableRoster/>
+                                        <EditableRoster week_start_sql={currentWeekStart}/>
                                 </Box>
 
                                     <Box
