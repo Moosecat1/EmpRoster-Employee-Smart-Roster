@@ -11,8 +11,13 @@
     } */
   }
 
+  .carousel-caption{
+    padding-bottom: 500px;
+  }
+
   .Carousel-bar{
     background-color: #3751FF;
+    
   }
   
     .width-100 {

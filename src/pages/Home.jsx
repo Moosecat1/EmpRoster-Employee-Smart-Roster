@@ -7,5 +7,5 @@ import Carousel from "../components/Carousel";
 
 export default function Home() {
     document.title = "EmpRoster - Smart Roster System"
-    return (<main><Navbar/><Hero /><Carousel /><Footer /></main>);
+    return (<main><Navbar/><Carousel /><Footer /></main>);
 }
