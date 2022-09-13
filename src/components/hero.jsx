@@ -7,7 +7,7 @@ export default function Hero() {
     
     return (
         //    <div className="container-fluid text-sm-center p-5 bg-white">
-        <Container fluid className="hero-body">
+        <Container>
             <Container>
             <Row>
                 <Col >
@@ -22,11 +22,11 @@ export default function Hero() {
             </Row>
             
             <Row>
-                <Col className="text-center">
-                <ButtonGroup className="me-2" aria-label="First group">
+                <Col>
+                {/* <ButtonGroup className="me-2" aria-label="First group">
                     <Button>About</Button>
-                </ButtonGroup>
-                <ButtonGroup className="me-2" aria-label="Second group">
+                </ButtonGroup> */}
+                <ButtonGroup aria-label="Second group">
                     <Button>Get Started</Button>
                 </ButtonGroup>
                 </Col>
