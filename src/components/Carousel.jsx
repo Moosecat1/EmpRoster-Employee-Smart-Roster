@@ -90,7 +90,7 @@ function CarouselComp() {
             <Carousel.Caption className='Carousel-color'>
             <Row>
                 <Col >
-                    <h1 style={{ color: 'white' }}>Questoions?</h1>
+                    <h1 style={{ color: 'white' }}>Questions?</h1>
                 </Col>
             </Row>
 
