@@ -36,7 +36,22 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     );
-  }else if(sessionStorage.getItem('emp_privilege') === "Admin"){
+  } else if(sessionStorage.getItem('emp_password_changed') === "0"){
+    return(
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
+            <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
+            <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
+            <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+            <Route path="/mainhub" element={<MainHub/>}/>
+            <Route path="/*" element={<NoPage/>}/>
+          </Routes>
+        </BrowserRouter>
+      );
+  } else if(sessionStorage.getItem('emp_privilege') === "Admin"){
       return(
           <BrowserRouter>
               <Routes>

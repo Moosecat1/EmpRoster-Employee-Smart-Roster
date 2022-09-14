@@ -36,10 +36,13 @@ export default function MainHub() {
 
     const updatePassword = async () => {
         if(password === confirmPassword){
-            axios.put("http://localhost:2420/updatePassword", {
-                emp_id: sha256(sessionStorage.getItem('emp_id')).toString(),
-                emp_password: password
+            await axios.put("http://localhost:2420/updatePassword", {
+                emp_id: sessionStorage.getItem('emp_id'),
+                emp_password: sha256(password).toString()
             });
+
+            sessionStorage.setItem('emp_password_changed', 1);
+            document.location.reload();
         }
     }
 
@@ -119,7 +122,7 @@ export default function MainHub() {
                         }}
                     />
                     <br /><br />
-                    <button className="w-75 btn btn-lg btn-primary">Update Password</button>
+                    <button className="w-75 btn btn-lg btn-primary" onClick={updatePassword}>Update Password</button>
                 </div>
             </main>
         )
