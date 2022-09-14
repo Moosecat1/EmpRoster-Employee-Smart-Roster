@@ -23,6 +23,7 @@ export default function Login(){
             const empId = res.empId;
             const empfName = res.empfName;
             const empPrivilege = res.empPrivilege;
+            const empPasswordChanged = res.empPasswordChanged;
             const companyId = res.companyId;
 
             if(empExists){
@@ -32,6 +33,7 @@ export default function Login(){
                 //sessionStorage.setItem('emp_lName', emplName);
                 sessionStorage.setItem('emp_privilege', empPrivilege);
                 sessionStorage.setItem('company_id', companyId);
+                sessionStorage.setItem('emp_password_changed', empPasswordChanged);
                 window.location.href = "/mainhub";
             } else{
                 setMessage("Incorrect email or password");
@@ -42,7 +44,7 @@ export default function Login(){
     if(sessionStorage.getItem('emp_id') != null) {
         alert("you have already Logged in")
         window.location.href = "/mainhub";
-    }else {
+    } else {
         return(
             <main>
                 <Navbar/>
@@ -79,8 +81,8 @@ export default function Login(){
                     </Form>
                 </div>
             </main>
-    );
-}
+        );
+    }
 }
 
 

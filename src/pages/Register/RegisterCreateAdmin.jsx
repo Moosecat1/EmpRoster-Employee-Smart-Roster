@@ -60,6 +60,7 @@ export default function RegisterCreateAdmin(){
                     emp_phNum: phoneNumber,
                     emp_type: type,
                     emp_privilege: "Admin",
+                    emp_password_changed: true,
                     company_id: companyId
                 }).catch((err) => {
                     console.log(err);

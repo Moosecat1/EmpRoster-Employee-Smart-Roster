@@ -61,6 +61,7 @@ app.post("/addEmployee", (req, res) => {
     const emp_phNum = req.body.emp_phNum;
     const emp_type = req.body.emp_type;
     const emp_privilege = req.body.emp_privilege;
+    const emp_password_changed = req.body.emp_password_changed;
     const company_id = req.body.company_id;
 
     var emp_id = company_id;
@@ -73,9 +74,9 @@ app.post("/addEmployee", (req, res) => {
             {
                 emp_id += (result[0].id + 1);
 
-                db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id) \n\
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, company_id],
+                db.query("INSERT INTO Employee (emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, emp_password_changed, company_id) \n\
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [emp_id, emp_fName, emp_lName, emp_password, emp_email, emp_phNum, emp_type, emp_privilege, emp_password_changed, company_id],
                     (err, result) => {
                         if(err){console.log(err);}
                         else{res.send([result, emp_id]);}
@@ -164,7 +165,7 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     const emp_id = req.params.emp_id;
     const emp_password = req.params.emp_password;
 
-    db.query("SELECT emp_id, emp_password, emp_fName, emp_lName, emp_privilege, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
+    db.query("SELECT emp_id, emp_password, emp_fName, emp_lName, emp_privilege, emp_password_changed, company_id FROM Employee WHERE (emp_id = ? OR emp_email = ?) AND emp_password = ?",
         [emp_id, emp_id, emp_password],
         (err, result) => {
             if(err){console.log(err);}
