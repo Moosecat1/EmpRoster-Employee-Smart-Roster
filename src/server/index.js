@@ -52,6 +52,22 @@ app.post("/addCompany", (req, res) => {
     });
 });
 
+app.post("/addCompanyEvent", (req, res) => {
+    const company_id = req.body.company_id;
+    const event_date = req.body.event_date;
+    const event_start = req.body.event_start;
+    const event_end = req.body.event_end;
+    const event_name = req.body.event_end;
+
+    db.query("INSERT INTO CompanyEvent (event_date, event_start, event_end, event_name, company_id) \n\
+        VALUES (?, ?, ?, ?, ?)",
+        [event_date, event_start, event_end, event_name, company_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 //add employe endpoint, basically the same as addCompany but obviously with employee fields instead
 app.post("/addEmployee", (req, res) => {
     const emp_password = req.body.emp_password;
@@ -150,7 +166,7 @@ app.post("/addCompanyEvent", (req, res) => {
 app.get("/getCompanyEvents/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT * FROM CompanyEvent WHERE company_id = ?",
+    db.query("SELECT * FROM CompanyEvent WHERE company_id = ? ORDER BY event_date ASC",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
