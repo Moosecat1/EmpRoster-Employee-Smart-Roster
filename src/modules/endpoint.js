@@ -28,6 +28,7 @@ const verifyEmployee = async (emp_id, emp_password) => {
     let empfName;
     let emplName;
     let empPrivilege;
+    let empPasswordChanged;
     let companyId;
 
     //get values from response to send to frontend
@@ -37,10 +38,11 @@ const verifyEmployee = async (emp_id, emp_password) => {
         empfName = res.data[0].emp_fName;
         emplName = res.data[0].emp_lName;
         empPrivilege = res.data[0].emp_privilege;
+        empPasswordChanged = res.data[0].emp_password_changed;
         companyId = res.data[0].company_id;
     }
 
-    return {empExists: empExists, empId: empId, empfName: empfName, emplName: emplName, empPrivilege: empPrivilege, companyId: companyId};
+    return {empExists: empExists, empId: empId, empfName: empfName, emplName: emplName, empPrivilege: empPrivilege, empPasswordChanged: empPasswordChanged, companyId: companyId};
 }
 
 const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_phNum, emp_type, emp_privilege, company_id) => {

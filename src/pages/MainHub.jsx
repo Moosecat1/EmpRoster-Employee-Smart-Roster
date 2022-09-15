@@ -2,10 +2,11 @@ import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import Roster from "../components/roster";
 import 'react-calendar/dist/Calendar.css';
-import React from "react";
-import {Container, Box, Typography, Avatar,List,ListItem,ListItemText} from "@mui/material";
+import {React, useState} from "react";
+import axios from 'axios';
+import {Container, Box, Typography, TextField, List, ListItem, ListItemText} from "@mui/material";
 
-const axios = require('axios');
+const sha256 = require('crypto-js/sha256');
 
 var UserName = () => {
     var user = sessionStorage.getItem("emp_fName");
@@ -29,63 +30,101 @@ function showTime(date) { // shows the current time with am or pm
     return strTime;
 }
 
-
-
 export default function MainHub() {
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const updatePassword = async () => {
+        if(password === confirmPassword){
+            await axios.put("http://localhost:2420/updatePassword", {
+                emp_id: sessionStorage.getItem('emp_id'),
+                emp_password: sha256(password).toString()
+            });
+
+            sessionStorage.setItem('emp_password_changed', 1);
+            document.location.reload();
+        }
+    }
 
     sessionStorage.setItem('emp_view', sessionStorage.getItem('emp_id'));
 
-    return(
-    <main>
-        <Navbar/>
-
-
-
-
-        <Container >
-            <Box
-            display={"flex"}
-            flexdirection={"row"}>
-
-            <Sidebar/>
-
-            <Box m={1} >
-
-
-                <h3>{"Welcome " + UserName()}</h3>
-
-
-
-
-                <Box >
-                        <List sx={{fontWeight:'bold'}}>
-                            <ListItem>
-                                <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster: </Typography>} />
-                            </ListItem>
-                            <ListItem>
-                                {"Date: " + displayTodaysDate()}
-                            </ListItem>
-                            <ListItem>
-                                { "Time: " + showTime(new Date())}
-                            </ListItem>
-                        </List>
-
-                </Box>
+    if(sessionStorage.getItem('emp_password_changed') === "1"){
+        return(
+            <main>
+                <Navbar/>
+                <Container >
                     <Box
+                    display={"flex"}
+                    flexdirection={"row"}>
+                    <Sidebar/>
+                    <Box m={1} >
+                        <h3>{"Welcome " + UserName()}</h3>
+                        <Box >
+                                <List sx={{fontWeight:'bold'}}>
+                                    <ListItem>
+                                        <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster: </Typography>} />
+                                    </ListItem>
+                                    <ListItem>
+                                        {"Date: " + displayTodaysDate()}
+                                    </ListItem>
+                                    <ListItem>
+                                        { "Time: " + showTime(new Date())}
+                                    </ListItem>
+                                </List>
+                        </Box>
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="center"
+                                alignItems="center"
 
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-
-                    >
-                        <Roster/>
+                            >
+                                <Roster/>
+                            </Box>
                     </Box>
-            </Box>
+                    <br />
+                    </Box>
+                </Container>
+            </main>
+        )
+    } else {
+        return (
+            <main>
+                <Navbar/>
 
-            <br />
-            </Box>
-        </Container>
-    </main>
-)
+                <h1>Please change your password:</h1>
+
+                <div className={"form-signin w-100 m-auto text-center"}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="confirm-password"
+                        onChange={(event) => {
+                            setConfirmPassword(event.target.value);
+                        }}
+                    />
+                    <br /><br />
+                    <button className="w-75 btn btn-lg btn-primary" onClick={updatePassword}>Update Password</button>
+                </div>
+            </main>
+        )
+    }
 }

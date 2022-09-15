@@ -25,6 +25,7 @@ CREATE TABLE Employee(
     emp_phNum VARCHAR(255),
     emp_type VARCHAR(50),
     emp_privilege VARCHAR(50),
+    emp_password_changed BOOLEAN,
     company_id VARCHAR(50),
     PRIMARY KEY(emp_id),
     FOREIGN KEY(company_id) REFERENCES Company(company_id),

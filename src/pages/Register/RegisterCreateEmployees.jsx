@@ -79,6 +79,7 @@ export default function RegisterCreateEmployees(){
                         emp_email: email,
                         emp_type: type,
                         emp_privilege: privilege,
+                        emp_password_changed: false,
                         company_id: companyId
                     }).catch((err) => {
                         console.log(err);
