@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import {Box,Button,Container,TableContainer,Table,TableHead,TableBody,TableRow,TableCell,Paper,Modal,Typography} from "@mui/material";
+const { addNotification } = require('../modules/endpoint');
 const axios = require('axios');
 
 const rowNames = ['Start-Time', 'End-Time'];
@@ -85,12 +86,7 @@ export default function ChangeAvailability(){
         if(endTime === "N/A"){endTime = null;}
 
         if(!(startTime === null ^ endTime === null)){
-            await axios.put("http://localhost:2420/updateRegularAvailability", {
-                emp_id: sessionStorage.getItem('emp_id'),
-                day_name: dayNames[currentDay],
-                reg_start: startTime,
-                reg_end: endTime
-            });
+            await addNotification(null, startTime, endTime, sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), currentDay, "Manager", "availabilityChange");
             
             document.location.reload();
         } else{

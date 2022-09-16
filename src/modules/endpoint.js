@@ -90,6 +90,18 @@ const addRegularAvailability = async (day_name, reg_start, reg_end, emp_id) => {
     });
 }
 
+const updateRegularAvailability = async (day_name, reg_start, reg_end, emp_id) => {
+    await axios.put("http://localhost:2420/updateRegularAvailability", {
+        day_name: day_name,
+        reg_start: reg_start,
+        reg_end: reg_end,
+        emp_id: emp_id
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+
 const addNullRegularAvailabilities = async (emp_id) => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -378,7 +390,9 @@ module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
 module.exports.addCompanyEvent = addCompanyEvent;
 module.exports.addRegularAvailability = addRegularAvailability;
+module.exports.updateRegularAvailability = updateRegularAvailability;
 module.exports.addNullRegularAvailabilities = addNullRegularAvailabilities;
+module.exports.getRegularAvailability = getRegularAvailability;
 module.exports.addAvailability = addAvailability;
 module.exports.getAvailability = getAvailability;
 module.exports.addWeeklyRoster = addWeeklyRoster;
