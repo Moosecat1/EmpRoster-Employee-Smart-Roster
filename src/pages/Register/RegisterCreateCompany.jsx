@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navbar';
-import {Alert,Container,Collapse, Link, Breadcrumbs,Typography} from "@mui/material";
+import {Alert,Button,Container,Collapse, Link, Breadcrumbs,TextField,Typography} from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -63,7 +63,7 @@ export default function RegisterCreateCompany() {
                             </Typography>
                         </Breadcrumbs>
                     </div>
-                    <div className={"form-signin w-100 m-auto text-center"}>
+                    <div className={"form-signin w-250 m-auto text-center"}>
                         <h1 className="h3 mb-3 fw-normal">Please enter your company name:</h1>
                         <Collapse in={open}>
                             <Alert severity="error" action={
@@ -83,14 +83,14 @@ export default function RegisterCreateCompany() {
                                 {message}
                             </Alert>
                         </Collapse>
-                        <div className={"form-floating"}>
-                            <input type={"text"} className={"form-control"} name={"companyName"}
+                        <div >
+                            <TextField type={"text"} name={"companyName"} label="Company Name"
                                    onChange={(event) => {
                                 setCompanyName(event.target.value);
                             }} required/>
                         </div>
                             <br/><br/>
-                        <button className="w-100 btn btn-lg btn-primary" onClick={createCompany}>Next</button>
+                        <Button size='large' variant='contained' onClick={createCompany}>Next Step</Button>
                     </div>
                 </Container>
             </>

@@ -7,10 +7,12 @@ import format from "date-fns/format";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
-import "react-big-calendar/lib/css/react-big-calendar.css"
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import {Container,Button, Box} from "@mui/material";
-import "react-datepicker/dist/react-datepicker.css"
+import "react-datepicker/dist/react-datepicker.css";
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 const { getAvailabilities, getCompanyEvents, addNotification, removeRosterDate } = require("../modules/endpoint");
 
 const locales = {
@@ -34,6 +36,11 @@ export default function RequestLeave(){
     const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
     const [allEvents, setallEvents] = useState(events);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const [leaveType, setLeaveType] = useState('');
+    const handleSelect=(e)=>{
+        console.log(e);
+        setLeaveType(e);
+    }
 
     async function handleAddEvent() {
         await setallEvents([...allEvents, newEvent]);
@@ -46,7 +53,7 @@ export default function RequestLeave(){
                 const date = newEventObject.start;
                 date.setDate(date.getDate() + 1);
                 const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
-                await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), "I'm cringe ", "Manager", "leaveRequest");
+                await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
             }
             else
             {
@@ -60,7 +67,7 @@ export default function RequestLeave(){
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
                     const removeSqlDate = dayLooper.toISOString().split('T')[0];
-                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), "I'm cringe ", "Manager", "leaveRequest");
+                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
                     await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }
@@ -146,8 +153,15 @@ export default function RequestLeave(){
                                 m={1}
                             >
 
-                                <input type="text" placeholder={"Leave Description"} value={newEvent.title}
-                                       onChange={(e) => setNewEvent({...newEvent, title:e.target.value}) }/>
+                                <DropdownButton title="Leave Reason" onSelect={handleSelect}>
+                                    <Dropdown.Item eventKey="RDO">RDO</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Sick Leave">Sick Leave</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Maternity / Parental Leave">Maternity / Parental Leave</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Family & Domestic Violence Leave">Family & Domestic Violence Leave</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Long Service Leave">Long Service Leave</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Community Sevice Leave">Community Service Leave</Dropdown.Item>
+                                    <Dropdown.Item eventKey="Other">Other</Dropdown.Item>
+                                </DropdownButton>
 
                                 <DatePicker placeholderText="Start Date" style={{marginBottom:'10px'}}
                                             selected={newEvent.start} onChange={(start) => setNewEvent({...newEvent,start})} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
-import {Alert,AlertTitle,TextField, Typography, Container} from "@mui/material";
+import {Alert,AlertTitle,Button,TextField, Typography, Container} from "@mui/material";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 const sha256 = require('crypto-js/sha256');
@@ -13,7 +13,7 @@ export default function RegisterCreateAdmin(){
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState("");     //containers for user input these are created to set and use throughout the page
     const [confirmPassword, setConfirmPassword] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [type, setType] = useState("Casual");
@@ -21,7 +21,7 @@ export default function RegisterCreateAdmin(){
     const [showAlert, setShowAlert] = useState(false);
     const [invalidFields, setInvalidFields] = useState([]);
 
-    const validateValues = () => {
+    const validateValues = () => { //function for form validation using regular expressions
         var fields = [];
         if (email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
             fields.push(" Invalid Email Address");
@@ -45,7 +45,7 @@ export default function RegisterCreateAdmin(){
         return (fields.length === 0);
     }
 
-    const submit = (event) => {
+    const submit = (event) => { //on submit if the validateValues function is passed then continue with the submit
         if(validateValues()) {
             event.preventDefault();
             const companyId = sessionStorage.getItem('company_id');
@@ -60,8 +60,9 @@ export default function RegisterCreateAdmin(){
                     emp_phNum: phoneNumber,
                     emp_type: type,
                     emp_privilege: "Admin",
+                    emp_password_changed: true,
                     company_id: companyId
-                }).catch((err) => {
+                }).catch((err) => { //catch errors
                     console.log(err);
                 });
 
@@ -70,8 +71,7 @@ export default function RegisterCreateAdmin(){
 
                 window.location.href = "/register/createemployees";
             })();
-        }else {
-            console.log("BRUH");
+        }else { //else prevent the event and show alert
             event.preventDefault();
             setShowAlert(true);
         }
@@ -102,8 +102,8 @@ export default function RegisterCreateAdmin(){
 
             <div className={"form-signin w-100 m-auto text-center"}>
                 <h1 className="h3 mb-3 fw-normal" >Admin details:</h1>
-                {showAlert ?
-                    <Alert
+                {showAlert ? //Alert event if true display Alert error else display info Alert
+                    <Alert //This is a simple Alert error created
                         severity="warning"
                         variant="outlined" >
                         <AlertTitle>Error</AlertTitle>
@@ -141,7 +141,7 @@ export default function RegisterCreateAdmin(){
                             onChange={(event) => {
                                 setLastName(event.target.value);
                             }}
-                        />
+                        /> {/* Each text field contains a certain id determining what variable it will store, on Change it will set that specific variable */}
                         <TextField
                             margin="normal"
                             required
@@ -208,7 +208,7 @@ export default function RegisterCreateAdmin(){
                         </select>
                     </div>
                     <br /><br />
-                    <button className="w-100 btn btn-lg btn-primary" type='submit'>Next</button>
+                    <Button size='large' variant='contained' type='submit'>Next Step</Button>
                 </form>
             </div>
             </Container>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
+import {Button} from '@mui/material';
 
 const sha256 = require('crypto-js/sha256');
 const {randomOneTimePassword} = require('../../modules/random.js');
@@ -36,7 +37,8 @@ export default function CompanyInfo(){
 
                 await axios.put("http://localhost:2420/updatePassword", {
                     emp_id: employee.emp_id,
-                    emp_password: hash.toString()
+                    emp_password: hash.toString(),
+                    emp_password_changed: false
                 });
 
                 employeeList.push(employee);
@@ -88,7 +90,7 @@ export default function CompanyInfo(){
             </div>
             <br />
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <button className="w-20 btn btn-lg btn-primary" onClick={() => printWindow()}>Print Information</button>
+                <Button size={"large"} variant={"contained"} onClick={() => printWindow()}>Print Information</Button>
             </div>
             <br />
         </>
