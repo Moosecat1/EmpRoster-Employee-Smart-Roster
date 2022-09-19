@@ -8,7 +8,7 @@ import pencils from '../resources/pencilsD.jpg';
 import { Button, ButtonGroup} from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import { Link } from "react-router-dom";
 
 function CarouselComp() {
     return (
@@ -73,7 +73,9 @@ function CarouselComp() {
                     <Button>About</Button>
                 </ButtonGroup> */}
                 <ButtonGroup>
-                    <Button>About</Button>
+                    <Button>About</Button>{
+                        
+                  }
                 </ButtonGroup>
                 </Col>
             </Row>
@@ -105,9 +107,11 @@ function CarouselComp() {
                 {/* <ButtonGroup className="me-2" aria-label="First group">
                     <Button>About</Button>
                 </ButtonGroup> */}
+                <Link to="/FAQ">
                 <ButtonGroup>
                     <Button>FAQ</Button>
                 </ButtonGroup>
+                </Link>
                 </Col>
             </Row>
             </Carousel.Caption>

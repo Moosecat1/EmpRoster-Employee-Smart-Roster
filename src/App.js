@@ -18,6 +18,7 @@ import ManagerViewEmployee from './pages/ManagerViewEmployee';
 import ViewCompanyRoster from "./pages/ViewCompanyRoster";
 import Notifications from "./pages/Notifications";
 import EditCompany from "./pages/EditCompany";
+import FAQ from "./pages/FAQ";
 
 export default function App() {
   console.log(sessionStorage.getItem('emp_privilege'));
@@ -28,6 +29,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
+          <Route path="/FAQ" element={<FAQ/>}/>
           <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
           <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
           <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
