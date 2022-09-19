@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
-import {Alert,AlertTitle,TextField, Typography, Container} from "@mui/material";
+import {Alert,AlertTitle,Button,TextField, Typography, Container} from "@mui/material";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 const sha256 = require('crypto-js/sha256');
@@ -208,7 +208,7 @@ export default function RegisterCreateAdmin(){
                         </select>
                     </div>
                     <br /><br />
-                    <button className="w-100 btn btn-lg btn-primary" type='submit'>Next</button>
+                    <Button size='large' variant='contained' type='submit'>Next Step</Button>
                 </form>
             </div>
             </Container>
