@@ -38,7 +38,8 @@ export default function MainHub() {
         if(password === confirmPassword){
             await axios.put("http://localhost:2420/updatePassword", {
                 emp_id: sessionStorage.getItem('emp_id'),
-                emp_password: sha256(password).toString()
+                emp_password: sha256(password).toString(),
+                emp_password_changed: true
             });
 
             sessionStorage.setItem('emp_password_changed', 1);
