@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {Alert, AlertTitle} from "@mui/material";
+import {Alert, AlertTitle, Container, TextField,Breadcrumbs,Link,Typography,Button} from "@mui/material";
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
 const { addNullRegularAvailabilities } = require('../../modules/endpoint');
@@ -97,9 +97,38 @@ export default function RegisterCreateEmployees(){
         })();
     }
 
+
+    // breadcrumbs for navigation of register pages and to show where user is
     return(
         <>
             <Navbar/>
+            <Container>
+
+                <div>
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link underline="hover" color="inherit" href="/">
+                            Landing Page
+                        </Link>
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            href="/register/createcompany"
+                        >
+                            Create Company
+                        </Link>
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            href="/register/createadmin"
+                        >
+                            Create Admin
+                        </Link>
+                        <Typography color="text.primary">
+                            Create Employees
+                        </Typography>
+                    </Breadcrumbs>
+                </div>
+
             <br />
                 <h1>Add Employees:</h1>
                 {showAlert ?
@@ -120,18 +149,39 @@ export default function RegisterCreateEmployees(){
                         {inputFields.map((inputField, index) =>
                             <div className={"form-signin w-100 m-auto text-center"} key={index}>
                                 <div className={"form-floating"}>
-                                    <label className="firstName">Employee First Name</label>
-                                    <input type={"text"} className={"form-control"} name={"firstName"} value={inputField.firstName} onChange={event => handleChangeInput(index, event)}/>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        type={"text"}
+                                        name={"firstName"}
+                                        label="Employee First Name"
+                                        value={inputField.firstName}
+                                        onChange={event => handleChangeInput(index, event)}
+                                    />
                                 </div>
-                                <br />
                                 <div className={"form-floating"}>
-                                    <label className="lastName">Employee Last Name</label>
-                                    <input type={"text"} className={"form-control"} name={"lastName"} value={inputField.lastName} onChange={event => handleChangeInput(index, event)}/>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        type={"text"}
+                                        name={"lastName"}
+                                        label="Employee Last Name"
+                                        value={inputField.lastName} onChange={event => handleChangeInput(index, event)}
+                                    />
                                 </div>
-                                <br />
                                 <div className={"form-floating"}>
-                                    <label className="email">Employee Email</label>
-                                    <input type={"text"} className={"form-control"} name={"email"} value={inputField.email} onChange={event => handleChangeInput(index, event)}/>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        type={"text"}
+                                        name={"email"}
+                                        label="Employee Email"
+                                        value={inputField.email}
+                                        onChange={event => handleChangeInput(index, event)}
+                                    />
                                 </div>
                                 <br />
                                 <div>
@@ -154,20 +204,21 @@ export default function RegisterCreateEmployees(){
                                     </select>
                                 </div>
                                 <br />
-                                <div className='buttonDiv'>
-                                    <button className="w-20 btn btn-lg" id="removeButton" onClick={() => handleRemove(index)}>Remove Employee</button>
+                                <div>
+                                    <Button size={"large"} variant={'contained'} color="error" onClick={() => handleRemove(index)}>Remove Employee</Button>
                                 </div>
                             </div>
                         )}
                         <br />
-                        <div className='buttonDiv'>
-                            <button className="w-20 btn btn-lg" id="addButton" onClick={handleAdd}>Add Employee</button>
+                        <div>
+                            <Button size={"large"} variant={'contained'} color="success" onClick={handleAdd}>Add Employee</Button>
                         </div>
                         <br /><br/>
                     </form>
                 <div className='buttonDiv'>
-                    <button className="w-20 btn btn-lg btn-primary" id="submitButton" onClick={finalise}>Submit</button>
+                    <Button size={"large"} variant={'contained'}  id="submitButton" onClick={finalise}>Submit</Button>
                 </div>
+            </Container>
             <br /><br />      
         </>
     );
