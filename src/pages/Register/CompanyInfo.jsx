@@ -37,7 +37,8 @@ export default function CompanyInfo(){
 
                 await axios.put("http://localhost:2420/updatePassword", {
                     emp_id: employee.emp_id,
-                    emp_password: hash.toString()
+                    emp_password: hash.toString(),
+                    emp_password_changed: false
                 });
 
                 employeeList.push(employee);

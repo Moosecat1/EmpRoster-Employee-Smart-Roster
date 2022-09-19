@@ -458,9 +458,10 @@ app.put("/updateEmployee", (req, res) => {
 app.put("/updatePassword", (req, res) => {
     const emp_id = req.body.emp_id;
     const emp_password = req.body.emp_password;
+    const emp_password_changed = req.body.emp_password_changed;
 
     db.query("UPDATE Employee SET emp_password = ?, emp_password_changed = ? WHERE emp_id = ?",
-        [emp_password, true, emp_id],
+        [emp_password, emp_password_changed, emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
