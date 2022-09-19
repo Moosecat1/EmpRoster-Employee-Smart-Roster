@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {Alert, AlertTitle} from "@mui/material";
+import {Alert, AlertTitle, Container} from "@mui/material";
 import Navbar from '../../components/navbar';
 import '../../css/Register.css'
 const { addNullRegularAvailabilities } = require('../../modules/endpoint');
@@ -100,6 +100,7 @@ export default function RegisterCreateEmployees(){
     return(
         <>
             <Navbar/>
+            <Container>
             <br />
                 <h1>Add Employees:</h1>
                 {showAlert ?
@@ -168,6 +169,7 @@ export default function RegisterCreateEmployees(){
                 <div className='buttonDiv'>
                     <button className="w-20 btn btn-lg btn-primary" id="submitButton" onClick={finalise}>Submit</button>
                 </div>
+            </Container>
             <br /><br />      
         </>
     );
