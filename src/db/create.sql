@@ -23,7 +23,7 @@ CREATE TABLE Employee(
     emp_password VARCHAR(255),
     emp_fName VARCHAR(255),
     emp_lName VARCHAR(255),
-    emp_email VARCHAR(255),
+    emp_email VARCHAR(255) UNIQUE,
     emp_phNum VARCHAR(255),
     emp_type VARCHAR(50),
     emp_privilege VARCHAR(50),
