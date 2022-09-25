@@ -8,11 +8,13 @@ CREATE TABLE Company(
 );
 
 CREATE TABLE CompanyEvent(
+    event_id INT NOT NULL AUTO_INCREMENT UNIQUE,
     event_date DATE,
     event_start TIME,
     event_end TIME,
     event_name VARCHAR(225),
     company_id VARCHAR(50),
+    PRIMARY KEY(event_name, event_date, company_id),
     FOREIGN KEY(company_id) REFERENCES Company(company_id)
 );
 

@@ -18,6 +18,7 @@ import ManagerViewEmployee from './pages/ManagerViewEmployee';
 import ViewCompanyRoster from "./pages/ViewCompanyRoster";
 import Notifications from "./pages/Notifications";
 import EditCompany from "./pages/EditCompany";
+import CompanyEvent from "./pages/CompanyEvent";
 
 export default function App() {
   console.log(sessionStorage.getItem('emp_privilege'));
@@ -74,6 +75,7 @@ export default function App() {
                   <Route path="/test" element={<Test/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
                   <Route path="/EditCompany" element={<EditCompany/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
 
@@ -99,6 +101,7 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
       );
@@ -120,6 +123,7 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
       );
