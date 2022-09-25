@@ -43,6 +43,7 @@ const times = ["All Day", "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", 
 
 export default function CompanyEvent(){
     const [companyEvents, setCompanyEvents] = useState([]);
+    const [isLoaded, setIsLoaded]= useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [inputFields, setInputFields] = useState([
         {
@@ -74,6 +75,7 @@ export default function CompanyEvent(){
             }
 
             setCompanyEvents(res.data);
+            setIsLoaded(true);
         }
 
         getCompanyEvents();
@@ -245,32 +247,34 @@ export default function CompanyEvent(){
             
     }
     
-    return(
-        <>
-            <Navbar/>
-
-            <div>
-                {checkEmpty()}
-            </div>
-            <br />
-            <button onClick={() => handleAddOpen()}>Add Event</button>
-            <Modal
-                open={addOpen}
-                onClose={handleAddClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description">
-                <Box sx={modalStyle}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Add Company Events
-                    </Typography>
-                    <br />
-                    {generateAddModal()}
-                    <br />
-                    <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <Button variant='contained' onClick={addEvents}>Add Events</Button>
-                    </div>
-                </Box>
-            </Modal>
-        </>
-    );
+    if(isLoaded){
+        return(
+            <>
+                <Navbar/>
+    
+                <div>
+                    {checkEmpty()}
+                </div>
+                <br />
+                <button onClick={() => handleAddOpen()}>Add Event</button>
+                <Modal
+                    open={addOpen}
+                    onClose={handleAddClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description">
+                    <Box sx={modalStyle}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Add Company Events
+                        </Typography>
+                        <br />
+                        {generateAddModal()}
+                        <br />
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                            <Button variant='contained' onClick={addEvents}>Add Events</Button>
+                        </div>
+                    </Box>
+                </Modal>
+            </>
+        );
+    }
 }
