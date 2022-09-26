@@ -65,7 +65,7 @@ export default function CompanyEvent(){
     useEffect(() => {
         const getCompanyEvents = async () => {
             const res = await axios.get("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
-
+            console.log("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
             for(let i = 0; i < res.data.length; i++){
                 let event_date = res.data[i].event_date;
 
@@ -133,7 +133,7 @@ export default function CompanyEvent(){
                 <td style={posStyle}>{companyEvent.event_start !== null ? companyEvent.event_start : "All Day"}</td>
                 <td style={posStyle}>{companyEvent.event_end !== null ? companyEvent.event_end : "All Day"}</td>
                 <td style={negStyle}>
-                    <Button variant={"contained"} color="error"  onClick={() => removeEvent(companyEvent.event_id)}>Remove</Button>
+                    <Button variant={"contained"} color={"error"} onClick={() => removeEvent(companyEvent.event_id)}>Remove</Button>
                 </td>
             </tr>
         );
@@ -285,7 +285,7 @@ export default function CompanyEvent(){
                                     {generateAddModal()}
                                     <br />
                                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                                        <Button variant='contained' onClick={addEvents}>Add Events</Button>
+                                        <Button variant='contained' onClick={() => addEvents()}>Add Events</Button>
                                     </div>
                                 </Box>
                             </Modal>
