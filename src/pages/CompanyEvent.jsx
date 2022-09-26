@@ -65,7 +65,6 @@ export default function CompanyEvent(){
     useEffect(() => {
         const getCompanyEvents = async () => {
             const res = await axios.get("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
-            console.log("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
             for(let i = 0; i < res.data.length; i++){
                 let event_date = res.data[i].event_date;
 
@@ -210,8 +209,6 @@ export default function CompanyEvent(){
     }
 
     const addEvents = async () => {
-        console.log(inputFields);
-
         let error = false;
 
         for(let i = 0; i < inputFields.length; i++){
