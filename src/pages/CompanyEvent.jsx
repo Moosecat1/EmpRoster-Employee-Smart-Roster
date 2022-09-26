@@ -1,7 +1,7 @@
 import {React, useEffect, useState} from "react";
 import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import { Modal,Container, Box,TextField, Typography, Button } from "@mui/material";
 import DatePicker from "react-datepicker";
 import axios from "axios";
 
@@ -133,7 +133,7 @@ export default function CompanyEvent(){
                 <td style={posStyle}>{companyEvent.event_start !== null ? companyEvent.event_start : "All Day"}</td>
                 <td style={posStyle}>{companyEvent.event_end !== null ? companyEvent.event_end : "All Day"}</td>
                 <td style={negStyle}>
-                    <button style={{color: "red"}} onClick={() => removeEvent(companyEvent.event_id)}>Remove</button>
+                    <Button variant={"contained"} color="error"  onClick={() => removeEvent(companyEvent.event_id)}>Remove</Button>
                 </td>
             </tr>
         );
@@ -170,11 +170,15 @@ export default function CompanyEvent(){
                 {inputFields.map((inputField, index) => 
                     <div className={"form-signin w-100 m-auto text-center"} key={index}>
                         <p>{`Event ${index}`}</p>
-                        <div className={"form-floating"}>
-                            <label className="name">Event Name</label>
-                            <input type={"text"} className={"form-control"} name={"name"} value={inputField.name} onChange={event => handleChangeInput(index, event)}/>
-                        </div>
-                        <br />
+                            <TextField
+                                required
+                                className={"form-control"}
+                                name={"name"}
+                                value={inputField.name}
+                                 label= {"Event Name"}
+                                onChange={event => handleChangeInput(index, event)}
+                            />
+                        <br /><br />
                         <DatePicker placeholderText="Event Date" selected={inputField.date} onChange={(date) => handleDateChange(index, date)}/>
                         <br /><br />
                         <label>Event Start:</label>
@@ -194,12 +198,12 @@ export default function CompanyEvent(){
                         </select>
                         <br /><br />
                         <div className='buttonDiv'>
-                            <button id="removeButton" onClick={() => handleRemove(index)}>Remove Event</button>
+                            <Button variant={'contained'} id="removeButton" onClick={() => handleRemove(index)}>Remove Event</Button>
                         </div>
                     </div>
                 )}
                 <div className='buttonDiv'>
-                <button id="addButton" onClick={handleAdd}>Add Event</button>
+                <Button variant={'contained'} id="addButton" onClick={handleAdd}>Add Event</Button>
                 </div>
             </form>
         );
@@ -251,29 +255,43 @@ export default function CompanyEvent(){
         return(
             <>
                 <Navbar/>
-    
-                <div>
-                    {checkEmpty()}
-                </div>
-                <br />
-                <button onClick={() => handleAddOpen()}>Add Event</button>
-                <Modal
-                    open={addOpen}
-                    onClose={handleAddClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description">
-                    <Box sx={modalStyle}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Add Company Events
-                        </Typography>
-                        <br />
-                        {generateAddModal()}
-                        <br />
-                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <Button variant='contained' onClick={addEvents}>Add Events</Button>
+                <Container>
+                    <Box display={"flex"}
+                        flexdirection={"row"}>
+                        <Box>
+                            <Sidebar/>
+                        </Box>
+
+                        <Box m={5}
+                             display="flex"
+                             flexDirection="column"
+                             justifyContent="center"
+                             alignItems="center">
+                            <div>
+                            {checkEmpty()}
                         </div>
+                            <br />
+                            <Button variant={'contained'} onClick={() => handleAddOpen()}>Add Event</Button>
+                            <Modal
+                                open={addOpen}
+                                onClose={handleAddClose}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description">
+                                <Box sx={modalStyle}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Add Company Events
+                                    </Typography>
+                                    <br />
+                                    {generateAddModal()}
+                                    <br />
+                                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                                        <Button variant='contained' onClick={addEvents}>Add Events</Button>
+                                    </div>
+                                </Box>
+                            </Modal>
+                        </Box>
                     </Box>
-                </Modal>
+                </Container>
             </>
         );
     }
