@@ -66,7 +66,7 @@ export default function RegisterCreateEmployees(){
                 }if( lastName === "" || (/\d/.test(lastName))){
                     errors.push(" Last Name: should not contain numbers or be left empty");
                 }if(email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
-                    errors.push(" Email: should not be left empty");
+                    errors.push(" Email: should not be left empty Or data entered is invalid");
                 }if(privilege === "" || type === ""){
                     errors.push(" Privilege or Type: should not be left empty");
                 }
@@ -87,13 +87,14 @@ export default function RegisterCreateEmployees(){
 
                     const empId = res.data[1];
                     await addNullRegularAvailabilities(empId);
+                    document.location.href = "/CompanyInfo";
             } else{
                     setInvalidFields(errors);
                     setShowAlert(true);
                 }
             }
 
-            document.location.href = "/CompanyInfo";
+
         })();
     }
 
