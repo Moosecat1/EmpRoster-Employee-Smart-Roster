@@ -66,11 +66,16 @@ export default function CompanyEvent(){
         const getCompanyEvents = async () => {
             const res = await axios.get("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
             for(let i = 0; i < res.data.length; i++){
-                let event_date = res.data[i].event_date;
+                const event = res.data[i];
+
+                let event_date = event.event_date;
 
                 const date = new Date(parseInt(event_date.substring(0, 4)), parseInt(event_date.substring(5, 7)) - 1, parseInt(event_date.substring(8, 10)) + 1);
+                
+                let primary_key = `${event.event_name}-${date.toISOString().substring(0, 10)}-${event.company_id}`;
 
                 res.data[i].event_date = date.toDateString();
+                res.data[i]["primary_key"] = primary_key;
             }
 
             setCompanyEvents(res.data);
@@ -224,6 +229,27 @@ export default function CompanyEvent(){
                 alert(`Start and end times cannot must both be all day or not at all at event ${i}.`);
                 break;
             }
+            if(inputField.date < new Date()){
+                error = true;
+                alert(`Event date must be a future date at event ${i}.`);
+                break;
+            }
+
+            const primary_key = `${inputField.name}-${inputField.date.toISOString().substring(0, 10)}-${sessionStorage.getItem('company_id')}`;
+            
+            let loopError = false;
+
+            for(let i2 = 0; i2 < companyEvents.length; i2++){
+                if(primary_key === companyEvents[i2].primary_key){
+                    error = true;
+                    loopError = true;
+                    alert(`Event name must be unique for the given date at event ${i}.`);
+                    break;
+                }
+            }
+
+            if(loopError)
+                break;
         }
 
         if(!error){
@@ -265,8 +291,8 @@ export default function CompanyEvent(){
                              justifyContent="center"
                              alignItems="center">
                             <div>
-                            {checkEmpty()}
-                        </div>
+                                {checkEmpty()}
+                            </div>
                             <br />
                             <Button variant={'contained'} onClick={() => handleAddOpen()}>Add Event</Button>
                             <Modal

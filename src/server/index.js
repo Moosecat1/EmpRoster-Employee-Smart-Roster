@@ -151,7 +151,7 @@ app.post("/addCompanyEvent", (req, res) => {
 app.get("/getCompanyEvents/:company_id", (req, res) => {
     const company_id = req.params.company_id;
 
-    db.query("SELECT * FROM CompanyEvent WHERE company_id = ? AND event_date >= CURRENT_DATE()",
+    db.query("SELECT * FROM CompanyEvent WHERE company_id = ? AND event_date >= CURRENT_DATE() ORDER BY event_date",
         [company_id],
         (err, result) => {
             if(err){console.log(err);}
