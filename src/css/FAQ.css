@@ -1,0 +1,16 @@
+.faqSpace {
+     display: flex;
+    flex-direction: column; 
+    margin-top: 50px;
+    padding-top: 50px; 
+     margin-bottom: 110px;
+    padding-bottom: 110px; 
+  }
+
+  .faqHeadingSpace {
+    display: flex;
+   flex-direction: column; 
+   margin-top: 50px;
+   padding-top: 50px; 
+ 
+ }

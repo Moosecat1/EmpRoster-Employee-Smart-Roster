@@ -1,4 +1,4 @@
-.Carousel {
+/* .Carousel { */
     /* display: flex;
     flex-direction: row;
     height: 900px; */
@@ -9,7 +9,7 @@
           height:auto;
         }
     } */
-  }
+  /* } */
 
   .carousel-caption{
     padding-bottom: 500px;
