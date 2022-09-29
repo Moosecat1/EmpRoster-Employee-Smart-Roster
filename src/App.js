@@ -23,8 +23,6 @@ import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 
 export default function App() {
-  console.log(sessionStorage.getItem('emp_privilege'));
-
   if(sessionStorage.getItem('emp_privilege') === null){
     return(
       <BrowserRouter>
