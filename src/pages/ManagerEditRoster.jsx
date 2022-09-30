@@ -81,7 +81,7 @@ export default function ManagerEditRoster(){
             <div key={index}>
                 <input type={'checkbox'} id={index} className={'employeeCheck'} name={employee.emp_id} onChange={event => addEmployee(event.target)}/>
                 &nbsp;&nbsp;
-                <label for={index}>{" " + employee.emp_id + ": " + employee.emp_fName + " " + employee.emp_lName}</label>
+                <label htmlFor={index}>{" " + employee.emp_id + ": " + employee.emp_fName + " " + employee.emp_lName}</label>
             </div>
         )
     }
@@ -91,7 +91,7 @@ export default function ManagerEditRoster(){
             <div key={index}>
                 <input type={'checkbox'} id={index} className={'employeeCheck'} name={employee.emp_id} onChange={event => removeEmployee(event.target)}/>
                 &nbsp;&nbsp;
-                <label for={index}>{" " + employee.emp_id + ": " + employee.emp_fName + " " + employee.emp_lName}</label>
+                <label htmlFor={index}>{" " + employee.emp_id + ": " + employee.emp_fName + " " + employee.emp_lName}</label>
             </div>
         )
     }
