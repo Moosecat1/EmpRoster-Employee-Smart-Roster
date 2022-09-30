@@ -30,8 +30,22 @@ function showTime(date) { // shows the current time with am or pm
     return strTime;
 }
 
+let weekStartConst = new Date();
+weekStartConst.setDate(weekStartConst.getDate() - weekStartConst.getDay());
+
+let weekStarts = [];
+
+let date = new Date();
+date.setDate(date.getDate() - date.getDay());
+
+for(let i = 0; i < 3; i++){
+    weekStarts.push(date.toISOString().split('T')[0]);
+    date.setDate(date.getDate() + 7);
+}
+
 export default function MainHub() {
     const [password, setPassword] = useState("");
+    const [weekStart, setWeekStart] = useState(weekStartConst);
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const updatePassword = async () => {
@@ -45,6 +59,11 @@ export default function MainHub() {
             sessionStorage.setItem('emp_password_changed', 1);
             document.location.reload();
         }
+    }
+
+    const handleWeekChange = (weekstart) => {
+        let newDate = new Date(parseInt(weekstart.substring(0, 4)), parseInt(weekstart.substring(5, 7)), parseInt(weekstart.substring(8, 10)));
+        setWeekStart(newDate);
     }
 
     sessionStorage.setItem('emp_view', sessionStorage.getItem('emp_id'));
@@ -73,15 +92,27 @@ export default function MainHub() {
                                     </ListItem>
                                 </List>
                         </Box>
-                            <Box
-                                display="flex"
-                                flexDirection="column"
-                                justifyContent="center"
-                                alignItems="center"
+                        <Box display="flex"
+                            justifyContent="flex-start"
+                            p={1}
+                        >
+                            <label>Roster Week Start: </label>
+                            &nbsp;
+                            <select name="weekStart" defaultValue={weekStart} onChange={(event) => handleWeekChange(event.target.value)}>
+                                {weekStarts.map((week_start, index) =>
+                                    <option name={week_start} key={index}>{week_start}</option>
+                                )}
+                            </select>
+                        </Box>
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
 
-                            >
-                                <Roster/>
-                            </Box>
+                        >
+                            <Roster week_start_sql={weekStart}/>
+                        </Box>
                     </Box>
                     <br />
                     </Box>
