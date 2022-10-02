@@ -27,8 +27,8 @@ class EmployeeList extends Component {
     }
 
     processEmps(){
-        return this.state.data.map((employee) =>
-            <Col>
+        return this.state.data.map((employee, index) =>
+            <Col key={index}>
                 <Card>
                     {/*<Card.Img variant="top" src="Placeholder" /> */ }
                     <Card.Body>
@@ -48,7 +48,7 @@ class EmployeeList extends Component {
         const res = await axios.get("http://localhost:2420/getEmployeesList/" + sessionStorage.getItem("company_id")).catch((err) => {
             console.log(err);
         });
-        console.log(res);
+        
         let empList = [];
 
         for(let i = 0; i < res.data.length; i++)

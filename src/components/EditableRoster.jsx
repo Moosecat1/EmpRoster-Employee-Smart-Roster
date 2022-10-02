@@ -178,16 +178,16 @@ class EditableRoster extends Component {
                             <label>Start Time:</label>
                             &nbsp;
                             <select id={"startTime"} name={'Start'} defaultValue={times[currentStartIndex]}>
-                                {times.map(time => 
-                                    <option value={time}>{time}</option>
+                                {times.map((time, index) => 
+                                    <option value={time} key={index}>{time}</option>
                                 )}
                             </select>
                             &nbsp;&nbsp;
                             <label>End Time:</label>
                             &nbsp;
                             <select id={"endTime"} name={'End'} defaultValue={times[currentEndIndex]}>
-                                {times.map(time => 
-                                    <option value={time}>{time}</option>
+                                {times.map((time, index) => 
+                                    <option value={time} key={index}>{time}</option>
                                 )}
                             </select>
                         </div>
