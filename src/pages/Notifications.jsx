@@ -4,10 +4,7 @@ import Navbar from "../components/navbar";
 import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import {Container, Box} from "@mui/material";
-import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
@@ -28,13 +25,13 @@ class Notifications extends Component {
 
     //Method that deals with a notification being accepted
     async acceptRequest(notification, index) {
-        if (notification.noti_type == "leaveRequest") {
+        if (notification.noti_type === "leaveRequest") {
             //Adds the accepted availability change to the database and makes a new notification for an employee in the database
             await addAvailability(notification.noti_date.split('T')[0], notification.noti_start, notification.noti_end, "Unavailable", notification.emp_id);
             await addNotification(notification.noti_date.split('T')[0], notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your leave request for the " + (this.state.dates[index].getDate() + 1) + "/" +  (this.state.dates[index].getMonth() + 1) + "/" +
                 this.state.dates[index].getFullYear() + " was accepted.", "Employee", "Accept");
         }
-        else if (notification.noti_type == "availabilityChange") {
+        else if (notification.noti_type === "availabilityChange") {
             //Adds the accepted regular availability change to the database and makes a new notification for an employee in the database
             await updateRegularAvailability(dayNames[notification.noti_desc], notification.noti_start, notification.noti_end, notification.emp_id);
             await addNotification(notification.noti_date, notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your change of availability for " + dayNames[notification.noti_desc] + "'s was accepted", "Employee", "Accept");
@@ -47,12 +44,12 @@ class Notifications extends Component {
 
     //Deals with a notification being denied
     async denyRequest(notification, index) {
-        if (notification.noti_type == "leaveRequest") {
+        if (notification.noti_type === "leaveRequest") {
             //Makes a new notification for an employee in the database
             await addNotification(notification.noti_date.split('T')[0], notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your leave request for the " + (this.state.dates[index].getDate() + 1) + "/" +  (this.state.dates[index].getMonth() + 1) + "/" +
                 this.state.dates[index].getFullYear() + " was denied.", "Employee", "Deny");
         }
-        else if (notification.noti_type == "availabilityChange") {
+        else if (notification.noti_type === "availabilityChange") {
             //Adds the accepted availability change to the database and makes a new notification for an employee in the database
             await addNotification(notification.noti_date, notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your change of availability for " + dayNames[notification.noti_desc] + "'s was accepted", "Employee", "Deny");
         }
@@ -70,7 +67,7 @@ class Notifications extends Component {
 
     //Deals with loading all the notification types properly
     notifType(notification, index) {
-        if (notification.noti_type == "leaveRequest") {
+        if (notification.noti_type === "leaveRequest") {
             //Returns a card that displays a request for leave that can be accepted or denied
             return(
                 <>
@@ -86,7 +83,7 @@ class Notifications extends Component {
                 </>
             )
         }
-        else if (notification.noti_type == "Deny") {
+        else if (notification.noti_type === "Deny") {
             //Returns a card that displays a denied notification
             return(
                 <>
@@ -100,7 +97,7 @@ class Notifications extends Component {
                     </>
             )
         }
-        else if (notification.noti_type == "Accept") {
+        else if (notification.noti_type === "Accept") {
             //Returns a card that displays an accepted notification
             return(
                 <>
@@ -114,7 +111,7 @@ class Notifications extends Component {
                 </>
             )
         }
-        else if (notification.noti_type == "availabilityChange") {
+        else if (notification.noti_type === "availabilityChange") {
             //Returns a card that displays a request for a regular availability change that can be accepted or denied
             return(
                 <>
@@ -134,7 +131,7 @@ class Notifications extends Component {
     //Deals with loading all notifications on the page properly
     processNotifs(){
         return this.state.data.map((notification, index) =>
-            <Col>
+            <Col key={index}>
                 <Card>
                     {this.notifType(notification, index)}
                 </Card>
@@ -157,7 +154,7 @@ class Notifications extends Component {
         {
             let date = new Date(res.data[i].noti_date);
             dateList.push(date);
-            if (res.data[i].noti_type == "availabilityChange") {
+            if (res.data[i].noti_type === "availabilityChange") {
                 //Gets an employees regular availability
                 res1 = await getRegularAvailability(res.data[i].emp_id, dayNames[res.data[i].noti_desc]);
                 res.data[i]["reg_start"] = res1.regStart;

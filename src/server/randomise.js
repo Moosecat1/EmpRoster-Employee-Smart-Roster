@@ -1,3 +1,5 @@
+//DOES NOT WORK ANYMORE DB IS TOO DIFFERENT AND DOES NOT MAKE SENSE TO UPDATE THIS RIGHT NOW AS MAKING A COMPANY IS QUITE EASY
+
 const { random, randomName, randomCompanyName, randomDomain, randomPhoneNumber, randomType, randomPrivilege } = require('../modules/random');
 const { addCompany, addCompanyEvent, addEmployee, addRegularAvailability, addAvailability, createRoster } = require('../modules/endpoint');
 
@@ -164,5 +166,3 @@ else
         }
     }
 })();
-
-

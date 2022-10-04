@@ -49,6 +49,7 @@ class EditableRoster extends Component {
         weekStart : new Date(),
         weekDates : [],
         employeeRosters : [],
+        employeeRegularAvailabilities : [],
         isLoaded : false,
         open : false,
         currentEmpView: '',
@@ -226,8 +227,25 @@ class EditableRoster extends Component {
             weekDates.push(dateString);
             dayLooper.setDate(dayLooper.getDate() + 1);
         }
+
+        let unique_emps = Array.from(new Set(employeeRosters.map(({emp_id}) => emp_id))).join(',');
+
+        const res1 = await axios.get("http://localhost:2420/getRosteredRegularAvailabilities", {
+            params: {emp_ids: unique_emps}
+        });
+
+        const res2 = await axios.get("http://localhost:2420/getCompanyEventsByWeek/" + sessionStorage.getItem('company_id'), {
+            params: {week_start: selectedDate}
+        });
+
+        const res3 = await axios.get("http://localhost:2420/getRosteredAvailabilities", {
+            params: {
+                emp_ids: unique_emps,
+                week_start: selectedDate
+            }
+        });
         
-        //group roster days by employee ID eg. {gam11: [{rosterObject}, {rosterObject}, gam12: [{rosterObject}]]}
+        //group roster days by employee ID eg. {gam11: [{rosterObject}, {rosterObject}], gam12: [{rosterObject}]}
         const sortedEmployeeRosters = employeeRosters.reduce((groupedEmployees, employee) => {
             const {emp_id} = employee;
 
