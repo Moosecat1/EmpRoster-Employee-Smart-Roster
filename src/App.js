@@ -74,7 +74,6 @@ export default function App() {
                   <Route path="/RequestLeave" element={<RequestLeave/>} />
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
-                  <Route path="/test" element={<Test/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
                   <Route path="/EditCompany" element={<EditCompany/>}/>
                   <Route path="/CompanyEvent" element={<CompanyEvent/>}/>

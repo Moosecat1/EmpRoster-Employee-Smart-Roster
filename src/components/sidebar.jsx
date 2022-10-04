@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {Box, Drawer,List, ListItem,ListItemIcon, ListItemButton, ListItemText, Divider} from "@mui/material";
-import {Home, People ,Settings, Edit, Preview} from "@mui/icons-material";
+import {Home, People,Event,Business,Notifications,Settings, Edit, Preview, EventAvailable, ViewColumn} from "@mui/icons-material";
 import PropTypes from "prop-types";
 
 
@@ -26,13 +26,11 @@ export default function Sidebar() {
     const url = window.location.href;
 
 
-
     if (sessionStorage.getItem("emp_privilege")  === 'Admin') {
         return (
             <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
                 <Divider/>
                 <List >
-                   
                         <ListItemButton  selected={selectedIndex === 0}
                                          onClick={(event) => handleListItemClick(event, 0)}
                                          href={"/MainHub"}>
@@ -42,8 +40,7 @@ export default function Sidebar() {
                             <ListItemText primary="Dashboard">
                             </ListItemText>
                         </ListItemButton>
-
-                        <ListItemButton selected={selectedIndex === 1}
+                        <ListItemButton selected={selectedIndex === 0}
                                         onClick={(event) => handleListItemClick(event, 1)}
                                         href={"/EmployeeList"}>
                             <ListItemIcon>
@@ -52,9 +49,17 @@ export default function Sidebar() {
                             <ListItemText primary="Employees" >
                             </ListItemText>
                         </ListItemButton>
-
-                        <ListItemButton  selected={selectedIndex === 2}
-                                         onClick={(event) => handleListItemClick(event, 2)}
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 2)}
+                                     href={"/notifications"}>
+                        <ListItemIcon>
+                            <Notifications/>
+                        </ListItemIcon>
+                        <ListItemText primary="Notifications">
+                        </ListItemText>
+                    </ListItemButton>
+                        <ListItemButton  selected={selectedIndex === 0}
+                                         onClick={(event) => handleListItemClick(event, 3)}
                                          href={"/settings"}>
                             <ListItemIcon>
                                 <Settings/>
@@ -62,8 +67,8 @@ export default function Sidebar() {
                             <ListItemText primary="Settings">
                             </ListItemText>
                         </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === 3}
-                                     onClick={(event) => handleListItemClick(event, 3)}
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 4)}
                                      href={"/ViewCompanyRoster"}>
                         <ListItemIcon>
                             <Preview/>
@@ -72,37 +77,42 @@ export default function Sidebar() {
                         </ListItemText>
                     </ListItemButton>
 
-                    <ListItemButton  selected={selectedIndex === 4}
-                                     onClick={(event) => handleListItemClick(event, 4)}
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 5)}
                                      href={"/ChangeAvailability"}>
                         <ListItemIcon>
-                            <Edit/>
+                            <EventAvailable/>
                         </ListItemIcon>
                         <ListItemText primary="Change Availability">
                         </ListItemText>
                     </ListItemButton>
-
-                    <ListItemButton  selected={selectedIndex === 5}
-                                     onClick={(event) => handleListItemClick(event, 5)}
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 6)}
+                                     href={"/CompanyEvent"}>
+                        <ListItemIcon>
+                            <Event/>
+                        </ListItemIcon>
+                        <ListItemText primary="Company Event">
+                        </ListItemText>
+                    </ListItemButton>
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 7)}
                                      href={"/ManagerEditRoster"}>
                         <ListItemIcon>
-                            <Edit/>
+                            <ViewColumn/>
                         </ListItemIcon>
                         <ListItemText primary="Edit Roster">
                         </ListItemText>
                     </ListItemButton>
-
-                    <ListItemButton  selected={selectedIndex === 6}
-                                     onClick={(event) => handleListItemClick(event, 6)}
+                    <ListItemButton  selected={selectedIndex === 0}
+                                     onClick={(event) => handleListItemClick(event, 8)}
                                      href={"/editcompany"}>
                         <ListItemIcon>
-                            <Edit/>
+                            <Business/>
                         </ListItemIcon>
                         <ListItemText primary="Edit Company">
                         </ListItemText>
                     </ListItemButton>
-
-
                 </List>
                 <Divider/>
 
@@ -114,7 +124,6 @@ export default function Sidebar() {
             <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
                 <Divider/>
                 <List >
-
                     <ListItemButton  selected={selectedIndex === 0}
                                      onClick={(event) => handleListItemClick(event, 0)}
                                      href={"/MainHub"}>
@@ -124,7 +133,6 @@ export default function Sidebar() {
                         <ListItemText primary="Dashboard">
                         </ListItemText>
                     </ListItemButton>
-
                     <ListItemButton selected={selectedIndex === 1}
                                     onClick={(event) => handleListItemClick(event, 1)}
                                     href={"/EmployeeList"}>
@@ -134,9 +142,17 @@ export default function Sidebar() {
                         <ListItemText primary="Employees" >
                         </ListItemText>
                     </ListItemButton>
-
                     <ListItemButton  selected={selectedIndex === 2}
                                      onClick={(event) => handleListItemClick(event, 2)}
+                                     href={"/notifications"}>
+                        <ListItemIcon>
+                            <Notifications/>
+                        </ListItemIcon>
+                        <ListItemText primary="Notifications">
+                        </ListItemText>
+                    </ListItemButton>
+                    <ListItemButton  selected={selectedIndex === 3}
+                                     onClick={(event) => handleListItemClick(event, 3)}
                                      href={"/settings"}>
                         <ListItemIcon>
                             <Settings/>
@@ -144,8 +160,8 @@ export default function Sidebar() {
                         <ListItemText primary="Settings">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === 3}
-                                     onClick={(event) => handleListItemClick(event, 3)}
+                    <ListItemButton  selected={selectedIndex === 4}
+                                     onClick={(event) => handleListItemClick(event, 4)}
                                      href={"/ViewCompanyRoster"}>
                         <ListItemIcon>
                             <Preview/>
@@ -154,27 +170,33 @@ export default function Sidebar() {
                         </ListItemText>
                     </ListItemButton>
 
-                    <ListItemButton  selected={selectedIndex === 4}
-                                     onClick={(event) => handleListItemClick(event, 4)}
+                    <ListItemButton  selected={selectedIndex === 5}
+                                     onClick={(event) => handleListItemClick(event, 5)}
                                      href={"/ChangeAvailability"}>
                         <ListItemIcon>
-                            <Edit/>
+                            <EventAvailable/>
                         </ListItemIcon>
                         <ListItemText primary="Change Availability">
                         </ListItemText>
                     </ListItemButton>
-
-                    <ListItemButton  selected={selectedIndex === 5}
-                                     onClick={(event) => handleListItemClick(event, 5)}
+                    <ListItemButton  selected={selectedIndex === 6}
+                                     onClick={(event) => handleListItemClick(event, 6)}
                                      href={"/ManagerEditRoster"}>
                         <ListItemIcon>
-                            <Edit/>
+                            <ViewColumn/>
                         </ListItemIcon>
                         <ListItemText primary="Edit Roster">
                         </ListItemText>
                     </ListItemButton>
-
-
+                    <ListItemButton  selected={selectedIndex === 7}
+                                     onClick={(event) => handleListItemClick(event, 7)}
+                                     href={"/CompanyEvent"}>
+                        <ListItemIcon>
+                            <Event/>
+                        </ListItemIcon>
+                        <ListItemText primary="Company Event">
+                        </ListItemText>
+                    </ListItemButton>
                 </List>
                 <Divider/>
 
@@ -187,7 +209,6 @@ export default function Sidebar() {
                 <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
         <Divider/>
             <List >
-
             <ListItemButton  selected={selectedIndex === 0}
             onClick={(event) => handleListItemClick(event, 0)}
             href={"/MainHub"}>
@@ -197,7 +218,6 @@ export default function Sidebar() {
             <ListItemText primary="Dashboard">
             </ListItemText>
         </ListItemButton>
-
             <ListItemButton selected={selectedIndex === 1}
                             onClick={(event) => handleListItemClick(event, 1)}
                             href={"/RequestLeave"}>
@@ -207,9 +227,17 @@ export default function Sidebar() {
                 <ListItemText primary="Request Leave" >
                 </ListItemText>
             </ListItemButton>
-
-            <ListItemButton  selected={selectedIndex === 2}
-                             onClick={(event) => handleListItemClick(event, 2)}
+                <ListItemButton  selected={selectedIndex === 2}
+                                 onClick={(event) => handleListItemClick(event, 2)}
+                                 href={"/notifications"}>
+                    <ListItemIcon>
+                        <Notifications/>
+                    </ListItemIcon>
+                    <ListItemText primary="Notifications">
+                    </ListItemText>
+                </ListItemButton>
+            <ListItemButton  selected={selectedIndex === 3}
+                             onClick={(event) => handleListItemClick(event, 3)}
                              href={"/settings"}>
                 <ListItemIcon>
                     <Settings/>
@@ -217,17 +245,15 @@ export default function Sidebar() {
                 <ListItemText primary="Settings">
                 </ListItemText>
             </ListItemButton>
-
-            <ListItemButton  selected={selectedIndex === 3}
-                             onClick={(event) => handleListItemClick(event, 3)}
+            <ListItemButton  selected={selectedIndex === 4}
+                             onClick={(event) => handleListItemClick(event, 4)}
                              href={"/ChangeAvailability"}>
                 <ListItemIcon>
-                    <Edit/>
+                    <EventAvailable/>
                 </ListItemIcon>
                 <ListItemText primary="Change Availability">
                 </ListItemText>
             </ListItemButton>
-
         </List>
             <Divider/>
 
