@@ -83,7 +83,7 @@ class CompanyRoster extends Component {
         const {employeeList} = this.state;
 
         return employeeList.map((employee, index) => 
-            <tr>
+            <tr key={index}>
                 <td style={nameStyle}>{employee.emp_fName + " " + employee.emp_lName}</td>
                 <td style={this.checkDay(0, index).style}>{this.checkDay(0, index).text}</td>
                 <td style={this.checkDay(1, index).style}>{this.checkDay(1, index).text}</td>
