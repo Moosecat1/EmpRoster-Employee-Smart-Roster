@@ -468,6 +468,30 @@ app.put("/updatePassword", (req, res) => {
     });
 });
 
+app.put("/updateEmail", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_email = req.body.emp_email;
+
+    db.query("UPDATE Employee SET emp_email = ? WHERE emp_id = ?",
+        [emp_email, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
+app.put("/updatePhone", (req, res) => {
+    const emp_id = req.body.emp_id;
+    const emp_phNum = req.body.emp_phNum;
+
+    db.query("UPDATE Employee SET emp_phNum = ? WHERE emp_id = ?",
+        [emp_phNum, emp_id],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+        });
+});
+
 app.put("/updateRegularAvailability", (req, res) => {
     const emp_id = req.body.emp_id;
     const day_name = req.body.day_name;

@@ -121,7 +121,7 @@ export default function Settings(){
                                         <List>
                                             <ListItem>
                                                 <ListItemText>Employee Phone Number:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
+                                                    <br/> <Button variant="contained" size="small" href="/UpdatePhone">Edit</Button>
 
                                                 </ListItemText>
 
@@ -131,7 +131,7 @@ export default function Settings(){
                                             <ListItem>
                                                 <ListItemText>Employee Email Address:
                                                     <br/>
-                                                    <Button variant="contained" size="small" submit>Edit</Button>
+                                                    <Button variant="contained" size="small" href="/UpdateEmail">Edit</Button>
                                                 </ListItemText>
                                             </ListItem>
 
@@ -142,7 +142,7 @@ export default function Settings(){
                                         <List>
                                             <ListItem>
                                                 <ListItemText>Password:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
+                                                    <br/> <Button variant="contained" size="small" href="/UpdatePassword">Edit</Button>
 
                                                 </ListItemText>
                                             </ListItem>

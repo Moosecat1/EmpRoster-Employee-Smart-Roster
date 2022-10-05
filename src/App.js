@@ -20,6 +20,9 @@ import Notifications from "./pages/Notifications";
 import EditCompany from "./pages/EditCompany";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
+import UpdatePassword from "./pages/UpdatePassword";
+import UpdateEmail from "./pages/UpdateEmail";
+import UpdatePhone from "./pages/UpdatePhone";
 
 export default function App() {
   console.log(sessionStorage.getItem('emp_privilege'));
@@ -78,6 +81,9 @@ export default function App() {
                   <Route path="/test" element={<Test/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
                   <Route path="/EditCompany" element={<EditCompany/>}/>
+                  <Route path="/UpdatePassword" element={<UpdatePassword/>}/>
+                  <Route path="/UpdateEmail" element={<UpdateEmail/>}/>
+                  <Route path="/UpdatePhone" element={<UpdatePhone/>}/>
               </Routes>
           </BrowserRouter>
 
@@ -103,6 +109,9 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/UpdatePassword" element={<UpdatePassword/>}/>
+                  <Route path="/UpdateEmail" element={<UpdateEmail/>}/>
+                  <Route path="/UpdatePhone" element={<UpdatePhone/>}/>
               </Routes>
           </BrowserRouter>
       );
@@ -124,6 +133,9 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/UpdatePassword" element={<UpdatePassword/>}/>
+                  <Route path="/UpdateEmail" element={<UpdateEmail/>}/>
+                  <Route path="/UpdatePhone" element={<UpdatePhone/>}/>
               </Routes>
           </BrowserRouter>
       );

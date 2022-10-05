@@ -67,6 +67,36 @@ const addEmployee = async (emp_password, emp_fName, emp_lName, emp_email, emp_ph
     return emp_id;
 }
 
+const updatePassword = async (emp_id, emp_password, emp_password_changed) => {
+    const hash = sha256(emp_password);
+
+    await axios.put("http://localhost:2420/updatePassword", {
+        emp_id: emp_id,
+        emp_password: hash.toString(),
+        emp_password_change: true
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const updateEmail = async (emp_id, emp_email) => {
+    await axios.put("http://localhost:2420/updateEmail", {
+        emp_id: emp_id,
+        emp_email: emp_email
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+const updatePhone = async (emp_id, emp_phNum) => {
+    await axios.put("http://localhost:2420/updatePhone", {
+        emp_id: emp_id,
+        emp_phNum: emp_phNum
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 const addCompany = async (company_name) => {
     var company_id;
 
@@ -388,6 +418,9 @@ const getEmployeeName = async (emp_id) => {
 
 //export the functions so they can be used program-wide
 module.exports.verifyEmployee = verifyEmployee;
+module.exports.updatePassword = updatePassword;
+module.exports.updateEmail = updateEmail;
+module.exports.updatePhone = updatePhone;
 module.exports.addEmployee = addEmployee;
 module.exports.addCompany = addCompany;
 module.exports.addCompanyEvent = addCompanyEvent;
