@@ -1,11 +1,10 @@
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useReducer} from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import Roster from "../components/roster";
 import {Avatar,Box,Button,Container,Typography,List,ListItem,ListItemText, Grid} from "@mui/material";
 import Calendar from 'react-calendar';
 const axios = require('axios');
-
 
 function stringToColour(string) { // This function is to make a string to a colour
     let hash = 0;
@@ -53,9 +52,13 @@ function showTime(date) { // shows the current time with am or pm
     return strTime;
 }
 
-export default function ManagerViewEmployee(){
+let weekStartConst = new Date();
+weekStartConst.setDate(weekStartConst.getDate() - weekStartConst.getDay());
 
+export default function ManagerViewEmployee(){
     const [empName, setEmpName] = useState("");
+    const [weekStart, setWeekStart] = useState(weekStartConst);
+    const [weekStarts, setWeekStarts] = useState([]);
     const [hasLoaded, setHasLoaded] = useState(false);
 
     useEffect(() => {
@@ -69,78 +72,104 @@ export default function ManagerViewEmployee(){
         }
 
         getEmpName();
+
+        let weekStarts = [];
+
+        let date = new Date();
+        date.setDate(date.getDate() - date.getDay());
+
+        for(let i = 0; i < 3; i++){
+            weekStarts.push(date.toISOString().split('T')[0]);
+            date.setDate(date.getDate() + 7);
+        }
+
+        setWeekStarts(weekStarts);
     }, []);
+
+    const handleWeekChange = (weekstart) => {
+        let newDate = new Date(parseInt(weekstart.substring(0, 4)), parseInt(weekstart.substring(5, 7)), parseInt(weekstart.substring(8, 10)));
+        setWeekStart(newDate);
+    }
 
     if(hasLoaded)
     {
+        return(
+            <main>
+                <Navbar/>
+                <Container >
+                    <Box
+                        display={"flex"}
+                        direction={"row"}>
 
-    return(
-        <main>
-            <Navbar/>
+                        <Box >
+                            <Sidebar/>
+                        </Box>
 
+                        <Box m={2}>
+                            <Box display="flex"
+                                flexDirection="row"
+                                justifyContent="flex-start">
 
-            <Container >
-                <Box
-                    display={"flex"}
-                    direction={"row"}>
+                                <Box>
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        p={1}
+                                    >
+                                        <Avatar {...stringAvatar(empName)} ></Avatar>
+                                        &nbsp;
+                                            <h3>{empName}</h3>
+                                    </Box>
 
-                    <Box >
-                        <Sidebar/>
-                    </Box>
+                                    <Box display="flex"
+                                        flexDirection="column"
+                                        justifyContent="flex-start"
+                                        p={1}
+                                    >
+                                        <List sx={{fontWeight:'bold'}}>
+                                            <ListItem>
+                                                <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster:</Typography>} />
+                                            </ListItem>
+                                            <ListItem>
+                                                {"Date: " + displayTodaysDate()}
+                                            </ListItem>
+                                            <ListItem>
+                                                { "Time: " + showTime(new Date())}
+                                            </ListItem>
+                                        </List>
+                                    </Box>
+                                    <Box display="flex"
+                                        justifyContent="flex-start"
+                                        p={1}
+                                    >
+                                        <label>Roster Week Start: </label>
+                                        &nbsp;
+                                        <select name="weekStart" defaultValue={weekStart} onChange={(event) => handleWeekChange(event.target.value)}>
+                                            {weekStarts.map((week_start, index) =>
+                                                <option name={week_start} key={index}>{week_start}</option>
+                                            )}
+                                        </select>
+                                    </Box>
+                                    <br />
+                                    <Box
 
-                    <Box m={2}>
-                        <Box display="flex"
-                             flexDirection="row"
-                             justifyContent="flex-start">
-
-                            <Box>
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    p={1}
-                                >
-                                    <Avatar {...stringAvatar(empName)} ></Avatar>
-                                    &nbsp;
-                                        <h3>{empName}</h3>
-                                </Box>
-
-                                <Box display="flex"
-                                     flexDirection="column"
-                                     justifyContent="flex-start"
-                                     p={1}
-                                >
-                                    <List sx={{fontWeight:'bold'}}>
-                                        <ListItem>
-                                            <ListItemText disableTypography primary={<Typography type="body2" sx={{fontWeight:'bold'}}>This Weeks Roster:</Typography>} />
-                                        </ListItem>
-                                        <ListItem>
-                                            {"Date: " + displayTodaysDate()}
-                                        </ListItem>
-                                        <ListItem>
-                                            { "Time: " + showTime(new Date())}
-                                        </ListItem>
-                                    </List>
-                                </Box>
-
-                                <Box
-
-                                    display="flex"
-                                    flexDirection="column"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    sx ={{width:"1000px"}}
-                                >
-                                    <Roster/>
-                                </Box>
-                            </Box >
+                                        display="flex"
+                                        flexDirection="column"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        sx ={{width:"1000px"}}
+                                    >
+                                        <Roster week_start_sql={weekStart}/>
+                                    </Box>
+                                </Box >
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-            </Container>
-        </main>
-    )
+                </Container>
+            </main>
+        )
     }
 
 

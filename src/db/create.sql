@@ -8,11 +8,13 @@ CREATE TABLE Company(
 );
 
 CREATE TABLE CompanyEvent(
+    event_id INT NOT NULL AUTO_INCREMENT UNIQUE,
     event_date DATE,
     event_start TIME,
     event_end TIME,
     event_name VARCHAR(225),
     company_id VARCHAR(50),
+    PRIMARY KEY(event_name, event_date, company_id),
     FOREIGN KEY(company_id) REFERENCES Company(company_id)
 );
 
@@ -21,7 +23,7 @@ CREATE TABLE Employee(
     emp_password VARCHAR(255),
     emp_fName VARCHAR(255),
     emp_lName VARCHAR(255),
-    emp_email VARCHAR(255),
+    emp_email VARCHAR(255) UNIQUE,
     emp_phNum VARCHAR(255),
     emp_type VARCHAR(50),
     emp_privilege VARCHAR(50),
