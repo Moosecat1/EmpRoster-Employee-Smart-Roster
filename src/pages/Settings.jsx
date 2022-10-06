@@ -3,12 +3,18 @@ import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
 
-import {Box,Button, Container ,List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Grid, Paper, Avatar , styled,Slider, Switch} from "@mui/material";
+import {Box, Button, Container, TextField, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Stack, Grid, Paper, Avatar, styled, Slider, Switch, Collapse, Alert, IconButton} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import {useState} from "react";
 const axios = require('axios');
+
+const { verifyEmployee, updatePassword, updateEmail, updatePhone } = require('../modules/endpoint');
 
 const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which holds an item
     backgroundColor: theme.palette.mode === 'dark' ? '#000000' : '#fff',
@@ -18,6 +24,20 @@ const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which h
     color: theme.palette.text.secondary,
 
 }));
+
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    overflowY: 'scroll',
+    maxHeight: "70%",
+    boxShadow: 24,
+    p: 4,
+};
 
 const label = { inputProps: { 'aria-label': 'Colour-Blind-Switch' } }; //simple switch label
 
@@ -80,11 +100,156 @@ function valuetext(value) { //font size value
 export default function Settings(){
 
     const [theme, setTheme] = React.useState(1);
-
+    const [changeType, setType] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [current_password, setCPass] = useState("");
+    const [emp_password, setPassword] = useState("");
+    const [loginMessage, setMessage] = useState("");
+    const [open, setOpen] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const handleOpen = (type) => {setType(type); setOpen(true);};
+    const handleClose = () => {/*{setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''});*/ setOpen(false);}
 
     const handleChange = (event) => {
         setTheme(event.target.value);
     };
+
+    const submitChanges = async () => {
+        if (changeType == "phone") {
+            (async () => {
+                await updatePhone(sessionStorage.getItem('emp_id'), phone);
+            })();
+            document.location.reload();
+        }
+        else if (changeType == "email") {
+            (async () => {
+                await updateEmail(sessionStorage.getItem('emp_id'), email);
+            })();
+        }
+        else if (changeType == "password") {
+            (async () => {
+                const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
+                const empExists = res.empExists;
+                if (empExists) {
+                    await updatePassword(sessionStorage.getItem('emp_id'), emp_password, 1);
+                    setAlert(false)
+                } else { //otherwise open the alert and set the error message
+                    setAlert(true);
+                    setMessage("Incorrect email or password");
+                }
+            })();
+        }
+    }
+
+    const generateModal = () => {
+        if(changeType == "phone") {
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Phone Number
+                    </Typography>
+                    <br />
+                    <TextField margin="normal"
+                               required
+                               fullWidth
+                               id="phone"
+                               label="New Phone Number"
+                               name="phone"
+                               autoComplete="name1234 or name@example.com"
+                               autoFocus
+                               onChange={(event) => {
+                                   setPhone(event.target.value)
+                               }}/>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button onClick={() => submitChanges()}>Save Changes</button>
+                    </div>
+                </div>
+            )
+        }
+        else if (changeType == "email") {
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Email
+                    </Typography>
+                    <br />
+                    <TextField margin="normal"
+                               required
+                               fullWidth
+                               id="email"
+                               label="New Email"
+                               name="email"
+                               autoComplete="name1234 or name@example.com"
+                               autoFocus
+                               onChange={(event) => {
+                                   setEmail(event.target.value)
+                               }}/>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button onClick={() => submitChanges()}>Save Changes</button>
+                    </div>
+                </div>
+            )
+        }
+        else if (changeType == "password") {
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Password
+                    </Typography>
+                    <br />
+                    <Collapse in={open}>
+                        <Alert severity="error" action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    setAlert(false);
+                                }}
+                            >
+                                <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                               sx={{ mb: 2 }}
+                        >
+                            {loginMessage}
+                        </Alert>
+                    </Collapse>
+                    <div className={"form-floating"}>
+                        <TextField margin="normal"
+                                   required
+                                   fullWidth
+                                   id="cPass"
+                                   label="Current Password"
+                                   name="cPass"
+                                   type="password"
+                                   onChange={(event) => {
+                                       setCPass(event.target.value)
+                                   }}/>
+                    </div>
+                    <div>
+                        <TextField margin="normal"
+                                   required
+                                   fullWidth
+                                   id="nPass"
+                                   label="New Password"
+                                   name="nPass"
+                                   type="password"
+                                   onChange={(event) => {
+                                       setPassword(event.target.value);
+                                   }}/>
+                    </div>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button onClick={() => submitChanges()}>Save Changes</button>
+                    </div>
+                </div>
+            )
+        }
+    }
 
     return(
         <>
@@ -121,8 +286,8 @@ export default function Settings(){
                                         <List>
                                             <ListItem>
                                                 <ListItemText>Employee Phone Number:
-                                                    <br/> <Button variant="contained" size="small" href="/UpdatePhone">Edit</Button>
-
+                                                    <br/>
+                                                    <Button variant="contained" size="small" onClick={() => handleOpen("phone")}>Edit</Button>
                                                 </ListItemText>
 
 
@@ -131,7 +296,7 @@ export default function Settings(){
                                             <ListItem>
                                                 <ListItemText>Employee Email Address:
                                                     <br/>
-                                                    <Button variant="contained" size="small" href="/UpdateEmail">Edit</Button>
+                                                    <Button variant="contained" size="small" onClick={() => handleOpen("email")}>Edit</Button>
                                                 </ListItemText>
                                             </ListItem>
 
@@ -142,7 +307,7 @@ export default function Settings(){
                                         <List>
                                             <ListItem>
                                                 <ListItemText>Password:
-                                                    <br/> <Button variant="contained" size="small" href="/UpdatePassword">Edit</Button>
+                                                    <br/> <Button variant="contained" size="small" onClick={() => handleOpen("password")}>Edit</Button>
 
                                                 </ListItemText>
                                             </ListItem>
@@ -276,6 +441,15 @@ export default function Settings(){
 
                         </Box>
                     </Box>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description">
+                        <Box sx={modalStyle}>
+                            {generateModal()}
+                        </Box>
+                    </Modal>
             </Container>
         </>
     );
