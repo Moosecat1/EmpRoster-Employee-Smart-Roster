@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Table from 'react-bootstrap/Table';
-import { getRoster } from '../modules/endpoint';
 import '../css/roster.css'
 const axios = require('axios');
 
@@ -31,17 +29,16 @@ let lastestFinish = "18:00";
 
 let displayTimes = [];
 
+let count = 0;
+
 class Roster extends Component {
     state = {
-        data : [],
         isLoaded : false,
+        cells : [],
         isRostered : false
     }
 
-    checkTime(dayIndex, timeIndex){
-        const {data} = this.state;
-        //console.log(data[dayIndex]);
-
+    checkTime(dayIndex, timeIndex, data){
         if(data[dayIndex].startTime === displayTimes[timeIndex])
         {
             dayBool[dayIndex] = true;
@@ -67,47 +64,13 @@ class Roster extends Component {
         }
     }
 
-    processTimes(){
-        //make subset of times that only is working hours
-        const startIndex = times.indexOf(earliestStart);
-        const endIndex = times.indexOf(lastestFinish);
+    async getData(weekStart){
+        if(count !== 0){
+            weekStart.setMonth(weekStart.getMonth() - 1);
+        } else{
+            count++;
+        }
 
-        displayTimes = times.slice(startIndex, endIndex);
-        console.log(earliestStart);
-
-        return displayTimes.map((time, index) =>
-            <tr style={{border: "1px solid black"}}>
-                <td style={{border: "1px solid black"}}>
-                    {time}
-                </td>
-                <td style={this.checkTime(0, index).style}>
-                    {this.checkTime(0, index).text}
-                </td>
-                <td style={this.checkTime(1, index).style}>
-                    {this.checkTime(1, index).text}
-                </td>
-                <td style={this.checkTime(2, index).style}>
-                    {this.checkTime(2, index).text}
-                </td>
-                <td style={this.checkTime(3, index).style}>
-                    {this.checkTime(3, index).text}
-                </td>
-                <td style={this.checkTime(4, index).style}>
-                    {this.checkTime(4, index).text}
-                </td>
-                <td style={this.checkTime(5, index).style}>
-                    {this.checkTime(5, index).text}
-                </td>
-                <td style={this.checkTime(6, index).style}>
-                    {this.checkTime(6, index).text}
-                </td>
-            </tr>
-        );
-    }
-
-    async componentDidMount(){
-        let weekStart = new Date();
-        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
         const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
@@ -173,9 +136,62 @@ class Roster extends Component {
                 earliestStart = res1.data[0].rost_start.substring(0, 5);
                 lastestFinish = res2.data[0].rost_end.substring(0, 5);
             }
+        } else{
+            earliestStart = "08:00";
+            lastestFinish = "18:00";
         }
 
-        this.setState({data: empRostTimes, isLoaded: true});
+        const startIndex = times.indexOf(earliestStart);
+        const endIndex = times.indexOf(lastestFinish);
+
+        displayTimes = times.slice(startIndex, endIndex);
+
+        const processes = displayTimes.map((time, index) =>
+            <tr style={{border: "1px solid black"}} key={index}>
+                <td style={{border: "1px solid black"}}>
+                    {time}
+                </td>
+                <td style={this.checkTime(0, index, empRostTimes).style}>
+                    {this.checkTime(0, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(1, index, empRostTimes).style}>
+                    {this.checkTime(1, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(2, index, empRostTimes).style}>
+                    {this.checkTime(2, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(3, index, empRostTimes).style}>
+                    {this.checkTime(3, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(4, index, empRostTimes).style}>
+                    {this.checkTime(4, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(5, index, empRostTimes).style}>
+                    {this.checkTime(5, index, empRostTimes).text}
+                </td>
+                <td style={this.checkTime(6, index, empRostTimes).style}>
+                    {this.checkTime(6, index, empRostTimes).text}
+                </td>
+            </tr>
+        );
+        
+        sunBool = monBool = tueBool = wedBool = thuBool = friBool = satBool = false;
+        dayBool = [sunBool, monBool, tueBool, wedBool, thuBool, friBool, satBool];
+
+        this.setState({cells: processes, isLoaded: true});
+    }
+
+    async componentDidUpdate(prevProps){
+        if(this.props.week_start_sql !== prevProps.week_start_sql){
+            await this.getData(this.props.week_start_sql);
+        }
+    }
+
+    async componentDidMount(){
+        let weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+
+        await this.getData(weekStart);
     }
 
     render(){
@@ -198,7 +214,7 @@ class Roster extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.processTimes()}
+                            {this.state.cells}
                         </tbody>
                     </table>
                 </div>
