@@ -1,18 +1,13 @@
 import * as React from 'react';
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
 
-import {Box, Button, Container, TextField, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Stack, Grid, Paper, Avatar, styled, Slider, Switch, Collapse, Alert, IconButton} from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import {Box, Button, Container, TextField, List, ListItem, ListItemText,  Grid, Paper, Avatar, styled } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 const axios = require('axios');
+
 
 const { verifyEmployee, updatePassword, updateEmail, updatePhone } = require('../modules/endpoint');
 
@@ -39,7 +34,6 @@ const modalStyle = {
     p: 4,
 };
 
-const label = { inputProps: { 'aria-label': 'Colour-Blind-Switch' } }; //simple switch label
 
 function stringToColour(string) { // This function is to make a string to a colour
     let hash = 0;
@@ -91,59 +85,51 @@ var UserName = () => {
     return user;
 }
 
-
-
-function valuetext(value) { //font size value
-    return `${value}px`;
-}
-
 export default function Settings(){
 
-    const [theme, setTheme] = React.useState(1);
     const [changeType, setType] = useState("");
     const [phone, setPhone] = useState("");
+    const [cPhone, setCPhone] = useState("");
     const [email, setEmail] = useState("");
+    const [cEmail, setCEmail] = useState("");
     const [current_password, setCPass] = useState("");
     const [emp_password, setPassword] = useState("");
-    const [loginMessage, setMessage] = useState("");
     const [open, setOpen] = useState(false);
-    const [alert, setAlert] = useState(false);
     const handleOpen = (type) => {setType(type); setOpen(true);};
-    const handleClose = () => {/*{setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''});*/ setOpen(false);}
+    const handleClose = () => { setEmail(""); setPhone(""); setPassword(""); setOpen(false);}
 
-    const handleChange = (event) => {
-        setTheme(event.target.value);
-    };
+
+    useEffect(() => {
+        async function initialiseData() {
+            const res = await axios.get("http://localhost:2420/getContact/" + sessionStorage.getItem("emp_id")).catch((err) => {
+                console.log(err);
+            });
+            setCEmail(res.data[0].emp_email);
+            setCPhone(res.data[0].emp_phNum);
+        }
+        initialiseData();
+        }, []
+    )
 
     const submitChanges = async () => {
-        if (changeType == "phone") {
-            (async () => {
-                await updatePhone(sessionStorage.getItem('emp_id'), phone);
-            })();
-            document.location.reload();
+        if (changeType === "phone") {
+            await updatePhone(sessionStorage.getItem('emp_id'), phone);
         }
-        else if (changeType == "email") {
-            (async () => {
-                await updateEmail(sessionStorage.getItem('emp_id'), email);
-            })();
+        else if (changeType === "email") {
+            await updateEmail(sessionStorage.getItem('emp_id'), email);
         }
-        else if (changeType == "password") {
-            (async () => {
-                const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
-                const empExists = res.empExists;
-                if (empExists) {
-                    await updatePassword(sessionStorage.getItem('emp_id'), emp_password, 1);
-                    setAlert(false)
-                } else { //otherwise open the alert and set the error message
-                    setAlert(true);
-                    setMessage("Incorrect email or password");
-                }
-            })();
+        else if (changeType === "password") {
+            const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
+            const empExists = res.empExists;
+            if (empExists) {
+                await updatePassword(sessionStorage.getItem('emp_id'), emp_password);
+            }
         }
+        document.location.reload();
     }
 
     const generateModal = () => {
-        if(changeType == "phone") {
+        if(changeType === "phone") {
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -168,7 +154,7 @@ export default function Settings(){
                 </div>
             )
         }
-        else if (changeType == "email") {
+        else if (changeType === "email") {
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -193,31 +179,13 @@ export default function Settings(){
                 </div>
             )
         }
-        else if (changeType == "password") {
+        else if (changeType === "password") {
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Change Password
                     </Typography>
                     <br />
-                    <Collapse in={open}>
-                        <Alert severity="error" action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    setAlert(false);
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                               sx={{ mb: 2 }}
-                        >
-                            {loginMessage}
-                        </Alert>
-                    </Collapse>
                     <div className={"form-floating"}>
                         <TextField margin="normal"
                                    required
@@ -279,14 +247,9 @@ export default function Settings(){
                                         <h4>Account Information</h4>
 
                                         <List>
-                                            <ListItem><ListItemText>Employement Status:</ListItemText></ListItem>
-                                            <ListItem><ListItemText>Employement Role:</ListItemText></ListItem>
-                                        </List>
-
-                                        <List>
                                             <ListItem>
                                                 <ListItemText>Employee Phone Number:
-                                                    <br/>
+                                                    <p>{cPhone}</p>
                                                     <Button variant="contained" size="small" onClick={() => handleOpen("phone")}>Edit</Button>
                                                 </ListItemText>
 
@@ -295,7 +258,7 @@ export default function Settings(){
 
                                             <ListItem>
                                                 <ListItemText>Employee Email Address:
-                                                    <br/>
+                                                    <p>{cEmail}</p>
                                                     <Button variant="contained" size="small" onClick={() => handleOpen("email")}>Edit</Button>
                                                 </ListItemText>
                                             </ListItem>
@@ -311,130 +274,7 @@ export default function Settings(){
 
                                                 </ListItemText>
                                             </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>Two Factor Authentication:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
-                                                </ListItemText>
-                                            </ListItem>
-
                                         </List>
-
-                                        <h3 style={{fontWeight:"bold"}}>Accessibility</h3>
-
-                                    <List>
-                                        <ListItem><ListItemText>Font Size:</ListItemText></ListItem>
-                                        <ListItem><Slider
-
-                                            defaultValue={14}
-                                            getAriaValueText={valuetext}
-                                            valueLabelDisplay="auto"
-                                            step={1}
-                                            marks
-                                            min={12}
-                                            max={18}
-                                            disabled
-                                        /></ListItem>
-                                    </List>
-
-                                    <List>
-                                        <ListItem><ListItemText>Colour Blind:</ListItemText>
-                                            <Switch {...label} disabled/>
-                                        </ListItem>
-
-                                    </List>
-
-                                        <h3 style={{fontWeight:"bold"}}>Themes</h3>
-
-
-                                        <List>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }}>
-                                                        <InputLabel id="simple-select-label">Change Theme:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Preset</MenuItem>
-                                                            <MenuItem value={2}>Custom</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Primary Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>Galaxy</MenuItem>
-                                                            <MenuItem value={3}>Midnight</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Secondary Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>Black</MenuItem>
-                                                            <MenuItem value={3}>Blue</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Text Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>White</MenuItem>
-                                                            <MenuItem value={3}>Black</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <Box padding={2}>
-
-                                                <Button><img src="public/s.png" width="100" height="100" alt="sunrise-colour"/></Button>
-                                                <Button> <img src="public/p.png" width="100" height="100" alt="midnight-colour"/></Button>
-                                                <Button>   <img src="public/pink.png" width="100" height="100" alt="hotpink-colour"/></Button>
-                                                <Button>  <img src="public/b.png" width="100" height="100" alt="aqua-colour"/></Button>
-                                                <br/>
-                                            </Box>
-                                            <Button variant="contained" submit>Save Changes</Button>
-                                        </List>
-
-
                                     </Item>
                                 </Grid>
                             </Grid>

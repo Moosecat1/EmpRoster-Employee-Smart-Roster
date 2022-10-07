@@ -173,6 +173,16 @@ app.get("/verifyEmployee/:emp_id&:emp_password", (req, res) => {
     });
 });
 
+app.get("/getContact/:emp_id", (req, res) => {
+    const emp_id = req.params.emp_id;
+
+    db.query("SELECT emp_phNum, emp_email FROM Employee WHERE (emp_id = ?)",
+        [emp_id],
+        (err, result) => {
+        if(err){console.log(err);}
+        else{res.send(result);}
+        });
+});
 
 app.get("/getEmployeesList/:company_id", (req, res) => {
     const company_id = req.params.company_id;
@@ -458,10 +468,9 @@ app.put("/updateEmployee", (req, res) => {
 app.put("/updatePassword", (req, res) => {
     const emp_id = req.body.emp_id;
     const emp_password = req.body.emp_password;
-    const emp_password_changed = req.body.emp_password_changed;
 
-    db.query("UPDATE Employee SET emp_password = ?, emp_password_changed = ? WHERE emp_id = ?",
-        [emp_password, emp_password_changed, emp_id],
+    db.query("UPDATE Employee SET emp_password = ? WHERE emp_id = ?",
+        [emp_password, emp_id],
         (err, result) => {
             if(err){console.log(err);}
             else{res.send(result);}
