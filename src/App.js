@@ -1,7 +1,6 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Test from './pages/Test';
 import EmployeeList from "./pages/EmployeeList";
 import RegisterCreateCompany from "./pages/Register/RegisterCreateCompany";
 import NoPage from "./pages/NoPage";
@@ -18,12 +17,11 @@ import ManagerViewEmployee from './pages/ManagerViewEmployee';
 import ViewCompanyRoster from "./pages/ViewCompanyRoster";
 import Notifications from "./pages/Notifications";
 import EditCompany from "./pages/EditCompany";
+import CompanyEvent from "./pages/CompanyEvent";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 
 export default function App() {
-  console.log(sessionStorage.getItem('emp_privilege'));
-
   if(sessionStorage.getItem('emp_privilege') === null){
     return(
       <BrowserRouter>
@@ -35,7 +33,7 @@ export default function App() {
           <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
           <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
           <Route path="/register/createadmin" element={<RegisterCreateAdmin/>}/>
-            <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+          <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
           <Route path="/*" element={<NoPage/>}/>
         </Routes>
       </BrowserRouter>
@@ -78,6 +76,7 @@ export default function App() {
                   <Route path="/test" element={<Test/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
                   <Route path="/EditCompany" element={<EditCompany/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
 
@@ -103,6 +102,7 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
       );
@@ -124,6 +124,7 @@ export default function App() {
                   <Route path="/ViewCompanyRoster" element={<ViewCompanyRoster/>}/>
                   <Route path="/Notifications" element={<Notifications/>}/>
                   <Route path="/CompanyInfo" element={<CompanyInfo/>}/>
+                  <Route path="/CompanyEvent" element={<CompanyEvent/>}/>
               </Routes>
           </BrowserRouter>
       );
