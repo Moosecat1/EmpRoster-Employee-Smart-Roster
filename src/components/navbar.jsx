@@ -27,6 +27,7 @@ if(sessionStorage.getItem("emp_id")!= null) {
                         <Nav.Link href="/About">About</Nav.Link>
                         <Nav.Link href="/FAQ">FAQ</Nav.Link>
                     </Nav>
+
                     <Nav onSelect={(selectedKey) => {
                         sessionStorage.clear();
                     }}>
