@@ -1,16 +1,17 @@
+//Imports neccesary for functionality
 import * as React from 'react';
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-
 import {Box, Button, Container, TextField, List, ListItem, ListItemText,  Grid, Paper, Avatar, styled } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import {useState, useEffect} from "react";
 const axios = require('axios');
 
-
+//Declaring methods that will be used throughout the page
 const { verifyEmployee, updatePassword, updateEmail, updatePhone } = require('../modules/endpoint');
 
+// makes a simple container which holds an item
 const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which holds an item
     backgroundColor: theme.palette.mode === 'dark' ? '#000000' : '#fff',
     ...theme.typography.body2,
@@ -20,6 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which h
 
 }));
 
+//Deals with the style of the modal
 const modalStyle = {
     position: 'absolute',
     top: '50%',
@@ -34,12 +36,11 @@ const modalStyle = {
     p: 4,
 };
 
-
-function stringToColour(string) { // This function is to make a string to a colour
+// This function is to change a strings text colour
+function stringToColour(string) {
     let hash = 0;
     let i;
 
-    /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
         hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
@@ -50,12 +51,12 @@ function stringToColour(string) { // This function is to make a string to a colo
         const value = (hash >> (i * 8)) & 0xff;
         colour += `00${value.toString(16)}`.slice(-2);
     }
-    /* eslint-enable no-bitwise */
 
     return colour;
 }
 
-function stringAvatar(name) { //function to split avatar name
+//function to split avatar name
+function stringAvatar(name) {
     return {
         sx: {
             bgcolor: stringToColour(name),
@@ -64,13 +65,14 @@ function stringAvatar(name) { //function to split avatar name
     };
 }
 
-
+//A constant style used throughout the page
 const style = {  width: '100%',
     height: 1000,
     bgcolor:"gray",
     paddingTop:3
     };
 
+//This function deals with getting a users full name
 function userfullName(){
     let fname = sessionStorage.getItem('emp_fName');
     let lname = sessionStorage.getItem('emp_priviledge');
@@ -80,13 +82,16 @@ function userfullName(){
     }
 }
 
+//This variable gets a users first name
 var UserName = () => {
     var user = sessionStorage.getItem("emp_fName");
     return user;
 }
 
+//This class deals with the rendering of the page
 export default function Settings(){
 
+    //Declaring useState variables and methods that will be used throughout the page
     const [changeType, setType] = useState("");
     const [phone, setPhone] = useState("");
     const [cPhone, setCPhone] = useState("");
@@ -98,7 +103,7 @@ export default function Settings(){
     const handleOpen = (type) => {setType(type); setOpen(true);};
     const handleClose = () => { setEmail(""); setPhone(""); setPassword(""); setOpen(false);}
 
-
+    //This function gets an employees contact details and stores them
     useEffect(() => {
         async function initialiseData() {
             const res = await axios.get("http://localhost:2420/getContact/" + sessionStorage.getItem("emp_id")).catch((err) => {
@@ -111,13 +116,17 @@ export default function Settings(){
         }, []
     )
 
+    //This method deals with submitting any changes to an employees data
     const submitChanges = async () => {
+        //If the changed data is of phone type then update an employees phone number
         if (changeType === "phone") {
             await updatePhone(sessionStorage.getItem('emp_id'), phone);
         }
+        //If the data is of email type then change an employees email address
         else if (changeType === "email") {
             await updateEmail(sessionStorage.getItem('emp_id'), email);
         }
+        //If the data is of type password, check that they have entered their current password and if so change an employees password
         else if (changeType === "password") {
             const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
             const empExists = res.empExists;
@@ -128,8 +137,11 @@ export default function Settings(){
         document.location.reload();
     }
 
+
+    //Deals with generating different modals for updating employee data
     const generateModal = () => {
         if(changeType === "phone") {
+            //Returns a modal that allows an employee to update their phone number
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -155,6 +167,7 @@ export default function Settings(){
             )
         }
         else if (changeType === "email") {
+            //Returns a modal that allows an employee to update their email address
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -180,6 +193,7 @@ export default function Settings(){
             )
         }
         else if (changeType === "password") {
+            //Returns a modal that allows an employee to change their password
             return(
                 <div>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -219,6 +233,7 @@ export default function Settings(){
         }
     }
 
+    //Renders the settings page
     return(
         <>
           <Navbar/>
