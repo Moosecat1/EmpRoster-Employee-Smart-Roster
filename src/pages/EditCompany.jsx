@@ -35,7 +35,6 @@ export default function EditCompany(){
     const [showAlert, setShowAlert] = useState(false);
 
 
-
     const handleAddOpen = () => {setAddOpen(true);}
     const handleAddClose = () => {
         const string = "Are you sure you want to exit? All input data will be lost.";
@@ -44,6 +43,8 @@ export default function EditCompany(){
         if(conf){
             setInputFields([{firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]); 
             setAddOpen(false);
+            setShowAlert(false);
+            setInvalidfields([]);
         }
     }
 
