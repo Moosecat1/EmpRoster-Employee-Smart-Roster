@@ -3,7 +3,10 @@ import axios from 'axios';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Box from "@mui/material/Box";
+import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const nameStyle = {
     backgroundColor: '#c5ceff',
@@ -35,9 +38,11 @@ export default function EditableCompany({setEmployeeListParent}){
     const [currentEmployeeData, setCurrentEmployeeData] = useState({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''});
     const [open, setOpen] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleOpen = (index) => {setCurrentEmployee(index); setOpen(true);};
-    const handleClose = () => {setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''}); setOpen(false);}
+    const handleClose = () => {setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''}); setOpen(false); setShowAlert(false); setInvalidfields([]);}
 
     useEffect(() => {
         //get newly created company's info (company name, id, employee info)
@@ -62,7 +67,11 @@ export default function EditableCompany({setEmployeeListParent}){
         setCurrentEmployeeData(ced);
     }
 
+
     const submitChanges = async () => {
+
+
+
         const preData = employeeList[currentEmployee];
         const postData = currentEmployeeData;
 
@@ -82,12 +91,31 @@ export default function EditableCompany({setEmployeeListParent}){
             }
         }
 
-        updateData['emp_id'] = emp_id;
+        const errors = [];
 
-        console.log(updateData);
+        if( updateData.emp_fName === "" || (/\d/.test(updateData.emp_fName)))
+        {
+            errors.push(" First Name: should not contain numbers or be left empty");
+        }if(updateData.emp_lName === "" || (/\d/.test(updateData.emp_lName))){
+            errors.push(" Last Name: should not contain numbers or be left empty");
+        }if(updateData.emp_email === "" || !updateData.emp_email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+            errors.push(" Email: should not be left empty Or data entered is invalid");
+        }if(updateData.emp_privilege === "" || updateData.emp_type === ""){
+            errors.push(" Privilege or Type: should not be left empty");
+        }
+        if (errors.length === 0){
+            updateData['emp_id'] = emp_id;
 
-        await axios.put("http://localhost:2420/updateEmployee", updateData).catch((err) => {console.log(err);});
-        document.location.reload();
+            console.log(updateData);
+
+            await axios.put("http://localhost:2420/updateEmployee", updateData).catch((err) => {console.log(err);});
+            document.location.reload();
+        }else{
+            setInvalidFields(errors);
+            setShowAlert(true);
+        }
+
+
     }
 
     const generateEmployees = () => {
@@ -113,6 +141,19 @@ export default function EditableCompany({setEmployeeListParent}){
 
             return(
                 <div>
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your details have the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to edit this employee's account
+                        </Alert>
+                    }
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Employee: {employeeView.emp_id}
                     </Typography>
@@ -143,7 +184,7 @@ export default function EditableCompany({setEmployeeListParent}){
                     </select>
                     <br /><br />
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button onClick={() => submitChanges()}>Save Changes</button>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
                     </div>
                 </div>
             )

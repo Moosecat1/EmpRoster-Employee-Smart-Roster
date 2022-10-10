@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import {Box, Button, Container, TextField, List, ListItem, ListItemText,  Grid, Paper, Avatar, styled } from "@mui/material";
+import {Alert,AlertTitle, Box, Button, Container, TextField, List, ListItem, ListItemText,  Grid, Paper, Avatar, styled } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import {useState, useEffect} from "react";
@@ -100,8 +100,11 @@ export default function Settings(){
     const [current_password, setCPass] = useState("");
     const [emp_password, setPassword] = useState("");
     const [open, setOpen] = useState(false);
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+
     const handleOpen = (type) => {setType(type); setOpen(true);};
-    const handleClose = () => { setEmail(""); setPhone(""); setPassword(""); setOpen(false);}
+    const handleClose = () => { setEmail(""); setPhone(""); setPassword(""); setOpen(false); setShowAlert(false); setInvalidFields([]);}
 
     //This function gets an employees contact details and stores them
     useEffect(() => {
@@ -118,23 +121,58 @@ export default function Settings(){
 
     //This method deals with submitting any changes to an employees data
     const submitChanges = async () => {
+    
+        const errors = [];
         //If the changed data is of phone type then update an employees phone number
+
         if (changeType === "phone") {
-            await updatePhone(sessionStorage.getItem('emp_id'), phone);
+            if(phone === "" || (/\D/.test(phone))) {
+                errors.push(" don't add spaces, don't add country code");
+            }
+            if (errors.length === 0){
+                await updatePhone(sessionStorage.getItem('emp_id'), phone);
+                document.location.reload();
+            }
+            else{
+                setInvalidFields(errors);
+                setShowAlert(true);
+            }
         }
         //If the data is of email type then change an employees email address
         else if (changeType === "email") {
-            await updateEmail(sessionStorage.getItem('emp_id'), email);
+            if (email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+                errors.push(" Invalid Email Address");
+            }
+            if(errors.length === 0){
+                await updateEmail(sessionStorage.getItem('emp_id'), email);
+                document.location.reload();
+            } else{
+                setInvalidFields(errors);
+                setShowAlert(true);
+            }
         }
         //If the data is of type password, check that they have entered their current password and if so change an employees password
         else if (changeType === "password") {
             const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
             const empExists = res.empExists;
             if (empExists) {
-                await updatePassword(sessionStorage.getItem('emp_id'), emp_password);
+                setInvalidFields([]);
+                setShowAlert(false);
+                if(emp_password === "" || emp_password.length < 8 || emp_password.includes(" ")){
+                    errors.push(" Invalid password, password must be greater than 8 characters");
+                }if(errors.length === 0){
+                    await updatePassword(sessionStorage.getItem('emp_id'), emp_password);
+                    document.location.reload();
+                }else{
+                    setInvalidFields(errors);
+                    setShowAlert(true);
+                }
+            }else{
+                errors.push(" Current password does not match");
+                setInvalidFields(errors);
+                setShowAlert(true);
             }
         }
-        document.location.reload();
     }
 
 
@@ -148,20 +186,34 @@ export default function Settings(){
                         Change Phone Number
                     </Typography>
                     <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your phone number has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change phone number
+                        </Alert>
+                    }
                     <TextField margin="normal"
                                required
                                fullWidth
                                id="phone"
                                label="New Phone Number"
                                name="phone"
-                               autoComplete="name1234 or name@example.com"
+                               autoComplete="02123456"
+                               inputProps={{ maxLength: 10 }}
                                autoFocus
                                onChange={(event) => {
                                    setPhone(event.target.value)
                                }}/>
                     <br /><br />
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button onClick={() => submitChanges()}>Save Changes</button>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
                     </div>
                 </div>
             )
@@ -174,20 +226,33 @@ export default function Settings(){
                         Change Email
                     </Typography>
                     <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your email has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change email
+                        </Alert>
+                    }
                     <TextField margin="normal"
                                required
                                fullWidth
                                id="email"
                                label="New Email"
                                name="email"
-                               autoComplete="name1234 or name@example.com"
+                               autoComplete="name@example.com"
                                autoFocus
                                onChange={(event) => {
                                    setEmail(event.target.value)
                                }}/>
                     <br /><br />
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button onClick={() => submitChanges()}>Save Changes</button>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
                     </div>
                 </div>
             )
@@ -200,6 +265,19 @@ export default function Settings(){
                         Change Password
                     </Typography>
                     <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your Password has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change Password
+                        </Alert>
+                    }
                     <div className={"form-floating"}>
                         <TextField margin="normal"
                                    required
@@ -226,7 +304,7 @@ export default function Settings(){
                     </div>
                     <br /><br />
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button onClick={() => submitChanges()}>Save Changes</button>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
                     </div>
                 </div>
             )
@@ -263,8 +341,7 @@ export default function Settings(){
 
                                         <List>
                                             <ListItem>
-                                                <ListItemText>Employee Phone Number:
-                                                    <p>{cPhone}</p>
+                                                <ListItemText>Employee Phone Number: <strong>{cPhone}</strong> <br/>
                                                     <Button variant="contained" size="small" onClick={() => handleOpen("phone")}>Edit</Button>
                                                 </ListItemText>
 
@@ -272,8 +349,7 @@ export default function Settings(){
                                             </ListItem>
 
                                             <ListItem>
-                                                <ListItemText>Employee Email Address:
-                                                    <p>{cEmail}</p>
+                                                <ListItemText>Employee Email Address: <strong>{cEmail}</strong> <br/>
                                                     <Button variant="contained" size="small" onClick={() => handleOpen("email")}>Edit</Button>
                                                 </ListItemText>
                                             </ListItem>
