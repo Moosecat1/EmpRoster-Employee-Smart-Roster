@@ -44,7 +44,7 @@ export default function EditCompany(){
             setInputFields([{firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]); 
             setAddOpen(false);
             setShowAlert(false);
-            setInvalidfields([]);
+            setInvalidFields([]);
         }
     }
 
