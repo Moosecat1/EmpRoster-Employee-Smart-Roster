@@ -42,7 +42,7 @@ export default function EditableCompany({setEmployeeListParent}){
     const [showAlert, setShowAlert] = useState(false);
 
     const handleOpen = (index) => {setCurrentEmployee(index); setOpen(true);};
-    const handleClose = () => {setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''}); setOpen(false); setShowAlert(false); setInvalidfields([]);}
+    const handleClose = () => {setCurrentEmployeeData({emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''}); setOpen(false); setShowAlert(false); setInvalidFields([]);}
 
     useEffect(() => {
         //get newly created company's info (company name, id, employee info)
