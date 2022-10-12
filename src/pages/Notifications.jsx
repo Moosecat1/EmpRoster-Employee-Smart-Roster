@@ -16,6 +16,7 @@ const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 
 document.title = "Notifications";
 
+//This class deals with the rendering of the page
 class Notifications extends Component {
     state = {
         data : [],

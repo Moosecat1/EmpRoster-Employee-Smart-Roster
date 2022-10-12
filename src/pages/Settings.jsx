@@ -1,15 +1,17 @@
+//Imports neccesary for functionality
 import * as React from 'react';
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import {ManageAccounts, Brush ,Camera} from "@mui/icons-material";
-
-import {Box,Button, Container ,List, ListItem, ListItemIcon , ListItemText, ListItemButton, Stack, Grid, Paper, Avatar , styled,Slider, Switch} from "@mui/material";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import {Alert,AlertTitle, Box, Button, Container, TextField, List, ListItem, ListItemText,  Grid, Paper, Avatar, styled } from "@mui/material";
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import {useState, useEffect} from "react";
 const axios = require('axios');
 
+//Declaring methods that will be used throughout the page
+const { verifyEmployee, updatePassword, updateEmail, updatePhone } = require('../modules/endpoint');
+
+// makes a simple container which holds an item
 const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which holds an item
     backgroundColor: theme.palette.mode === 'dark' ? '#000000' : '#fff',
     ...theme.typography.body2,
@@ -19,13 +21,26 @@ const Item = styled(Paper)(({ theme }) => ({ // makes a simple container which h
 
 }));
 
-const label = { inputProps: { 'aria-label': 'Colour-Blind-Switch' } }; //simple switch label
+//Deals with the style of the modal
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    overflowY: 'scroll',
+    maxHeight: "70%",
+    boxShadow: 24,
+    p: 4,
+};
 
-function stringToColour(string) { // This function is to make a string to a colour
+// This function is to change a strings text colour
+function stringToColour(string) {
     let hash = 0;
     let i;
 
-    /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
         hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
@@ -36,12 +51,12 @@ function stringToColour(string) { // This function is to make a string to a colo
         const value = (hash >> (i * 8)) & 0xff;
         colour += `00${value.toString(16)}`.slice(-2);
     }
-    /* eslint-enable no-bitwise */
 
     return colour;
 }
 
-function stringAvatar(name) { //function to split avatar name
+//function to split avatar name
+function stringAvatar(name) {
     return {
         sx: {
             bgcolor: stringToColour(name),
@@ -50,13 +65,14 @@ function stringAvatar(name) { //function to split avatar name
     };
 }
 
-
+//A constant style used throughout the page
 const style = {  width: '100%',
     height: 1000,
     bgcolor:"gray",
     paddingTop:3
     };
 
+//This function deals with getting a users full name
 function userfullName(){
     let fname = sessionStorage.getItem('emp_fName');
     let lname = sessionStorage.getItem('emp_priviledge');
@@ -66,26 +82,236 @@ function userfullName(){
     }
 }
 
+//This variable gets a users first name
 var UserName = () => {
     var user = sessionStorage.getItem("emp_fName");
     return user;
 }
 
-
-
-function valuetext(value) { //font size value
-    return `${value}px`;
-}
-
+//This class deals with the rendering of the page
 export default function Settings(){
 
-    const [theme, setTheme] = React.useState(1);
+    //Declaring useState variables and methods that will be used throughout the page
+    const [changeType, setType] = useState("");
+    const [phone, setPhone] = useState("");
+    const [cPhone, setCPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [cEmail, setCEmail] = useState("");
+    const [current_password, setCPass] = useState("");
+    const [emp_password, setPassword] = useState("");
+    const [open, setOpen] = useState(false);
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+
+    const handleOpen = (type) => {setType(type); setOpen(true);};
+    const handleClose = () => { setEmail(""); setPhone(""); setPassword(""); setOpen(false); setShowAlert(false); setInvalidFields([]);}
+
+    //This function gets an employees contact details and stores them
+    useEffect(() => {
+        async function initialiseData() {
+            const res = await axios.get("http://localhost:2420/getContact/" + sessionStorage.getItem("emp_id")).catch((err) => {
+                console.log(err);
+            });
+            setCEmail(res.data[0].emp_email);
+            setCPhone(res.data[0].emp_phNum);
+        }
+        initialiseData();
+        }, []
+    )
+
+    //This method deals with submitting any changes to an employees data
+    const submitChanges = async () => {
+    
+        const errors = [];
+        //If the changed data is of phone type then update an employees phone number
+
+        if (changeType === "phone") {
+            if(phone === "" || (/\D/.test(phone))) {
+                errors.push(" don't add spaces, don't add country code");
+            }
+            if (errors.length === 0){
+                await updatePhone(sessionStorage.getItem('emp_id'), phone);
+                document.location.reload();
+            }
+            else{
+                setInvalidFields(errors);
+                setShowAlert(true);
+            }
+        }
+        //If the data is of email type then change an employees email address
+        else if (changeType === "email") {
+            if (email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+                errors.push(" Invalid Email Address");
+            }
+            if(errors.length === 0){
+                await updateEmail(sessionStorage.getItem('emp_id'), email);
+                document.location.reload();
+            } else{
+                setInvalidFields(errors);
+                setShowAlert(true);
+            }
+        }
+        //If the data is of type password, check that they have entered their current password and if so change an employees password
+        else if (changeType === "password") {
+            const res = await verifyEmployee(sessionStorage.getItem('emp_id'), current_password);
+            const empExists = res.empExists;
+            if (empExists) {
+                setInvalidFields([]);
+                setShowAlert(false);
+                if(emp_password === "" || emp_password.length < 8 || emp_password.includes(" ")){
+                    errors.push(" Invalid password, password must be greater than 8 characters");
+                }if(errors.length === 0){
+                    await updatePassword(sessionStorage.getItem('emp_id'), emp_password);
+                    document.location.reload();
+                }else{
+                    setInvalidFields(errors);
+                    setShowAlert(true);
+                }
+            }else{
+                errors.push(" Current password does not match");
+                setInvalidFields(errors);
+                setShowAlert(true);
+            }
+        }
+    }
 
 
-    const handleChange = (event) => {
-        setTheme(event.target.value);
-    };
+    //Deals with generating different modals for updating employee data
+    const generateModal = () => {
+        if(changeType === "phone") {
+            //Returns a modal that allows an employee to update their phone number
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Phone Number
+                    </Typography>
+                    <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your phone number has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change phone number
+                        </Alert>
+                    }
+                    <TextField margin="normal"
+                               required
+                               fullWidth
+                               id="phone"
+                               label="New Phone Number"
+                               name="phone"
+                               autoComplete="02123456"
+                               inputProps={{ maxLength: 10 }}
+                               autoFocus
+                               onChange={(event) => {
+                                   setPhone(event.target.value)
+                               }}/>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
+                    </div>
+                </div>
+            )
+        }
+        else if (changeType === "email") {
+            //Returns a modal that allows an employee to update their email address
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Email
+                    </Typography>
+                    <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your email has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change email
+                        </Alert>
+                    }
+                    <TextField margin="normal"
+                               required
+                               fullWidth
+                               id="email"
+                               label="New Email"
+                               name="email"
+                               autoComplete="name@example.com"
+                               autoFocus
+                               onChange={(event) => {
+                                   setEmail(event.target.value)
+                               }}/>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
+                    </div>
+                </div>
+            )
+        }
+        else if (changeType === "password") {
+            //Returns a modal that allows an employee to change their password
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Change Password
+                    </Typography>
+                    <br />
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your Password has the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change Password
+                        </Alert>
+                    }
+                    <div className={"form-floating"}>
+                        <TextField margin="normal"
+                                   required
+                                   fullWidth
+                                   id="cPass"
+                                   label="Current Password"
+                                   name="cPass"
+                                   type="password"
+                                   onChange={(event) => {
+                                       setCPass(event.target.value)
+                                   }}/>
+                    </div>
+                    <div>
+                        <TextField margin="normal"
+                                   required
+                                   fullWidth
+                                   id="nPass"
+                                   label="New Password"
+                                   name="nPass"
+                                   type="password"
+                                   onChange={(event) => {
+                                       setPassword(event.target.value);
+                                   }}/>
+                    </div>
+                    <br /><br />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Button variant={"contained"} onClick={() => submitChanges()}>Save Changes</Button>
+                    </div>
+                </div>
+            )
+        }
+    }
 
+    //Renders the settings page
     return(
         <>
           <Navbar/>
@@ -114,24 +340,17 @@ export default function Settings(){
                                         <h4>Account Information</h4>
 
                                         <List>
-                                            <ListItem><ListItemText>Employement Status:</ListItemText></ListItem>
-                                            <ListItem><ListItemText>Employement Role:</ListItemText></ListItem>
-                                        </List>
-
-                                        <List>
                                             <ListItem>
-                                                <ListItemText>Employee Phone Number:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
-
+                                                <ListItemText>Employee Phone Number: <strong>{cPhone}</strong> <br/>
+                                                    <Button variant="contained" size="small" onClick={() => handleOpen("phone")}>Edit</Button>
                                                 </ListItemText>
 
 
                                             </ListItem>
 
                                             <ListItem>
-                                                <ListItemText>Employee Email Address:
-                                                    <br/>
-                                                    <Button variant="contained" size="small" submit>Edit</Button>
+                                                <ListItemText>Employee Email Address: <strong>{cEmail}</strong> <br/>
+                                                    <Button variant="contained" size="small" onClick={() => handleOpen("email")}>Edit</Button>
                                                 </ListItemText>
                                             </ListItem>
 
@@ -142,140 +361,26 @@ export default function Settings(){
                                         <List>
                                             <ListItem>
                                                 <ListItemText>Password:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
+                                                    <br/> <Button variant="contained" size="small" onClick={() => handleOpen("password")}>Edit</Button>
 
                                                 </ListItemText>
                                             </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>Two Factor Authentication:
-                                                    <br/> <Button variant="contained" size="small" submit>Edit</Button>
-                                                </ListItemText>
-                                            </ListItem>
-
                                         </List>
-
-                                        <h3 style={{fontWeight:"bold"}}>Accessibility</h3>
-
-                                    <List>
-                                        <ListItem><ListItemText>Font Size:</ListItemText></ListItem>
-                                        <ListItem><Slider
-
-                                            defaultValue={14}
-                                            getAriaValueText={valuetext}
-                                            valueLabelDisplay="auto"
-                                            step={1}
-                                            marks
-                                            min={12}
-                                            max={18}
-                                            disabled
-                                        /></ListItem>
-                                    </List>
-
-                                    <List>
-                                        <ListItem><ListItemText>Colour Blind:</ListItemText>
-                                            <Switch {...label} disabled/>
-                                        </ListItem>
-
-                                    </List>
-
-                                        <h3 style={{fontWeight:"bold"}}>Themes</h3>
-
-
-                                        <List>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }}>
-                                                        <InputLabel id="simple-select-label">Change Theme:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Preset</MenuItem>
-                                                            <MenuItem value={2}>Custom</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Primary Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>Galaxy</MenuItem>
-                                                            <MenuItem value={3}>Midnight</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Secondary Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>Black</MenuItem>
-                                                            <MenuItem value={3}>Blue</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <FormControl sx={{ minWidth: 500 }} disabled>
-                                                        <InputLabel id="simple-select-label">Text Colour:</InputLabel>
-                                                        <Select
-                                                            labelId="simple-select-label"
-                                                            id="simple-select"
-                                                            value={theme}
-                                                            label="ChangeTheme"
-                                                            onChange={handleChange}
-                                                        >
-                                                            <MenuItem value={1}>Default</MenuItem>
-                                                            <MenuItem value={2}>White</MenuItem>
-                                                            <MenuItem value={3}>Black</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </ListItemText>
-                                            </ListItem>
-
-                                            <Box padding={2}>
-
-                                                <Button><img src="public/s.png" width="100" height="100" alt="sunrise-colour"/></Button>
-                                                <Button> <img src="public/p.png" width="100" height="100" alt="midnight-colour"/></Button>
-                                                <Button>   <img src="public/pink.png" width="100" height="100" alt="hotpink-colour"/></Button>
-                                                <Button>  <img src="public/b.png" width="100" height="100" alt="aqua-colour"/></Button>
-                                                <br/>
-                                            </Box>
-                                            <Button variant="contained" submit>Save Changes</Button>
-                                        </List>
-
-
                                     </Item>
                                 </Grid>
                             </Grid>
 
                         </Box>
                     </Box>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description">
+                        <Box sx={modalStyle}>
+                            {generateModal()}
+                        </Box>
+                    </Modal>
             </Container>
         </>
     );

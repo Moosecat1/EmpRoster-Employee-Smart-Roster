@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/navbar';
 import EditableCompany from '../components/EditableCompany';
-import { Modal,TextField, Typography, Box, Button, Container } from '@mui/material';
+import { Alert,AlertTitle,Modal,TextField, Typography, Box, Button, Container } from '@mui/material';
 import Sidebar from '../components/sidebar';
 const { addNullRegularAvailabilities } = require('../modules/endpoint');
 
@@ -31,6 +31,9 @@ export default function EditCompany(){
             firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'
         }
     ]);
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+
 
     const handleAddOpen = () => {setAddOpen(true);}
     const handleAddClose = () => {
@@ -40,6 +43,8 @@ export default function EditCompany(){
         if(conf){
             setInputFields([{firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]); 
             setAddOpen(false);
+            setShowAlert(false);
+            setInvalidfields([]);
         }
     }
 
@@ -97,9 +102,75 @@ export default function EditCompany(){
         }
     }
 
+    const finalise = () => {
+        (async() => {
+            for(let i = 0; i < inputFields.length; i++)
+            {
+                const employee = inputFields[i];
+                const firstName = employee.firstName;
+                const lastName = employee.lastName;
+                const email = employee.email;
+                const privilege = employee.privilege;
+                const type = employee.type;
+
+                const companyId = sessionStorage.getItem('company_id');
+
+                const errors = [];
+
+                if(firstName === "" || (/\d/.test(firstName)))
+                {
+                    errors.push(" First Name: should not contain numbers or be left empty");
+                }if( lastName === "" || (/\d/.test(lastName))){
+                errors.push(" Last Name: should not contain numbers or be left empty");
+            }if(email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+                errors.push(" Email: should not be left empty Or data entered is invalid");
+            }if(privilege === "" || type === ""){
+                errors.push(" Privilege or Type: should not be left empty");
+            }
+                if (errors.length === 0){
+                    //do not delete anything below they are CRUCIAL for the code to RUN
+                    const res = await axios.post("http://localhost:2420/addEmployee", {
+                        emp_password: null,
+                        emp_fName: firstName,
+                        emp_lName: lastName,
+                        emp_email: email,
+                        emp_type: type,
+                        emp_privilege: privilege,
+                        emp_password_changed: false,
+                        company_id: companyId
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+
+                    const empId = res.data[1];
+                    await addNullRegularAvailabilities(empId);
+                    document.location.reload();
+                } else{
+                    setInvalidFields(errors);
+                    setShowAlert(true);
+                }
+            }
+
+
+        })();
+    }
+
     const generateAddModal = () => {
         return(
             <form onSubmit={handleSubmit}>
+                {showAlert ?
+                    <Alert
+                        severity="warning"
+                        variant="outlined" >
+                        <AlertTitle>Error</AlertTitle>
+                        Your details have the following issues:
+                        <strong>{invalidFields.toString()}</strong>
+                    </Alert> :
+                    <Alert
+                        severity="info">
+                        Please fill out the following form for your new Employee's Account(s)
+                    </Alert>
+                }
                 {inputFields.map((inputField, index) =>
                     <div className={"form-signin w-100 m-auto text-center"} key={index}>
                         <div className={"form-floating"}>
@@ -159,13 +230,13 @@ export default function EditCompany(){
                         </div>
                         <br />
                         <div className='buttonDiv'>
-                            <button id="removeButton" onClick={() => handleRemove(index)}>Remove Employee</button>
+                            <Button id="removeButton" onClick={() => handleRemove(index)}>Remove Employee</Button>
                         </div>
                     </div>
                 )}
                 <br />
                 <div className='buttonDiv'>
-                    <button id="addButton" onClick={handleAdd}>Add Employee</button>
+                    <Button id="addButton" onClick={handleAdd}>Add Employee</Button>
                 </div>
                 <br /><br/>
             </form>
@@ -185,41 +256,6 @@ export default function EditCompany(){
         }
     }
 
-    const addEmployees = async () => {
-        for(let i = 0; i < inputFields.length; i++)
-        {
-            const employee = inputFields[i];
-            const firstName = employee.firstName;
-            const lastName = employee.lastName;
-            const email = employee.email;
-            const privilege = employee.privilege;
-            const type = employee.type;
-
-            const companyId = sessionStorage.getItem('company_id');
-
-            if(firstName !== "" || lastName !== "" || privilege !== "" || type !== "")
-            {
-                const res = await axios.post("http://localhost:2420/addEmployee", {
-                    emp_password: "password",
-                    emp_fName: firstName,
-                    emp_lName: lastName,
-                    emp_email: email,
-                    emp_type: type,
-                    emp_privilege: privilege,
-                    company_id: companyId
-                }).catch((err) => {
-                    console.log(err);
-                });
-
-                const emp_id = res.data[1];
-                console.log(res);
-
-                await addNullRegularAvailabilities(emp_id);
-            }
-        }
-
-        document.location.reload();
-    }
 
     const removeEmployees = async () => {
         if(checkedEmployees.length !== 0){
@@ -305,7 +341,7 @@ export default function EditCompany(){
                                 <br />
                                 {generateAddModal()}
                                 <div style={{display: 'flex', justifyContent: 'center'}}>
-                                    <Button variant='contained' onClick={addEmployees}>Add Employees</Button>
+                                    <Button variant='contained' onClick={finalise}>Add Employees</Button>
                                 </div>
                             </Box>
                         </Modal>
