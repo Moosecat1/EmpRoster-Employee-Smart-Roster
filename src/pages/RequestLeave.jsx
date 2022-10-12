@@ -13,7 +13,7 @@ import {Container,Button, Box} from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-const { getAvailabilities, getCompanyEvents, addNotification, removeRosterDate } = require("../modules/endpoint");
+const { getAvailabilities, getCompanyEvents, addNotification, removeRosterDate, addAvailability } = require("../modules/endpoint");
 
 const locales = {
     "en-AU": require("date-fns/locale/en-AU")
@@ -38,7 +38,6 @@ export default function RequestLeave(){
     const [hasLoaded, setHasLoaded] = useState(false);
     const [leaveType, setLeaveType] = useState('');
     const handleSelect=(e)=>{
-        console.log(e);
         setLeaveType(e);
     }
 
@@ -52,8 +51,15 @@ export default function RequestLeave(){
             {
                 const date = newEventObject.start;
                 date.setDate(date.getDate() + 1);
+
                 const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
-                await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
+
+                if(sessionStorage.getItem('emp_privilege') === "Employee"){
+                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
+                    alert("Your leave request has been sent to a manager. Awaiting approval.");
+                } else{
+                    await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                }
             }
             else
             {
@@ -66,11 +72,20 @@ export default function RequestLeave(){
                 while(dayLooper.getTime() !== endDate.getTime())
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
-                    const removeSqlDate = dayLooper.toISOString().split('T')[0];
-                    await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
-                    await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
+                    //const removeSqlDate = dayLooper.toISOString().split('T')[0];
+
+                    if(sessionStorage.getItem('emp_privilege') === "Employee"){
+                        await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
+                        //await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
+                    } else{
+                        await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
+                    }
+
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }
+
+                if(sessionStorage.getItem('emp_privilege') === "Employee")
+                    alert("Your leave request has been sent to a manager. Awaiting approval.");
             }
 
             document.location.reload();
@@ -81,7 +96,6 @@ export default function RequestLeave(){
         const getAvailabilityData = async () => {
             var dayLooper = new Date();
             dayLooper.setDate(dayLooper.getDate() + 1);
-            const sqlDate = dayLooper.toISOString().split('T')[0];
 
             const employeeAvailabilities = await getAvailabilities(sessionStorage.getItem('emp_id'));
             const companyEvents = await getCompanyEvents(sessionStorage.getItem('company_id'));

@@ -298,6 +298,79 @@ app.put("/updateRoster", (req, res) => {
     });
 });
 
+app.get("/getRosteredRegularAvailabilities", (req, res) => {
+    const emp_ids_string = req.query.emp_ids;
+
+    const emp_ids = emp_ids_string.split(',');
+
+    db.query("SELECT * FROM RegularAvailability \n\
+        WHERE emp_id IN (?) \n\
+        ORDER BY FIELD(day_name, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')",
+        [emp_ids],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getRosteredAvailabilities", (req, res) => {
+    const emp_ids_string = req.query.emp_ids;
+
+    let week_start;
+
+    if(req.query.week_start !== undefined && req.query.week_start.length === 10){
+        let weekStartDate = new Date(parseInt(req.query.week_start.substring(0, 4)), parseInt(req.query.week_start.substring(5, 7)) - 1, parseInt(req.query.week_start.substring(8, 10)) + 1);
+        weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay() + 1);
+
+        week_start = weekStartDate.toISOString().substring(0, 10);
+    } else{
+        let nullDate = new Date();
+        nullDate.setDate(nullDate.getDate() - nullDate.getDay());
+        week_start = nullDate.toISOString().substring(0, 10);
+    }
+
+    let week_end_date = new Date(parseInt(week_start.substring(0, 4)), parseInt(week_start.substring(5, 7)) - 1, parseInt(week_start.substring(8, 10)) + 1);
+    week_end_date.setDate(week_end_date.getDate() + (7 - week_end_date.getDay()) + 1);
+
+    const emp_ids = emp_ids_string.split(',');
+
+    db.query("SELECT * FROM Availability \n\
+        WHERE emp_id IN (?) AND avail_date >= ? AND avail_date <= ?",
+        [emp_ids, week_start, week_end_date.toISOString().substring(0, 10)],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
+app.get("/getCompanyEventsByWeek/:company_id", (req, res) => {
+    const company_id = req.params.company_id;
+
+    let week_start;
+
+    if(req.query.week_start !== undefined && req.query.week_start.length === 10){
+        let weekStartDate = new Date(parseInt(req.query.week_start.substring(0, 4)), parseInt(req.query.week_start.substring(5, 7)) - 1, parseInt(req.query.week_start.substring(8, 10)) + 1);
+        weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay() + 1);
+
+        week_start = weekStartDate.toISOString().substring(0, 10);
+    } else{
+        let nullDate = new Date();
+        nullDate.setDate(nullDate.getDate() - nullDate.getDay());
+        week_start = nullDate.toISOString().substring(0, 10);
+    }
+
+    let week_end_date = new Date(parseInt(week_start.substring(0, 4)), parseInt(week_start.substring(5, 7)) - 1, parseInt(week_start.substring(8, 10)) + 1);
+    week_end_date.setDate(week_end_date.getDate() + (7 - week_end_date.getDay()) + 1);
+
+    db.query("SELECT * FROM CompanyEvent \n\
+        WHERE company_id = ? AND event_date >= ? AND event_date <= ?",
+        [company_id, week_start, week_end_date.toISOString().substring(0, 10)],
+        (err, result) => {
+            if(err){console.log(err);}
+            else{res.send(result);}
+    });
+});
+
 app.get("/getCompanyRoster/:company_id&:week_start", (req, res) => {
     const company_id = req.params.company_id;
     const rost_week_start = req.params.week_start;

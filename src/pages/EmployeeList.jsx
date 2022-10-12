@@ -9,17 +9,10 @@ import { Link } from "react-router-dom";
 import { Container, Box } from "@mui/material";
 import ManagerViewAvailability from './ManagerViewAvailability';
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 
 const axios = require('axios');
 
 document.title = "Employee List";
-/*this page needs to change quite a bit:
-    -use props when loading roster instead of this sessionstorage thing
-    -use componentdidmount and state to get initial data
-    -when creating each employee thing use react format and not html/js (ie. use a map with jsx tags instead of pill.append thing)
-    -for now it works, but roster needs to integrate props 
-*/
 
 //This class deals with the rendering of the employeeList page
 class EmployeeList extends Component {
@@ -88,4 +81,5 @@ class EmployeeList extends Component {
         }
     }
 }
+
 export default EmployeeList;

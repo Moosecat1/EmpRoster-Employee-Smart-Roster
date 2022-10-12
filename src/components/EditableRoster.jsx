@@ -49,6 +49,7 @@ class EditableRoster extends Component {
         weekStart : new Date(),
         weekDates : [],
         employeeRosters : [],
+        availabilities : [],
         isLoaded : false,
         open : false,
         currentEmpView: '',
@@ -126,27 +127,54 @@ class EditableRoster extends Component {
         );
     }
 
-    async addRosterTime(empId, selectedDate){
+    async addRosterTime(empId, selectedDate, earliestAvail, latestAvail){
         let startTime = document.getElementById("startTime").value;
         let endTime = document.getElementById("endTime").value;
+
+        let startTimeFloat = this.timeToFloat(startTime);
+        let endTimeFloat = this.timeToFloat(endTime);
 
         if(startTime === "N/A"){startTime = null;}
         if(endTime === "N/A"){endTime = null;}
 
-        if(!(startTime === null ^ endTime === null)){
-            await axios.put("http://localhost:2420/updateRoster", {
-                emp_id: empId,
-                rost_date: selectedDate,
-                rost_start: startTime,
-                rost_end: endTime
-            });
-            
-            document.location.reload();
-        } else{
+        if((startTime === null ^ endTime === null)){
             alert("Please select a time for both start and end.");
+            return;
+        }
+        if(startTimeFloat >= endTimeFloat){
+            alert("End time cannot be greater than start time.");
+            return;
+        }
+        
+        if((startTimeFloat >= earliestAvail && startTimeFloat <= latestAvail) && (endTimeFloat >= earliestAvail && endTimeFloat <= latestAvail)){
+                await axios.put("http://localhost:2420/updateRoster", {
+                    emp_id: empId,
+                    rost_date: selectedDate,
+                    rost_start: startTime,
+                    rost_end: endTime
+                });
+
+                document.location.reload();
+        } else{
+            const conf = window.confirm("The selected times do not align with the employee's availabilities. Do you wish to proceed?");
+
+            if(conf){
+                await axios.put("http://localhost:2420/updateRoster", {
+                    emp_id: empId,
+                    rost_date: selectedDate,
+                    rost_start: startTime,
+                    rost_end: endTime
+                });
+                
+                document.location.reload();
+            }
         }
     }
-    
+
+    timeToFloat(time){
+        return parseFloat(time.replace(/:/g, '.'));
+    }
+
     generateModal(){
             const {currentEmpView, currentDayIndex, weekDates, employeeRosters} = this.state;
 
@@ -165,30 +193,58 @@ class EditableRoster extends Component {
                 const currentStartIndex = times.indexOf(currentStart);
                 const currentEndIndex = times.indexOf(currentEnd);
 
+                const {availabilities} = this.state;
+
+                const regAvail = availabilities.regular[currentEmpView][currentDayIndex];
+
+                const leaveAvail = availabilities.leave[currentEmpView] !== null ? availabilities.leave[currentEmpView].find(element => {
+                    return element.avail_date === weekDates[currentDayIndex];
+                }) : undefined;
+
+                const compEvent = availabilities.company.find(element => {
+                    return element.event_date === weekDates[currentDayIndex];
+                });
+
+                const reg = [(regAvail === undefined || regAvail.reg_start === null) ? "25:00" : regAvail.reg_start, (regAvail === undefined || regAvail.reg_end === null) ? "-1:00" : regAvail.reg_end];
+                const leave = [(leaveAvail === undefined || leaveAvail.avail_start === null) ? "25:00" : leaveAvail.avail_start, (leaveAvail === undefined || leaveAvail.avail_end === null) ? "-1:00" : leaveAvail.avail_end];
+                const comp = [(compEvent === undefined) ? "25:00" : (compEvent.event_start === null) ? "25:00" : compEvent.event_start, (compEvent === undefined) ? "-1:00" : (compEvent.event_end === null) ? "-1:00" : compEvent.event_end];
+
+                let earliestAvail = Math.min(...[this.timeToFloat(reg[0]), this.timeToFloat(leave[0]), this.timeToFloat(comp[0])]);
+                let latestAvail = Math.max(...[this.timeToFloat(reg[1]), this.timeToFloat(leave[1]), this.timeToFloat(comp[1])]);
+
+                const colorTimes = times.slice(1, times.length - 1).map((time, index) => 
+                    <option value={time} style={{color: (this.timeToFloat(time) >= earliestAvail && this.timeToFloat(time) <= latestAvail) ? "black" : "grey"}} key={index}>{time}</option>
+                )
+
                 return(
                     <div>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
                             Employee ID: {currentEmpView}
                             <br />
-                            {/*Employee Name: empNameHERE*/}
                             Day: {dayNames[currentDayIndex] + ", " + weekDates[currentDayIndex]}
+                        </Typography>
+                        <br />
+                        <Typography fontSize="medium">
+                            Regular Availability: {(regAvail.reg_start === null || regAvail.reg_end === null) ? "N/A" : (regAvail.reg_start === "00:00:00" && regAvail.reg_end === "23:59:00") ? "All Day" : `${regAvail.reg_start} - ${regAvail.reg_end}`}
+                            <br />
+                            Leave Taken: {leaveAvail === undefined ? "N/A" : (leaveAvail.avail_start === null || leaveAvail.avail_end === null) ? "N/A" : (leaveAvail.avail_start === "00:00:00" && leaveAvail.avail_end === "23:59:00") ? "All Day" : `${leaveAvail.avail_start} - ${leaveAvail.avail_end}`}
+                            <br />
+                            Company Event {compEvent === undefined ? "" : `(${compEvent.event_name})`}: {compEvent === undefined ? "N/A" : (compEvent.event_start === null || compEvent.event_end === null) ? "All Day" : `${compEvent.event_start} - ${compEvent.event_end}`}
                         </Typography>
                         <br /><br />
                         <div>
                             <label>Start Time:</label>
                             &nbsp;
                             <select id={"startTime"} name={'Start'} defaultValue={times[currentStartIndex]}>
-                                {times.map((time, index) => 
-                                    <option value={time} key={index}>{time}</option>
-                                )}
+                                <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
+                                {colorTimes}
                             </select>
                             &nbsp;&nbsp;
                             <label>End Time:</label>
                             &nbsp;
                             <select id={"endTime"} name={'End'} defaultValue={times[currentEndIndex]}>
-                                {times.map((time, index) => 
-                                    <option value={time} key={index}>{time}</option>
-                                )}
+                                <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
+                                {colorTimes}
                             </select>
                         </div>
                         <br/><br />
@@ -196,7 +252,7 @@ class EditableRoster extends Component {
                             display="flex"
                             justifyContent="center"
                             alignItems="center">
-                            <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex])}>Save Roster</Button>
+                            <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex], earliestAvail, latestAvail)}>Save Roster</Button>
                         </Box>
                     </div>
                 )
@@ -226,19 +282,81 @@ class EditableRoster extends Component {
             weekDates.push(dateString);
             dayLooper.setDate(dayLooper.getDate() + 1);
         }
+
+        let unique_emps_arr = Array.from(new Set(employeeRosters.map(({emp_id}) => emp_id)));
+        let unique_emps = unique_emps_arr.join(',');
+
+        const res1 = await axios.get("http://localhost:2420/getRosteredRegularAvailabilities", {
+            params: {emp_ids: unique_emps}
+        });
+
+        const res2 = await axios.get("http://localhost:2420/getCompanyEventsByWeek/" + sessionStorage.getItem('company_id'), {
+            params: {week_start: selectedDate}
+        });
+
+        const res3 = await axios.get("http://localhost:2420/getRosteredAvailabilities", {
+            params: {
+                emp_ids: unique_emps,
+                week_start: selectedDate
+            }
+        });
+
+        function groupItemsByEmpId(arr){
+            return arr.reduce((groupedEmployees, employee) => {
+                const {emp_id} = employee;
+    
+                if(groupedEmployees[emp_id] == null) groupedEmployees[emp_id] = []
+    
+                groupedEmployees[emp_id].push(employee);
+                return groupedEmployees;
+            }, {})
+        }
+
+        let leaveTemp = groupItemsByEmpId(res3.data);
+
+        Object.keys(leaveTemp).forEach((key) => {
+            leaveTemp[key] = leaveTemp[key].map(function(avail){
+                let availDate = new Date(avail.avail_date);
+                availDate.setDate(availDate.getDate() + 1);
+
+                avail.avail_date = availDate.toISOString().substring(0, 10);
+                return avail;
+            });
+        })
+
+        unique_emps_arr.forEach((unique_emp) => {
+            let emp_exists = false;
+
+            for(let leave_day of res3.data){
+                if(leave_day.emp_id === unique_emp){
+                    emp_exists = true;
+                    break;
+                }
+            }
+
+            if(!emp_exists)
+            leaveTemp[unique_emp] = null;
+        });
+
+        res2.data.forEach((company_event) => {
+            let eventDate = new Date(company_event.event_date);
+            eventDate.setDate(eventDate.getDate() + 1);
+
+            company_event.event_date = eventDate.toISOString().substring(0, 10);
+            return company_event;
+        });
+
+        let overallAvailabilities = {
+            regular: groupItemsByEmpId(res1.data),
+            leave: leaveTemp,
+            company: res2.data
+        }
         
-        //group roster days by employee ID eg. {gam11: [{rosterObject}, {rosterObject}, gam12: [{rosterObject}]]}
-        const sortedEmployeeRosters = employeeRosters.reduce((groupedEmployees, employee) => {
-            const {emp_id} = employee;
-
-            if(groupedEmployees[emp_id] == null) groupedEmployees[emp_id] = []
-
-            groupedEmployees[emp_id].push(employee);
-            return groupedEmployees;
-        }, {});
+        //group roster days by employee ID eg. {gam11: [{rosterObject}, {rosterObject}], gam12: [{rosterObject}]}
+        const sortedEmployeeRosters = groupItemsByEmpId(employeeRosters);
 
         //set them in the react state
-        this.setState({employeeRosters: sortedEmployeeRosters, weekStart: weekStart, weekDates: weekDates, isLoaded: true})
+        this.setState({employeeRosters: sortedEmployeeRosters, availabilities: overallAvailabilities, weekStart: weekStart, weekDates: weekDates, isLoaded: true})
     }
 
     render(){

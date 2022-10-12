@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import {Box,Button,Container,TableContainer,Table,TableHead,TableBody,TableRow,TableCell,Paper,Modal,Typography} from "@mui/material";
-const { addNotification } = require('../modules/endpoint');
+const { addNotification, updateRegularAvailability } = require('../modules/endpoint');
 const axios = require('axios');
 
 const rowNames = ['Start-Time', 'End-Time'];
@@ -86,7 +86,12 @@ export default function ChangeAvailability(){
         if(endTime === "N/A"){endTime = null;}
 
         if(!(startTime === null ^ endTime === null)){
-            await addNotification(null, startTime, endTime, sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), currentDay, "Manager", "availabilityChange");
+            if(sessionStorage.getItem('emp_privilege') === "Employee"){
+                await addNotification(null, startTime, endTime, sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), currentDay, "Manager", "availabilityChange");   
+                alert("Your change availability request has been sent to a manager. Awaiting approval.");
+            } else{
+                await updateRegularAvailability(dayNames[currentDay], startTime, endTime, sessionStorage.getItem('emp_id'));
+            }
             
             document.location.reload();
         } else{
@@ -125,8 +130,8 @@ export default function ChangeAvailability(){
                         <label>End Time:</label>
                         &nbsp;
                         <select id={"endTime"} name={'End'} defaultValue={times[currentEndIndex]}>
-                            {times.map(time => 
-                                <option value={time}>{time}</option>
+                            {times.map((time, index) => 
+                                <option value={time} key={index}>{time}</option>
                             )}
                         </select>
                     </div>
