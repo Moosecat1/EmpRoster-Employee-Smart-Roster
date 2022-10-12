@@ -154,13 +154,12 @@ export default function ManagerViewEmployee(){
                                     </Box>
                                     <br />
                                     <Box
-
                                         display="flex"
-                                        flexDirection="column"
+                                        flexDirection="row"
                                         justifyContent="center"
-                                        alignItems="center"
-                                        sx ={{width:"1000px"}}
-                                    >
+                                        alignItems="flex-start"
+                                        sx ={{borderStyle:"solid", width: '950px', overflowY: 'scroll', maxHeight: "700px"}}>
+                                            
                                         <Roster week_start_sql={weekStart}/>
                                     </Box>
                                 </Box >

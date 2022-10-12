@@ -43,6 +43,8 @@ for(let i = 0; i < 3; i++){
     date.setDate(date.getDate() + 7);
 }
 
+console.log(weekStarts);
+
 export default function MainHub() {
     const [password, setPassword] = useState("");
     const [weekStart, setWeekStart] = useState(weekStartConst);
@@ -106,12 +108,12 @@ export default function MainHub() {
                         </Box>
                         <Box
                             display="flex"
-                            flexDirection="column"
+                            flexDirection="row"
                             justifyContent="center"
-                            alignItems="center"
-
-                        >
-                            <Roster week_start_sql={weekStart}/>
+                            alignItems="flex-start"
+                            sx ={{borderStyle:"solid", width: '950px', overflowY: 'scroll', maxHeight: "700px"}}>
+                                
+                            <Roster week_start_sql={weekStart} id='rosterable'/>
                         </Box>
                     </Box>
                     <br />

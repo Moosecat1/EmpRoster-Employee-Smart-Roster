@@ -171,29 +171,52 @@ class Notifications extends Component {
         const {isLoaded} = this.state;
         console.log(isLoaded);
         if(isLoaded){
-            return(
-                <div className='flex'>
-                    <Navbar/>
+            if(this.state.data.length !== 0){
+                return(
+                    <div className='flex'>
+                        <Navbar/>
 
-                    <Container>
-                        <Box display={'flex'}
-                             flexdirection={'row'}>
+                        <Container>
+                            <Box display={'flex'}
+                                flexdirection={'row'}>
 
-                            <Box>
-                                <Sidebar/>
+                                <Box>
+                                    <Sidebar/>
+                                </Box>
+
+
+                        <Box>
+                            <Row xs={1} md={2} className="g-4">
+                            {this.processNotifs()}
+                            </Row>
+                        </Box>
+
+                            </Box>
+                        </Container>
+                    </div>
+                )
+            } else{
+                return(
+                    <div className='flex'>
+                        <Navbar/>
+                        <Container>
+                            <Box display={'flex'}
+                                flexdirection={'row'}>
+
+                                <Box>
+                                    <Sidebar/>
+                                </Box>
+                                <Box>
+                                    <Row xs={1} md={1} className="g-4">
+                                        <h1>There are no notifications for you at this time.</h1>
+                                    </Row>
+                                </Box>
                             </Box>
 
-
-                       <Box>
-                           <Row xs={1} md={2} className="g-4">
-                           {this.processNotifs()}
-                           </Row>
-                       </Box>
-
-                        </Box>
-                    </Container>
-                </div>
-            )
+                        </Container>
+                    </div>
+                )
+            }
         }
     }
 }
