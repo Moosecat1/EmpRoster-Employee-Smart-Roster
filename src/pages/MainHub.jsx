@@ -4,7 +4,7 @@ import Roster from "../components/roster";
 import 'react-calendar/dist/Calendar.css';
 import {React, useState} from "react";
 import axios from 'axios';
-import {Container, Box, Typography, TextField, List, ListItem, ListItemText} from "@mui/material";
+import {Alert,AlertTitle,Button,Container, Box, Typography, TextField, List, ListItem, ListItemText} from "@mui/material";
 
 const sha256 = require('crypto-js/sha256');
 
@@ -49,9 +49,19 @@ export default function MainHub() {
     const [password, setPassword] = useState("");
     const [weekStart, setWeekStart] = useState(weekStartConst);
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [invalidFields, setInvalidFields] = useState([]);
+
 
     const updatePassword = async () => {
-        if(password === confirmPassword){
+        const errors = [];
+        if (password === "" || password.length < 8 || password.includes(" ")) {
+            errors.push(" Invalid Password (must be at least 8 characters)");
+        }
+        if (password !== confirmPassword) {
+            errors.push(" Password's don't match");
+        }
+        if(errors.length === 0){
             await axios.put("http://localhost:2420/updatePassword", {
                 emp_id: sessionStorage.getItem('emp_id'),
                 emp_password: sha256(password).toString(),
@@ -60,6 +70,9 @@ export default function MainHub() {
 
             sessionStorage.setItem('emp_password_changed', 1);
             document.location.reload();
+        }else{
+            setInvalidFields(errors);
+            setShowAlert(true);
         }
     }
 
@@ -125,10 +138,22 @@ export default function MainHub() {
         return (
             <main>
                 <Navbar/>
-
-                <h1>Please change your password:</h1>
+                <Container>
 
                 <div className={"form-signin w-100 m-auto text-center"}>
+                    {showAlert ?
+                        <Alert
+                            severity="warning"
+                            variant="outlined" >
+                            <AlertTitle>Error</AlertTitle>
+                            Your details have the following issues:
+                            <strong>{invalidFields.toString()}</strong>
+                        </Alert> :
+                        <Alert
+                            severity="info">
+                            Please fill out the following form to change your password.
+                        </Alert>
+                    }
                     <TextField
                         margin="normal"
                         required
@@ -156,8 +181,9 @@ export default function MainHub() {
                         }}
                     />
                     <br /><br />
-                    <button className="w-75 btn btn-lg btn-primary" onClick={updatePassword}>Update Password</button>
-                </div>
+                    <Button variant={"contained"} onClick={updatePassword}>Update Password</Button>
+                </div >
+                </Container>
             </main>
         )
     }
