@@ -69,9 +69,6 @@ export default function EditableCompany({setEmployeeListParent}){
 
 
     const submitChanges = async () => {
-
-
-
         const preData = employeeList[currentEmployee];
         const postData = currentEmployeeData;
 
@@ -81,6 +78,7 @@ export default function EditableCompany({setEmployeeListParent}){
 
         let updateData = {emp_fName: '', emp_lName: '', emp_email: '', emp_type: '', emp_privilege: ''};
 
+        //overwrite values that were not left empty with the input value, else set the data to the previous values
         for(let i = 0; i < fields.length; i++){
             const currentField = postData[fields[i]];
 
@@ -93,6 +91,7 @@ export default function EditableCompany({setEmployeeListParent}){
 
         const errors = [];
 
+        //do error checking
         if( updateData.emp_fName === "" || (/\d/.test(updateData.emp_fName)))
         {
             errors.push(" First Name: should not contain numbers or be left empty");
@@ -103,14 +102,13 @@ export default function EditableCompany({setEmployeeListParent}){
         }if(updateData.emp_privilege === "" || updateData.emp_type === ""){
             errors.push(" Privilege or Type: should not be left empty");
         }
+        //if there is no errors, update employee data in db, display the errors to user
         if (errors.length === 0){
             updateData['emp_id'] = emp_id;
 
-            console.log(updateData);
-
             await axios.put("http://localhost:2420/updateEmployee", updateData).catch((err) => {console.log(err);});
             document.location.reload();
-        }else{
+        } else{
             setInvalidFields(errors);
             setShowAlert(true);
         }
@@ -119,6 +117,7 @@ export default function EditableCompany({setEmployeeListParent}){
     }
 
     const generateEmployees = () => {
+        //generate table with each employees information
         return employeeList.map((employee, index) => 
             <tr key={index}>
                 <td style={nameStyle} onClick={() => handleOpen(index)}>

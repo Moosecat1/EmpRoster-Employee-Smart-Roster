@@ -45,8 +45,10 @@ export default function RequestLeave(){
         await setallEvents([...allEvents, newEvent]);
         const newEventObject = newEvent;
         
+        //if start and end are not null and start time is not later than end time, allow leave to be added
         if((newEventObject.start !== "" && newEventObject.end !== "") && !(newEventObject.start > newEventObject.end))
         {
+            //if the start time equals the end time, add the availability for the whole day
             if(newEventObject.start.getTime() === newEventObject.end.getTime())
             {
                 const date = newEventObject.start;
@@ -54,6 +56,7 @@ export default function RequestLeave(){
 
                 const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
 
+                //if user is employee, send notfication to manager. else, add directly into db
                 if(sessionStorage.getItem('emp_privilege') === "Employee"){
                     await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
                     alert("Your leave request has been sent to a manager. Awaiting approval.");
@@ -72,11 +75,9 @@ export default function RequestLeave(){
                 while(dayLooper.getTime() !== endDate.getTime())
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
-                    //const removeSqlDate = dayLooper.toISOString().split('T')[0];
 
                     if(sessionStorage.getItem('emp_privilege') === "Employee"){
                         await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
-                        //await removeRosterDate(sessionStorage.getItem('emp_id'), removeSqlDate);
                     } else{
                         await addAvailability(sqlDate, "00:00", "23:59", "Unavailable", sessionStorage.getItem('emp_id'));
                     }
@@ -84,6 +85,7 @@ export default function RequestLeave(){
                     dayLooper.setDate(dayLooper.getDate() + 1);
                 }
 
+                //if user is employee, send notfication to manager. else, add directly into db
                 if(sessionStorage.getItem('emp_privilege') === "Employee")
                     alert("Your leave request has been sent to a manager. Awaiting approval.");
             }
@@ -97,9 +99,11 @@ export default function RequestLeave(){
             var dayLooper = new Date();
             dayLooper.setDate(dayLooper.getDate() + 1);
 
+            //get the current employee availabilites and company events from the db
             const employeeAvailabilities = await getAvailabilities(sessionStorage.getItem('emp_id'));
             const companyEvents = await getCompanyEvents(sessionStorage.getItem('company_id'));
 
+            //if the employee has availabilities, add them to the calendar
             if(employeeAvailabilities.hasAvailabilities)
             {
                 for(let i = 0; i < employeeAvailabilities.availabilities.length; i++)
@@ -118,6 +122,7 @@ export default function RequestLeave(){
                 }
             }
 
+            //if the company has events, add them to the calendar
             if(companyEvents.hasEvents)
             {
                 for(let i = 0; i < companyEvents.events.length; i++)

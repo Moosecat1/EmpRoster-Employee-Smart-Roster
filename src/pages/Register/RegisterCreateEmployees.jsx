@@ -14,6 +14,7 @@ export default function RegisterCreateEmployees(){
         }
     ]);
 
+    //change state based on changed field
     const handleChangeInput = (index, event) => {
         var labels = document.getElementsByClassName(event.target.name);
 
@@ -31,16 +32,17 @@ export default function RegisterCreateEmployees(){
         event.preventDefault();
     }
 
+    //if user adds new employee, add new object to state
     const handleAdd = () => {
         setInputFields([...inputFields, {firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'}]);
     }
 
+    //remove employee from state when user removes an employee
     const handleRemove = (index) => {
         const values = [...inputFields];
         values.splice(index, 1);
         setInputFields(values);
     }
-
 
     const [invalidFields, setInvalidFields] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
@@ -60,6 +62,7 @@ export default function RegisterCreateEmployees(){
 
                 const errors = [];
 
+                //error check, and if no errors add employee to db
                 if(firstName === "" || (/\d/.test(firstName)))
                 {
                     errors.push(" First Name: should not contain numbers or be left empty");
@@ -71,7 +74,7 @@ export default function RegisterCreateEmployees(){
                     errors.push(" Privilege or Type: should not be left empty");
                 }
                 if (errors.length === 0){
-                    //do not delete anything below they are CRUCIAL for the code to RUN 
+                    //add employee to the db
                     const res = await axios.post("http://localhost:2420/addEmployee", {
                         emp_password: null,
                         emp_fName: firstName,
@@ -97,7 +100,6 @@ export default function RegisterCreateEmployees(){
 
         })();
     }
-
 
     // breadcrumbs for navigation of register pages and to show where user is
     return(

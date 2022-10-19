@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
+import Bowser from "bowser";
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Box from "@mui/material/Box";
@@ -62,6 +63,7 @@ class EditableRoster extends Component {
     checkDay(employeeRoster, dayIndex){
         const {employeeRosters, weekDates}= this.state;
 
+        //generate string based on the employees start and end times for the given day
         function timesString(rosterIndex){
             const rostDay = employeeRosters[employeeRoster][rosterIndex];
             const startString = "Start Time: " + rostDay.rost_start;
@@ -78,6 +80,7 @@ class EditableRoster extends Component {
         let empWorking = false;
         let rosterIndex;
 
+        //check if employee is working on a current day, and save the index of the roster in the current week dates array
         for(let i = 0; i < employeeRosters[employeeRoster].length; i++){
             const rosterDate = employeeRosters[employeeRoster][i];
             let dayMinusOne = new Date(rosterDate.rost_date);
@@ -113,6 +116,7 @@ class EditableRoster extends Component {
     processEmployeeTimes(){
         const {employeeRosters}= this.state;
 
+        //generate table based on the employees roster
         return Object.keys(employeeRosters).map((employee, index) => 
             <tr key={index}>
                 <td style={nameStyle}>{employee}</td>
@@ -128,24 +132,29 @@ class EditableRoster extends Component {
     }
 
     async addRosterTime(empId, selectedDate, earliestAvail, latestAvail){
+        //get start and end time
         let startTime = document.getElementById("startTime").value;
         let endTime = document.getElementById("endTime").value;
 
+        //convert them to floats
         let startTimeFloat = this.timeToFloat(startTime);
         let endTimeFloat = this.timeToFloat(endTime);
 
         if(startTime === "N/A"){startTime = null;}
         if(endTime === "N/A"){endTime = null;}
 
+        //only allow user to input N/A if selected for both start and end times
         if((startTime === null ^ endTime === null)){
             alert("Please select a time for both start and end.");
             return;
         }
+        //only allow user to input start value that is earlier than the end value
         if(startTimeFloat >= endTimeFloat){
             alert("End time cannot be greater than start time.");
             return;
         }
         
+        //if the selected times are outside of the employees availabilities, get confirmation from the user about whether or not to still proceed
         if((startTimeFloat >= earliestAvail && startTimeFloat <= latestAvail) && (endTimeFloat >= earliestAvail && endTimeFloat <= latestAvail)){
                 await axios.put("http://localhost:2420/updateRoster", {
                     emp_id: empId,
@@ -171,92 +180,98 @@ class EditableRoster extends Component {
         }
     }
 
+    //convert a time string into a float value
     timeToFloat(time){
         return parseFloat(time.replace(/:/g, '.'));
     }
 
     generateModal(){
-            const {currentEmpView, currentDayIndex, weekDates, employeeRosters} = this.state;
+        const {currentEmpView, currentDayIndex, weekDates, employeeRosters} = this.state;
 
-            if(typeof employeeRosters[currentEmpView] != "undefined")
-            {
-                const rostDate = employeeRosters[currentEmpView][currentDayIndex];
+        if(typeof employeeRosters[currentEmpView] != "undefined")
+        {
+            const rostDate = employeeRosters[currentEmpView][currentDayIndex];
 
-                let currentStart = "N/A";
-                let currentEnd = "N/A";
+            let currentStart = "N/A";
+            let currentEnd = "N/A";
 
-                if(rostDate.rost_start !== null && rostDate.rost_end !== null){
-                    currentStart = rostDate.rost_start.substring(0, 5);
-                    currentEnd = rostDate.rost_end.substring(0, 5);
-                }
-
-                const currentStartIndex = times.indexOf(currentStart);
-                const currentEndIndex = times.indexOf(currentEnd);
-
-                const {availabilities} = this.state;
-
-                const regAvail = availabilities.regular[currentEmpView][currentDayIndex];
-
-                const leaveAvail = availabilities.leave[currentEmpView] !== null ? availabilities.leave[currentEmpView].find(element => {
-                    return element.avail_date === weekDates[currentDayIndex];
-                }) : undefined;
-
-                const compEvent = availabilities.company.find(element => {
-                    return element.event_date === weekDates[currentDayIndex];
-                });
-
-                const reg = [(regAvail === undefined || regAvail.reg_start === null) ? "25:00" : regAvail.reg_start, (regAvail === undefined || regAvail.reg_end === null) ? "-1:00" : regAvail.reg_end];
-                const leave = [(leaveAvail === undefined || leaveAvail.avail_start === null) ? "25:00" : leaveAvail.avail_start, (leaveAvail === undefined || leaveAvail.avail_end === null) ? "-1:00" : leaveAvail.avail_end];
-                const comp = [(compEvent === undefined) ? "25:00" : (compEvent.event_start === null) ? "25:00" : compEvent.event_start, (compEvent === undefined) ? "-1:00" : (compEvent.event_end === null) ? "-1:00" : compEvent.event_end];
-
-                let earliestAvail = Math.min(...[this.timeToFloat(reg[0]), this.timeToFloat(leave[0]), this.timeToFloat(comp[0])]);
-                let latestAvail = Math.max(...[this.timeToFloat(reg[1]), this.timeToFloat(leave[1]), this.timeToFloat(comp[1])]);
-
-                const colorTimes = times.slice(1, times.length - 1).map((time, index) => 
-                    <option value={time} style={{color: (this.timeToFloat(time) >= earliestAvail && this.timeToFloat(time) <= latestAvail) ? "black" : "grey"}} key={index}>{time}</option>
-                )
-
-                return(
-                    <div>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Employee ID: {currentEmpView}
-                            <br />
-                            Day: {dayNames[currentDayIndex] + ", " + weekDates[currentDayIndex]}
-                        </Typography>
-                        <br />
-                        <Typography fontSize="medium">
-                            Regular Availability: {(regAvail.reg_start === null || regAvail.reg_end === null) ? "N/A" : (regAvail.reg_start === "00:00:00" && regAvail.reg_end === "23:59:00") ? "All Day" : `${regAvail.reg_start} - ${regAvail.reg_end}`}
-                            <br />
-                            Leave Taken: {leaveAvail === undefined ? "N/A" : (leaveAvail.avail_start === null || leaveAvail.avail_end === null) ? "N/A" : (leaveAvail.avail_start === "00:00:00" && leaveAvail.avail_end === "23:59:00") ? "All Day" : `${leaveAvail.avail_start} - ${leaveAvail.avail_end}`}
-                            <br />
-                            Company Event {compEvent === undefined ? "" : `(${compEvent.event_name})`}: {compEvent === undefined ? "N/A" : (compEvent.event_start === null || compEvent.event_end === null) ? "All Day" : `${compEvent.event_start} - ${compEvent.event_end}`}
-                        </Typography>
-                        <br /><br />
-                        <div>
-                            <label>Start Time:</label>
-                            &nbsp;
-                            <select id={"startTime"} name={'Start'} defaultValue={times[currentStartIndex]}>
-                                <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
-                                {colorTimes}
-                            </select>
-                            &nbsp;&nbsp;
-                            <label>End Time:</label>
-                            &nbsp;
-                            <select id={"endTime"} name={'End'} defaultValue={times[currentEndIndex]}>
-                                <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
-                                {colorTimes}
-                            </select>
-                        </div>
-                        <br/><br />
-                        <Box
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center">
-                            <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex], earliestAvail, latestAvail)}>Save Roster</Button>
-                        </Box>
-                    </div>
-                )
+            //get the current roster days start and end time
+            if(rostDate.rost_start !== null && rostDate.rost_end !== null){
+                currentStart = rostDate.rost_start.substring(0, 5);
+                currentEnd = rostDate.rost_end.substring(0, 5);
             }
+
+            const currentStartIndex = times.indexOf(currentStart);
+            const currentEndIndex = times.indexOf(currentEnd);
+
+            const {availabilities} = this.state;
+
+            //check if the employee has a regular availability, leave or a company event on the current day
+            const regAvail = availabilities.regular[currentEmpView][currentDayIndex];
+
+            const leaveAvail = availabilities.leave[currentEmpView] !== null ? availabilities.leave[currentEmpView].find(element => {
+                return element.avail_date === weekDates[currentDayIndex];
+            }) : undefined;
+
+            const compEvent = availabilities.company.find(element => {
+                return element.event_date === weekDates[currentDayIndex];
+            });
+
+            //format values so they work with Math.min/Math.max
+            const reg = [(regAvail === undefined || regAvail.reg_start === null) ? "25:00" : regAvail.reg_start, (regAvail === undefined || regAvail.reg_end === null) ? "-1:00" : regAvail.reg_end];
+            const leave = [(leaveAvail === undefined || leaveAvail.avail_start === null) ? "25:00" : leaveAvail.avail_start, (leaveAvail === undefined || leaveAvail.avail_end === null) ? "-1:00" : leaveAvail.avail_end];
+            const comp = [(compEvent === undefined) ? "25:00" : (compEvent.event_start === null) ? "25:00" : compEvent.event_start, (compEvent === undefined) ? "-1:00" : (compEvent.event_end === null) ? "-1:00" : compEvent.event_end];
+
+            //get the earliest and latest times the employee is available
+            let earliestAvail = Math.min(...[this.timeToFloat(reg[0]), this.timeToFloat(leave[0]), this.timeToFloat(comp[0])]);
+            let latestAvail = Math.max(...[this.timeToFloat(reg[1]), this.timeToFloat(leave[1]), this.timeToFloat(comp[1])]);
+
+            //generate input options with colours
+            const colorTimes = times.slice(1, times.length - 1).map((time, index) => 
+                <option value={time} style={{color: (this.timeToFloat(time) >= earliestAvail && this.timeToFloat(time) <= latestAvail) ? "black" : "grey"}} key={index}>{time}</option>
+            )
+
+            return(
+                <div>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Employee ID: {currentEmpView}
+                        <br />
+                        Day: {dayNames[currentDayIndex] + ", " + weekDates[currentDayIndex]}
+                    </Typography>
+                    <br />
+                    <Typography fontSize="medium">
+                        Regular Availability: {(regAvail.reg_start === null || regAvail.reg_end === null) ? "N/A" : (regAvail.reg_start === "00:00:00" && regAvail.reg_end === "23:59:00") ? "All Day" : `${regAvail.reg_start} - ${regAvail.reg_end}`}
+                        <br />
+                        Leave Taken: {leaveAvail === undefined ? "N/A" : (leaveAvail.avail_start === null || leaveAvail.avail_end === null) ? "N/A" : (leaveAvail.avail_start === "00:00:00" && leaveAvail.avail_end === "23:59:00") ? "All Day" : `${leaveAvail.avail_start} - ${leaveAvail.avail_end}`}
+                        <br />
+                        Company Event {compEvent === undefined ? "" : `(${compEvent.event_name})`}: {compEvent === undefined ? "N/A" : (compEvent.event_start === null || compEvent.event_end === null) ? "All Day" : `${compEvent.event_start} - ${compEvent.event_end}`}
+                    </Typography>
+                    <br /><br />
+                    <div>
+                        <label>Start Time:</label>
+                        &nbsp;
+                        <select id={"startTime"} name={'Start'} defaultValue={times[currentStartIndex]}>
+                            <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
+                            {colorTimes}
+                        </select>
+                        &nbsp;&nbsp;
+                        <label>End Time:</label>
+                        &nbsp;
+                        <select id={"endTime"} name={'End'} defaultValue={times[currentEndIndex]}>
+                            <option value={"N/A"} style={{color: "black"}} key={0}>{"N/A"}</option>
+                            {colorTimes}
+                        </select>
+                    </div>
+                    <br/><br />
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center">
+                        <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex], earliestAvail, latestAvail)}>Save Roster</Button>
+                    </Box>
+                </div>
+            )
+        }
     }
 
     async componentDidMount(){
@@ -272,7 +287,10 @@ class EditableRoster extends Component {
         
         let weekDates = [];
 
-        let weekStartPlaceholder = new Date(selectedDate.substring(0, 4), selectedDate.substring(5, 7) - 1, selectedDate.substring(8, 10));
+        const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+
+        //if engine is chromium, calculate week start differently
+        let weekStartPlaceholder = engine === "Blink" ? new Date(parseInt(selectedDate.substring(0, 4)), parseInt(selectedDate.substring(5, 7)) - 1, parseInt(selectedDate.substring(8, 10)) + 1) : new Date(parseInt(selectedDate.substring(0, 4)), parseInt(selectedDate.substring(5, 7)) - 1, parseInt(selectedDate.substring(8, 10)));
 
         let dayLooper = weekStartPlaceholder;
 
@@ -286,6 +304,7 @@ class EditableRoster extends Component {
         let unique_emps_arr = Array.from(new Set(employeeRosters.map(({emp_id}) => emp_id)));
         let unique_emps = unique_emps_arr.join(',');
 
+        //get regular avails, company events and leave from db
         const res1 = await axios.get("http://localhost:2420/getRosteredRegularAvailabilities", {
             params: {emp_ids: unique_emps}
         });
@@ -301,6 +320,7 @@ class EditableRoster extends Component {
             }
         });
 
+        //groups JS object by empIds
         function groupItemsByEmpId(arr){
             return arr.reduce((groupedEmployees, employee) => {
                 const {emp_id} = employee;
@@ -314,6 +334,7 @@ class EditableRoster extends Component {
 
         let leaveTemp = groupItemsByEmpId(res3.data);
 
+        //convert each date string into a date obj
         Object.keys(leaveTemp).forEach((key) => {
             leaveTemp[key] = leaveTemp[key].map(function(avail){
                 let availDate = new Date(avail.avail_date);

@@ -24,12 +24,6 @@ const modalStyle = {
     p: 4,
 };
 
-//get employees already rostered on and display them initially
-//only have unadded employees in the add employee MODAL
-//make employees CHECKABLE - then have add button which adds them to ROSTER
-//add availability info in MODAL for date availability
-//make table cell CLICKABLE, display MODAL with START TIME, END TIME, ADD button
-
 export default function ManagerEditRoster(){
     const [open, setOpen] = React.useState(false);
     const [openRostered, setOpenRostered] = React.useState(false);
@@ -49,6 +43,7 @@ export default function ManagerEditRoster(){
         const getEmployeeData = async () => {
             const company_id = sessionStorage.getItem('company_id')
 
+            //add the available week starts to an array
             let weekStart = new Date();
             weekStart.setDate(weekStart.getDate() - weekStart.getDay());
             const week_start_sql = sessionStorage.getItem('roster_week_start') === null ? weekStart.toISOString().split('T')[0] : sessionStorage.getItem('roster_week_start');
@@ -60,6 +55,7 @@ export default function ManagerEditRoster(){
                 weekStart.setDate(weekStart.getDate() + 7);
             }
 
+            //get the employees that are rostered and unrostered from db
             const res = await axios.get('http://localhost:2420/getUnrosteredEmployees/' + company_id + "&" + week_start_sql).catch((err) => {console.log(err);});
             const employeeList = res.data;
 
@@ -76,6 +72,7 @@ export default function ManagerEditRoster(){
         getEmployeeData();
     }, []);
 
+    //generate modal with all employees that are not rostered, so they can be added to the roster
     const generateAddModal = () => {
         return employeeList.map((employee, index) => 
             <div key={index}>
@@ -86,6 +83,7 @@ export default function ManagerEditRoster(){
         )
     }
 
+    //generate modal with all employees that are rostered, so they can be removed from the roster
     const generateRemoveModal = () => {
         return rosteredEmployeeList.map((employee, index) => 
             <div key={index}>
@@ -99,6 +97,7 @@ export default function ManagerEditRoster(){
     let checkedEmployees = [];
     let checkedRosteredEmployees = [];
 
+    //add checked employee to array (add)
     const addEmployee = (event) => {
         const empExists = checkedEmployees.indexOf(event.name);
 
@@ -109,6 +108,7 @@ export default function ManagerEditRoster(){
         }
     }
 
+    //add checked employee to array (remove)
     const removeEmployee = (event) => {
         const empExists = checkedRosteredEmployees.indexOf(event.name);
 
@@ -119,6 +119,7 @@ export default function ManagerEditRoster(){
         }
     }
 
+    //for each checked employee (add), add them to the selected week's roster
     const addEmployees = async () => {
         let weekStart = new Date();
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());
@@ -132,6 +133,7 @@ export default function ManagerEditRoster(){
         document.location.reload();
     }
 
+    //for each checked employee (remove), remove them from the selected week's roster
     const removeEmployees = async () => {
         let weekStart = new Date();
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());
@@ -145,6 +147,7 @@ export default function ManagerEditRoster(){
         document.location.reload();
     }
 
+    //change the roster week to be viewed
     const handleRosterChange = (roster_week_start) => {
         sessionStorage.setItem('roster_week_start', roster_week_start);
         document.location.reload();

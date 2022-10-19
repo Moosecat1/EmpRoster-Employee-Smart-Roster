@@ -30,6 +30,7 @@ function showTime(date) { // shows the current time with am or pm
     return strTime;
 }
 
+//add the current week and next two weeks as available selections
 let weekStartConst = new Date();
 weekStartConst.setDate(weekStartConst.getDate() - weekStartConst.getDay());
 
@@ -43,13 +44,12 @@ for(let i = 0; i < 3; i++){
     date.setDate(date.getDate() + 7);
 }
 
-console.log(weekStarts);
-
 export default function MainHub() {
     const [password, setPassword] = useState("");
     const [weekStart, setWeekStart] = useState(weekStartConst);
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    //if the password matches the old password, update the password in the db
     const updatePassword = async () => {
         if(password === confirmPassword){
             await axios.put("http://localhost:2420/updatePassword", {
@@ -70,6 +70,7 @@ export default function MainHub() {
 
     sessionStorage.setItem('emp_view', sessionStorage.getItem('emp_id'));
 
+    //if the employee has already changed their password, let them into the website. else, display change password prompt
     if(sessionStorage.getItem('emp_password_changed') === "1"){
         return(
             <main>

@@ -90,6 +90,7 @@ export default function EditCompany(){
         event.preventDefault();
     }
 
+    //generate modal with all current employees, so that user can select and remove them
     const generateRemoveModal = () => {
         if(employeeList.length !== 0){
             return employeeList.map((employee, index) => 
@@ -117,18 +118,19 @@ export default function EditCompany(){
 
                 const errors = [];
 
-                if(firstName === "" || (/\d/.test(firstName)))
-                {
+                //error check, and add all errors to array
+                if(firstName === "" || (/\d/.test(firstName))){
                     errors.push(" First Name: should not contain numbers or be left empty");
                 }if( lastName === "" || (/\d/.test(lastName))){
                 errors.push(" Last Name: should not contain numbers or be left empty");
-            }if(email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
-                errors.push(" Email: should not be left empty Or data entered is invalid");
-            }if(privilege === "" || type === ""){
-                errors.push(" Privilege or Type: should not be left empty");
-            }
+                }if(email === "" || !email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+                    errors.push(" Email: should not be left empty Or data entered is invalid");
+                }if(privilege === "" || type === ""){
+                    errors.push(" Privilege or Type: should not be left empty");
+                }
+
+                //if no errors, add employee into the database along with null regular availabilities
                 if (errors.length === 0){
-                    //do not delete anything below they are CRUCIAL for the code to RUN
                     const res = await axios.post("http://localhost:2420/addEmployee", {
                         emp_password: null,
                         emp_fName: firstName,
@@ -155,6 +157,7 @@ export default function EditCompany(){
         })();
     }
 
+    //generate modal that allows user to create employees
     const generateAddModal = () => {
         return(
             <form onSubmit={handleSubmit}>
@@ -243,6 +246,7 @@ export default function EditCompany(){
         );
     }
 
+    //set checked employees in state
     const addCheckedEmployees = (emp_id) => {
         const empIndex = checkedEmployees.indexOf(emp_id);
 
@@ -258,6 +262,7 @@ export default function EditCompany(){
 
 
     const removeEmployees = async () => {
+        //if the user has selected employees to delete ask them for confirmation. if confirmed, delete employees from the db
         if(checkedEmployees.length !== 0){
             let string = "Are you sure you want to delete employees ";
 

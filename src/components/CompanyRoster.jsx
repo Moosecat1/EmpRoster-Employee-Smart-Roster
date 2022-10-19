@@ -28,8 +28,9 @@ class CompanyRoster extends Component {
     }
 
     checkDay(dayIndex, empIndex){
-        const {weekDates, employeeList, employeeRoster} = this.state;
+        const {weekDates, employeeRoster} = this.state;
 
+        //generate the string with start and end time for a corresponding day
         function timesString(empRosterIndex){
             const rostDay = empRoster[empRosterIndex];
             const startString = "Start Time: " + rostDay.rost_start;
@@ -43,14 +44,12 @@ class CompanyRoster extends Component {
             )
         }
 
-        const employee = employeeList[empIndex];
         const empRoster = employeeRoster[empIndex];
-
-        //const empWorking = empRoster.some((rost) => rost.rost_date === weekDates[dayIndex]);
 
         let empWorking = false;
         let empRosterIndex;
 
+        //check if employee is working on the specified day
         for(let i = 0; i < empRoster.length; i++)
         {
             if(empRoster[i].rost_date === weekDates[dayIndex])
@@ -63,6 +62,7 @@ class CompanyRoster extends Component {
             }
         }
         
+        //if the employee is working, return the corresponding text and style
         if(empWorking)
         {
             return({
@@ -82,6 +82,7 @@ class CompanyRoster extends Component {
     processEmployeeTimes(){
         const {employeeList} = this.state;
 
+        //generate table with the roster for each week day and employee
         return employeeList.map((employee, index) => 
             <tr key={index}>
                 <td style={nameStyle}>{employee.emp_fName + " " + employee.emp_lName}</td>
@@ -97,6 +98,7 @@ class CompanyRoster extends Component {
     }
 
     async componentDidMount(){
+        //get the current week start
         const currentDate = new Date();
         let weekStart = new Date();
         weekStart.setDate(currentDate.getDate() - (currentDate.getDay()));
@@ -107,6 +109,7 @@ class CompanyRoster extends Component {
         let dayLooper = new Date();
         dayLooper.setDate(currentDate.getDate() - (currentDate.getDay()));
 
+        //add all week dates to array
         for(let i = 0; i < 7; i++){
             const dateString = dayLooper.toISOString().substring(0, 10);
             weekDates.push(dateString);
@@ -115,11 +118,13 @@ class CompanyRoster extends Component {
 
         const companyId = sessionStorage.getItem('company_id');
 
+        //get employee list from the db
         const res = await axios.get("http://localhost:2420/getEmployeesList/" + companyId).catch((err) => {console.log(err);})
         const employeeList = res.data;
 
         let employeeRosters = [];
 
+        //for each employee, get their roster for the week from the db and append to array
         for(let i = 0; i < employeeList.length; i++){
             const employeeId = employeeList[i].emp_id;
             

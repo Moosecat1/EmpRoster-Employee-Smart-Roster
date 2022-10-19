@@ -23,7 +23,6 @@ export default function Login(){
     };
 
     function sendLoginRequest(event, response) { //handles the main event
-        console.log("logging in"); //console log to test if we are logging in
         event.preventDefault(); //prevent page reload
         (async () => {
             const res = await verifyEmployee(emp_id, emp_password);
