@@ -3,8 +3,8 @@ import * as React from 'react';
 import {Box,List,ListItemIcon, ListItemButton, ListItemText, Divider} from "@mui/material";
 import {Home, People,Event,Business,Notifications,Settings, Preview, EventAvailable, ViewColumn} from "@mui/icons-material";
 
-const admPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/changeavailability", "/companyevent", "/managereditroster", "/editcompany"];
-const manPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/changeavailability", "/managereditroster", "/companyevent"];
+const admPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/requestleave", "/changeavailability", "/companyevent", "/managereditroster", "/editcompany"];
+const manPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/requestleave", "/changeavailability", "/managereditroster", "/companyevent"];
 const empPages = ["/mainhub", "/requestleave", "/notifications", "/settings", "/changeavailability"];
 
 export default function Sidebar() {
