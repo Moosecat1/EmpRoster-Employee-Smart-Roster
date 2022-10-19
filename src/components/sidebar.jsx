@@ -3,8 +3,8 @@ import * as React from 'react';
 import {Box,List,ListItemIcon, ListItemButton, ListItemText, Divider} from "@mui/material";
 import {Home, People,Event,Business,Notifications,Settings, Preview, EventAvailable, ViewColumn} from "@mui/icons-material";
 
-const admPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/changeavailability", "/companyevent", "/managereditroster", "/editcompany"];
-const manPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/changeavailability", "/managereditroster", "/companyevent"];
+const admPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/requestleave", "/changeavailability", "/companyevent", "/managereditroster", "/editcompany"];
+const manPages = ["/mainhub", "/employeelist", "/notifications", "/settings", "/viewcompanyroster", "/requestleave", "/changeavailability", "/managereditroster", "/companyevent"];
 const empPages = ["/mainhub", "/requestleave", "/notifications", "/settings", "/changeavailability"];
 
 export default function Sidebar() {
@@ -88,9 +88,17 @@ export default function Sidebar() {
                         <ListItemText primary="View Company Roster">
                         </ListItemText>
                     </ListItemButton>
-
-                    <ListItemButton  selected={selectedIndex === selectedArray[5]}
-                                     onClick={(event) => handleListItemClick(event, 5)}
+                    <ListItemButton selected={selectedIndex === selectedArray[5]}
+                                    onClick={(event) => handleListItemClick(event, 5)}
+                                    href={"/RequestLeave"}>
+                        <ListItemIcon>
+                            <People/>
+                        </ListItemIcon>
+                        <ListItemText primary="Request Leave" >
+                        </ListItemText>
+                    </ListItemButton>
+                    <ListItemButton  selected={selectedIndex === selectedArray[6]}
+                                     onClick={(event) => handleListItemClick(event, 6)}
                                      href={"/ChangeAvailability"}>
                         <ListItemIcon>
                             <EventAvailable/>
@@ -98,8 +106,8 @@ export default function Sidebar() {
                         <ListItemText primary="Change Availability">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === selectedArray[6]}
-                                     onClick={(event) => handleListItemClick(event, 6)}
+                    <ListItemButton  selected={selectedIndex === selectedArray[7]}
+                                     onClick={(event) => handleListItemClick(event, 7)}
                                      href={"/CompanyEvent"}>
                         <ListItemIcon>
                             <Event/>
@@ -107,8 +115,8 @@ export default function Sidebar() {
                         <ListItemText primary="Company Event">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === selectedArray[7]}
-                                     onClick={(event) => handleListItemClick(event, 7)}
+                    <ListItemButton  selected={selectedIndex === selectedArray[8]}
+                                     onClick={(event) => handleListItemClick(event, 8)}
                                      href={"/ManagerEditRoster"}>
                         <ListItemIcon>
                             <ViewColumn/>
@@ -116,8 +124,8 @@ export default function Sidebar() {
                         <ListItemText primary="Edit Roster">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === selectedArray[8]}
-                                     onClick={(event) => handleListItemClick(event, 8)}
+                    <ListItemButton  selected={selectedIndex === selectedArray[9]}
+                                     onClick={(event) => handleListItemClick(event, 9)}
                                      href={"/editcompany"}>
                         <ListItemIcon>
                             <Business/>
@@ -180,9 +188,17 @@ export default function Sidebar() {
                         <ListItemText primary="View Company Roster">
                         </ListItemText>
                     </ListItemButton>
-
-                    <ListItemButton  selected={selectedIndex === selectedArray[5]}
-                                     onClick={(event) => handleListItemClick(event, 5)}
+                    <ListItemButton selected={selectedIndex === selectedArray[5]}
+                                    onClick={(event) => handleListItemClick(event, 5)}
+                                    href={"/RequestLeave"}>
+                        <ListItemIcon>
+                            <People/>
+                        </ListItemIcon>
+                        <ListItemText primary="Request Leave" >
+                        </ListItemText>
+                    </ListItemButton>
+                    <ListItemButton  selected={selectedIndex === selectedArray[6]}
+                                     onClick={(event) => handleListItemClick(event, 6)}
                                      href={"/ChangeAvailability"}>
                         <ListItemIcon>
                             <EventAvailable/>
@@ -190,8 +206,8 @@ export default function Sidebar() {
                         <ListItemText primary="Change Availability">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === selectedArray[6]}
-                                     onClick={(event) => handleListItemClick(event, 6)}
+                    <ListItemButton  selected={selectedIndex === selectedArray[7]}
+                                     onClick={(event) => handleListItemClick(event, 7)}
                                      href={"/ManagerEditRoster"}>
                         <ListItemIcon>
                             <ViewColumn/>
@@ -199,8 +215,8 @@ export default function Sidebar() {
                         <ListItemText primary="Edit Roster">
                         </ListItemText>
                     </ListItemButton>
-                    <ListItemButton  selected={selectedIndex === selectedArray[7]}
-                                     onClick={(event) => handleListItemClick(event, 7)}
+                    <ListItemButton  selected={selectedIndex === selectedArray[8]}
+                                     onClick={(event) => handleListItemClick(event, 8)}
                                      href={"/CompanyEvent"}>
                         <ListItemIcon>
                             <Event/>
