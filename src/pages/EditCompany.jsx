@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { SHA256 } from 'crypto-js';
+import {randomOneTimePassword} from '../modules/random.js';
 import Navbar from '../components/navbar';
 import EditableCompany from '../components/EditableCompany';
 import { Alert,AlertTitle,Modal,TextField, Typography, Box, Button, Container } from '@mui/material';
@@ -28,7 +30,7 @@ export default function EditCompany(){
     const [checkedEmployees, setCheckedEmployees] = useState([]);
     const [inputFields, setInputFields] = useState([
         {
-            firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'
+            firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'
         }
     ]);
     const [invalidFields, setInvalidFields] = useState([]);
@@ -41,7 +43,7 @@ export default function EditCompany(){
         let conf = window.confirm(string);
 
         if(conf){
-            setInputFields([{firstName: '', lastName: '', privilege: 'Employee', type: 'Casual'}]); 
+            setInputFields([{firstName: '', lastName: '', email: '', privilege: 'Employee', type: 'Casual'}]); 
             setAddOpen(false);
             setShowAlert(false);
             setInvalidFields([]);
@@ -105,8 +107,13 @@ export default function EditCompany(){
 
     const finalise = () => {
         (async() => {
+            let errors = []; 
+            let employees = [];
+
             for(let i = 0; i < inputFields.length; i++)
             {
+                errors = []; 
+
                 const employee = inputFields[i];
                 const firstName = employee.firstName;
                 const lastName = employee.lastName;
@@ -115,8 +122,6 @@ export default function EditCompany(){
                 const type = employee.type;
 
                 const companyId = sessionStorage.getItem('company_id');
-
-                const errors = [];
 
                 //error check, and add all errors to array
                 if(firstName === "" || (/\d/.test(firstName))){
@@ -129,10 +134,10 @@ export default function EditCompany(){
                     errors.push(" Privilege or Type: should not be left empty");
                 }
 
-                //if no errors, add employee into the database along with null regular availabilities
+                //if no errors, push employee to array
                 if (errors.length === 0){
-                    const res = await axios.post("http://localhost:2420/addEmployee", {
-                        emp_password: null,
+                    employees.push({
+                        emp_password: randomOneTimePassword(),
                         emp_fName: firstName,
                         emp_lName: lastName,
                         emp_email: email,
@@ -140,20 +145,44 @@ export default function EditCompany(){
                         emp_privilege: privilege,
                         emp_password_changed: false,
                         company_id: companyId
-                    }).catch((err) => {
-                        console.log(err);
                     });
-
-                    const empId = res.data[1];
-                    await addNullRegularAvailabilities(empId);
-                    document.location.reload();
                 } else{
                     setInvalidFields(errors);
                     setShowAlert(true);
                 }
             }
 
+            //if no errors, add the employees to the db
+            if(employees.length === inputFields.length){
+                let otps = [];
 
+                for(let i = 0; i < employees.length; i++){
+                    let employee = employees[i];
+    
+                    const empOtp = employee.emp_password;
+
+                    employee.emp_password = SHA256(employee.emp_password).toString();
+
+                    const res = await axios.post("http://localhost:2420/addEmployee", employee);
+
+                    const empId = res.data[1];
+                    await addNullRegularAvailabilities(empId);
+
+                    otps.push({emp_id: empId, emp_password: empOtp});
+                }
+
+                let alertStr = "The one-time passwords for the newly created employees are: ";
+
+                for(let i = 0; i < otps.length; i++){
+                    alertStr += `\n\t${otps[i].emp_id}: ${otps[i].emp_password}`;
+                }
+
+                alertStr += "\nPlease write these down somewhere, as they will not be retrievable after this.";
+
+                alert(alertStr);
+
+                document.location.reload();
+            }
         })();
     }
 
