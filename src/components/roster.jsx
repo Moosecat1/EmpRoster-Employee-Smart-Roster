@@ -76,9 +76,9 @@ class Roster extends Component {
 
             if(engine === "Blink")
                 weekStart.setDate(weekStart.getDate() + 1);
-        } else{
-            count++;
         }
+
+        count++;
 
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
@@ -93,7 +93,11 @@ class Roster extends Component {
         //add all the selected weeks dates to array
         for(let i = 0; i < 7; i++)
         {
-            rostDates.push(weekStart.getDate());
+            if(engine === "Blink" && count > 1)
+                rostDates.push(weekStart.getDate() - 1);
+            else
+                rostDates.push(weekStart.getDate());
+
             weekStart.setDate(weekStart.getDate() + 1);
         }
 
@@ -107,9 +111,6 @@ class Roster extends Component {
         }
 
         let empRostTimes = [];
-
-        let counter = 0;
-
         //for each day, if employee is working, add the day with the rostered start and end times. else, add the day with null values
         for(let i = 0; i < 7; i++)
         {
@@ -124,9 +125,6 @@ class Roster extends Component {
                     startTime = startTime.substring(0, 5);
                     endTime = endTime.substring(0, 5);
                 }
-
-                counter++;
-
                 empRostTimes.push({startTime: startTime, endTime: endTime});
             }
             else

@@ -67,7 +67,7 @@ export default function RequestLeave(){
             else
             {
                 let dayLooper = newEventObject.start;
-                dayLooper.setDate(dayLooper.getDate() + 1);
+                dayLooper.setDate(dayLooper.getDate());
 
                 let endDate = newEventObject.end;
                 endDate.setDate(endDate.getDate() + 1);

@@ -7,6 +7,8 @@ import Card from 'react-bootstrap/Card';
 import {Container, Box} from "@mui/material";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Bowser from "bowser";
+import e from "cors";
 
 //Declaring methods that will be used throughout the page
 const { addAvailability, removeNotification, addNotification, getEmployeeName, getRegularAvailability, updateRegularAvailability } = require('../modules/endpoint');
@@ -25,18 +27,30 @@ class Notifications extends Component {
     }
 
     //Method that deals with a notification being accepted
-    async acceptRequest(notification, index) {
+    async acceptRequest(notification, index) { 
         if (notification.noti_type === "leaveRequest") {
+            const dateString = notification.noti_date.split('T')[0];
+
+            let date = new Date(parseInt(dateString.substring(0, 4)), parseInt(dateString.substring(5, 7)) - 1, parseInt(dateString.substring(8, 10)));
+    
+            const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+            
+            if(engine !== "Blink")
+                date.setDate(date.getDate() + 1);
+            else
+                date.setDate(date.getDate() + 2);
+            
+            let dateStr = date.toISOString().substring(0, 10);
+
             //Adds the accepted availability change to the database and makes a new notification for an employee in the database
-            await addAvailability(notification.noti_date.split('T')[0], notification.noti_start, notification.noti_end, "Unavailable", notification.emp_id);
-            await addNotification(notification.noti_date.split('T')[0], notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your leave request for the " + (this.state.dates[index].getDate() + 1) + "/" +  (this.state.dates[index].getMonth() + 1) + "/" +
+            await addAvailability(dateStr, notification.noti_start, notification.noti_end, "Unavailable", notification.emp_id);
+            await addNotification(dateStr, notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your leave request for the " + (this.state.dates[index].getDate() + 1) + "/" +  (this.state.dates[index].getMonth() + 1) + "/" +
                 this.state.dates[index].getFullYear() + " was accepted.", "Employee", "Accept");
         }
         else if (notification.noti_type === "availabilityChange") {
             //Adds the accepted regular availability change to the database and makes a new notification for an employee in the database
             await updateRegularAvailability(dayNames[notification.noti_desc], notification.noti_start, notification.noti_end, notification.emp_id);
             await addNotification(notification.noti_date, notification.noti_start, notification.noti_end, notification.emp_id, notification.company_id, notification.emp_fName, notification.emp_lName, "Your change of availability for " + dayNames[notification.noti_desc] + "'s was accepted", "Employee", "Accept");
-
         }
         //Removes the accepted notification from the database to ensure no conflicts and reloads the page
         await removeNotification(notification.noti_id);
@@ -70,13 +84,23 @@ class Notifications extends Component {
     notifType(notification, index) {
         if (notification.noti_type === "leaveRequest") {
             //Returns a card that displays a request for leave that can be accepted or denied
+
+            const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+        
+            let date = this.state.dates[index];
+
+            if(engine !== "Blink")
+                date.setDate(date.getDate() + 1);
+            
+            date.setMonth(date.getMonth() + 1);
+
             return(
                 <>
                     <Card.Body>
                         <Card.Title>
                             {"Leave Request"}
                         </Card.Title>
-                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + (this.state.dates[index].getDate() + 1) + "/" +  (this.state.dates[index].getMonth() + 1) + "/" +
+                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + (date.getDate()) + "/" +  (date.getMonth()) + "/" +
                         this.state.dates[index].getFullYear() + " from " + notification.noti_start + "-" + notification.noti_end + " due to " + notification.noti_desc}
                     </Card.Body>
                     <Button variant="primary" onClick={() =>this.acceptRequest(notification, index)}>Accept</Button>
