@@ -82,8 +82,6 @@ class Roster extends Component {
 
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
-        console.log(week_start_sql)
-
         //get the current weeks roster from the db
         const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
             console.log(err);
@@ -109,9 +107,6 @@ class Roster extends Component {
         }
 
         let empRostTimes = [];
-
-        console.log(res.data)
-        console.log(empRostDates)
 
         let counter = 0;
 
