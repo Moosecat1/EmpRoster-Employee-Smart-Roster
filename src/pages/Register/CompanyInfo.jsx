@@ -30,6 +30,7 @@ export default function CompanyInfo(){
 
             let employeeList = [];
 
+            //update each employee's password with a one-time password
             for(let i = 1; i < res.data.length; i++){
                 let employee = res.data[i];
                 employee.emp_otp = randomOneTimePassword();
@@ -51,6 +52,7 @@ export default function CompanyInfo(){
         initialiseCompanyData();
     }, []);
 
+    //generate table based on employee data
     const generateEmployees = () => {
         return employeeList.map((employee, index) => 
             <tr key={index}>
@@ -62,6 +64,7 @@ export default function CompanyInfo(){
         );
     }
 
+    //allow user to print information
     const printWindow = () => {
         window.print();
         document.location = '/';

@@ -170,7 +170,6 @@ class Notifications extends Component {
     //Deals with the actual rendering of the page
     render(){
         const {isLoaded} = this.state;
-        console.log(isLoaded);
         if(isLoaded){
             if(this.state.data.length !== 0){
                 return(

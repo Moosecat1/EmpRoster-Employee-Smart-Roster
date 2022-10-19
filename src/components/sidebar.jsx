@@ -14,6 +14,7 @@ export default function Sidebar() {
         setSelectedIndex(index);
     };
 
+    //get the current url
     let url = window.location.href;
     url = url.split('/');
     url = url[url.length - 1];
@@ -21,6 +22,7 @@ export default function Sidebar() {
 
     let selectedArray;
 
+    //generate array to generate sidebar highlighting correctly
     if(sessionStorage.getItem("emp_privilege") === "Employee"){
         let arrLength = empPages.length;
         selectedArray = new Array(arrLength).fill(0);
@@ -35,6 +37,7 @@ export default function Sidebar() {
         selectedArray[admPages.indexOf(url)] = 1;
     }
 
+    //generate sidebar based on the user's privilege
     if (sessionStorage.getItem("emp_privilege")  === 'Admin') {
         return(
             <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>

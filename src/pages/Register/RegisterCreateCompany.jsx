@@ -8,18 +8,14 @@ const { addCompany, addOperatingTime } = require('../../modules/endpoint');
 
 document.title = "Create Your Company";
 
-
-
-
 export default function RegisterCreateCompany() {
     const [companyName, setCompanyName] = useState("");
     const [open, setOpen] = React.useState(false);
     const [message, setMessage] = React.useState("");
     
     const createCompany = () => {
-
         (async () => {
-
+            //do error checking, and if no errors create company in db
             if (companyName === "" && companyName.length < 3) {
                 setMessage("Company Name should contain 3 or more Letters");
                 setOpen(true);
@@ -36,13 +32,6 @@ export default function RegisterCreateCompany() {
             }
         })()
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
 
     if (sessionStorage.getItem('emp_id') != null) {
         alert("your company is already registered")

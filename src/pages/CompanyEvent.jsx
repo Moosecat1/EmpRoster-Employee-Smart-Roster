@@ -52,6 +52,7 @@ export default function CompanyEvent(){
     ]);
 
     const handleAddOpen = () => {setAddOpen(true);}
+    //if user attempts to close window, warn them that all data that was input will be cleared
     const handleAddClose = () => {
         const string = "Are you sure you want to exit? All input data will be lost.";
         let conf = window.confirm(string);
@@ -64,6 +65,7 @@ export default function CompanyEvent(){
 
     useEffect(() => {
         const getCompanyEvents = async () => {
+            //get the current company events from the db and format their dates
             const res = await axios.get("http://localhost:2420/getCompanyEvents/" + sessionStorage.getItem('company_id'));
             for(let i = 0; i < res.data.length; i++){
                 const event = res.data[i];
@@ -96,6 +98,7 @@ export default function CompanyEvent(){
         handleChangeInput(index, eventObj);
     }
 
+    //the handle functions handle adding a new event, remove existing ones etc.
     const handleChangeInput = (index, event) => {
         var labels = document.getElementsByClassName(event.target.name);
 
@@ -129,6 +132,7 @@ export default function CompanyEvent(){
         document.location.reload();
     }
 
+    //generate table with the current events
     const generateEventTable = () => {
         return companyEvents.map((companyEvent, index) => 
             <tr key={index}>
@@ -168,6 +172,7 @@ export default function CompanyEvent(){
         }
     }
 
+    //generate modal to allow user to add new events
     const generateAddModal = () => {
         return(
             <form onSubmit={handleSubmit}>
@@ -216,6 +221,7 @@ export default function CompanyEvent(){
     const addEvents = async () => {
         let error = false;
 
+        //for every event, check if there is any input errors
         for(let i = 0; i < inputFields.length; i++){
             const inputField = inputFields[i];
 
@@ -252,6 +258,7 @@ export default function CompanyEvent(){
                 break;
         }
 
+        //if there is no errors, add the users input to the db
         if(!error){
             for(let i = 0; i < inputFields.length; i++){
                 const inputField = inputFields[i];

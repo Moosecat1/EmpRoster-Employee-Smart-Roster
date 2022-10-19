@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../css/roster.css'
 const axios = require('axios');
+const Bowser = require('bowser');
 
 //make time only when they rostered, change colour of cell, make cell onClick etc., use getRoster function
 
@@ -39,6 +40,7 @@ class Roster extends Component {
     }
 
     checkTime(dayIndex, timeIndex, data){
+        //if t
         if(data[dayIndex].startTime === displayTimes[timeIndex])
         {
             dayBool[dayIndex] = true;
@@ -48,6 +50,7 @@ class Roster extends Component {
             dayBool[dayIndex] = false;
         }
 
+        //return text and style for table cell based on if emp is rostered
         if(dayBool[dayIndex])
         {
             return({
@@ -65,14 +68,23 @@ class Roster extends Component {
     }
 
     async getData(weekStart){
+        const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+
+        //only decrease month when roster week is changed (due to JS date formatting)
         if(count !== 0){
             weekStart.setMonth(weekStart.getMonth() - 1);
+
+            if(engine === "Blink")
+                weekStart.setDate(weekStart.getDate() + 1);
         } else{
             count++;
         }
 
         const week_start_sql = weekStart.toISOString().split('T')[0];
 
+        console.log(week_start_sql)
+
+        //get the current weeks roster from the db
         const res = await axios.get("http://localhost:2420/getRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
             console.log(err);
         });
@@ -80,12 +92,14 @@ class Roster extends Component {
         let rostDates = [];
         let empRostDates = [];
     
+        //add all the selected weeks dates to array
         for(let i = 0; i < 7; i++)
         {
             rostDates.push(weekStart.getDate());
             weekStart.setDate(weekStart.getDate() + 1);
         }
 
+        //add all the dates employee is working to array
         for(let i = 0; i < res.data.length; i++)
         {
             let date = new Date();
@@ -96,16 +110,20 @@ class Roster extends Component {
 
         let empRostTimes = [];
 
+        console.log(res.data)
+        console.log(empRostDates)
+
         let counter = 0;
 
-        for(let i = 0; i < 7; i ++)
+        //for each day, if employee is working, add the day with the rostered start and end times. else, add the day with null values
+        for(let i = 0; i < 7; i++)
         {
             const currentDate = rostDates[i];
 
             if(empRostDates.includes(currentDate))
             {
-                let startTime = res.data[counter].rost_start;
-                let endTime = res.data[counter].rost_end;
+                let startTime = res.data[i].rost_start;
+                let endTime = res.data[i].rost_end;
 
                 if(!(startTime === null || endTime === null)){
                     startTime = startTime.substring(0, 5);
@@ -122,6 +140,7 @@ class Roster extends Component {
             }
         }
 
+        //get the earliest and latest time employee is rostered for the week from db
         const res1 = await axios.get("http://localhost:2420/getEarliestRoster/" + sessionStorage.getItem('emp_view') + "&" + week_start_sql).catch((err) => {
             console.log(err);
         });
@@ -130,6 +149,7 @@ class Roster extends Component {
             console.log(err);
         });
 
+        //set the earliest start and latest finish to the corresponding values (if they exist, else set them to 8AM and 6PM)
         if(res1.data.length !== 0 && res2.data.length !== 0)
         {
             if(!(res1.data[0].rost_start === null || res2.data[0].rost_end === null)){
@@ -146,6 +166,7 @@ class Roster extends Component {
 
         displayTimes = times.slice(startIndex, endIndex);
 
+        //generate table based on the earliest start and latest finish times
         const processes = displayTimes.map((time, index) =>
             <tr style={{border: "1px solid black"}} key={index}>
                 <td style={{border: "1px solid black"}}>
@@ -181,12 +202,14 @@ class Roster extends Component {
         this.setState({cells: processes, isLoaded: true});
     }
 
+    //get the chosen week start and generate data
     async componentDidUpdate(prevProps){
         if(this.props.week_start_sql !== prevProps.week_start_sql){
             await this.getData(this.props.week_start_sql);
         }
     }
 
+    //get the current week start and generate data
     async componentDidMount(){
         let weekStart = new Date();
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());

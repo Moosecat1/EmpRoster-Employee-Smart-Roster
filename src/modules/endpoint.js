@@ -1,6 +1,7 @@
-//import axios
+//imports
 const axios = require('axios');
 const sha256 = require('crypto-js/sha256');
+const Bowser = require('bowser');
 
 //make a function that can be called from anywhere (with the correct imports) which allows for checking if a employee exists
 const verifyEmployee = async (emp_id, emp_password) => {
@@ -262,9 +263,15 @@ const addRoster = async (rost_date, rost_start, rost_end, rost_week_start, emp_i
 }
 
 const addWeeklyRoster = async (rost_week_start, emp_id) => {
-    let weekStart = new Date(rost_week_start.substring(0, 4), rost_week_start.substring(5, 7) - 1, rost_week_start.substring(8, 10));
+    const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+
+    let weekStart = new Date(rost_week_start.substring(0, 4), parseInt(rost_week_start.substring(5, 7)) - 1, rost_week_start.substring(8, 10));
     let dayLooper = weekStart;
-    dayLooper.setDate(weekStart.getDate() - (weekStart.getDay()));
+
+    if(engine !== "Blink")
+        dayLooper.setDate(weekStart.getDate() - (weekStart.getDay()));
+    else
+        dayLooper.setDate(weekStart.getDate() - (weekStart.getDay()) + 1);
 
     for(let i = 0; i < 7; i++){
         const dateString = dayLooper.toISOString().substring(0, 10);

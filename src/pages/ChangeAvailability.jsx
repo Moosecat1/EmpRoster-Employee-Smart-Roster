@@ -39,6 +39,7 @@ export default function ChangeAvailability(){
 
     useEffect(() => {
         async function getData(){
+            //get the current availabilities from the db
             const res = await axios.get("http://localhost:2420/getRegularAvailabilities/" + sessionStorage.getItem('emp_id')).catch((err) => console.log(err));
 
             const regularAvailabilities = res.data;
@@ -51,6 +52,7 @@ export default function ChangeAvailability(){
 
     const objectFields = ["reg_start", "reg_end"];
 
+    //if there is not a regular availability, return text signifying the availability is null
     const generateString = (dayIndex, fieldIndex) => {
         const cellValue = regularAvailabilities[dayIndex][objectFields[fieldIndex]];
 
@@ -62,6 +64,7 @@ export default function ChangeAvailability(){
     }
 
     const generateAvailabilities = () => {
+        //generate table based on the current availabilities
         if(regularAvailabilities[0] !== undefined){
             return rowNames.map((rowName, index) => 
                 <TableRow key={index}>
@@ -85,6 +88,7 @@ export default function ChangeAvailability(){
         if(startTime === "N/A"){startTime = null;}
         if(endTime === "N/A"){endTime = null;}
 
+        //if one of start or end is null, alert the user with an error. else, if they are an employee, send notification to the manager, else, add availability straight into db
         if(!(startTime === null ^ endTime === null)){
             if(sessionStorage.getItem('emp_privilege') === "Employee"){
                 await addNotification(null, startTime, endTime, sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), currentDay, "Manager", "availabilityChange");   
@@ -104,6 +108,7 @@ export default function ChangeAvailability(){
             let currentStart = "N/A";
             let currentEnd = "N/A";
 
+            //if start and end are not null, set them to the current availability
             if(regularAvailabilities[currentDay][objectFields[0]] !== null && regularAvailabilities[currentDay][objectFields[1]] !== null){
                 currentStart = regularAvailabilities[currentDay][objectFields[0]].substring(0, 5);
                 currentEnd = regularAvailabilities[currentDay][objectFields[1]].substring(0, 5);

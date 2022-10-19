@@ -62,6 +62,7 @@ export default function ManagerViewEmployee(){
     const [hasLoaded, setHasLoaded] = useState(false);
 
     useEffect(() => {
+        //get the selected employee's information from the db
         const getEmpName = async () => {
             const res = await axios.get("http://localhost:2420/getEmployeeName/" + sessionStorage.getItem('emp_view'));
             const fname = res.data[0].emp_fName;
@@ -86,6 +87,7 @@ export default function ManagerViewEmployee(){
         setWeekStarts(weekStarts);
     }, []);
 
+    //if user changes date to look at roster, update the roster
     const handleWeekChange = (weekstart) => {
         let newDate = new Date(parseInt(weekstart.substring(0, 4)), parseInt(weekstart.substring(5, 7)), parseInt(weekstart.substring(8, 10)));
         setWeekStart(newDate);
