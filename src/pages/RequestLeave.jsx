@@ -71,14 +71,10 @@ export default function RequestLeave(){
 
                 let endDate = newEventObject.end;
                 endDate.setDate(endDate.getDate() + 1);
-                
-                console.log(dayLooper);
-                console.log(endDate);
 
                 while(dayLooper.getTime() !== endDate.getTime())
                 {
                     const sqlDate = dayLooper.toISOString().split('T')[0].replace(/-/g, '/');
-                    console.log(sqlDate);
 
                     if(sessionStorage.getItem('emp_privilege') === "Employee"){
                         await addNotification(sqlDate, "00:00", "23:59", sessionStorage.getItem('emp_id'), sessionStorage.getItem('company_id'), sessionStorage.getItem('emp_fName'), sessionStorage.getItem('emp_lName'), leaveType, "Manager", "leaveRequest");
