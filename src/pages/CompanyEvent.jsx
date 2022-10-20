@@ -1,4 +1,5 @@
 import {React, useEffect, useState} from "react";
+import Bowser from 'bowser';
 import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import { Modal,Container, Box,TextField, Typography, Button } from "@mui/material";
@@ -262,6 +263,11 @@ export default function CompanyEvent(){
         if(!error){
             for(let i = 0; i < inputFields.length; i++){
                 const inputField = inputFields[i];
+
+                const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+
+                if(engine === "Blink")
+                    inputField.date.setDate(inputField.date.getDate() + 1);
 
                 const event_date = inputField.date.toISOString().substring(0, 10);
                 const event_start = inputField.start === 'All Day' ? null : inputField.start; 
