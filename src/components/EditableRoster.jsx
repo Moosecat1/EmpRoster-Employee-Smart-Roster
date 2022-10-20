@@ -131,7 +131,7 @@ class EditableRoster extends Component {
         );
     }
 
-    async addRosterTime(empId, selectedDate, earliestAvail, latestAvail){
+    async addRosterTime(empId, selectedDate, availTimes){
         //get start and end time
         let startTime = document.getElementById("startTime").value;
         let endTime = document.getElementById("endTime").value;
@@ -153,9 +153,12 @@ class EditableRoster extends Component {
             alert("End time cannot be greater than start time.");
             return;
         }
+
+        const rosteredTimes = times.slice(times.indexOf(startTime), times.indexOf(endTime));
+        const availArr = availTimes.slice(availTimes.indexOf(startTime), availTimes.indexOf(endTime));
         
         //if the selected times are outside of the employees availabilities, get confirmation from the user about whether or not to still proceed
-        if((startTimeFloat >= earliestAvail && startTimeFloat <= latestAvail) && (endTimeFloat >= earliestAvail && endTimeFloat <= latestAvail)){
+        if(rosteredTimes.toString() === availArr.toString()){
                 await axios.put("http://localhost:2420/updateRoster", {
                     emp_id: empId,
                     rost_date: selectedDate,
@@ -217,18 +220,25 @@ class EditableRoster extends Component {
                 return element.event_date === weekDates[currentDayIndex];
             });
 
-            //format values so they work with Math.min/Math.max
-            const reg = [(regAvail === undefined || regAvail.reg_start === null) ? "25:00" : regAvail.reg_start, (regAvail === undefined || regAvail.reg_end === null) ? "-1:00" : regAvail.reg_end];
-            const leave = [(leaveAvail === undefined || leaveAvail.avail_start === null) ? "25:00" : leaveAvail.avail_start, (leaveAvail === undefined || leaveAvail.avail_end === null) ? "-1:00" : leaveAvail.avail_end];
-            const comp = [(compEvent === undefined) ? "25:00" : (compEvent.event_start === null) ? "25:00" : compEvent.event_start, (compEvent === undefined) ? "-1:00" : (compEvent.event_end === null) ? "-1:00" : compEvent.event_end];
+            let availTimes = times.slice(times.indexOf(regAvail.reg_start !== null ? regAvail.reg_start.substring(0, 5) : "null"), times.indexOf(regAvail.reg_end !== null ? regAvail.reg_end.substring(0, 5) : "null"));
 
-            //get the earliest and latest times the employee is available
-            let earliestAvail = Math.min(...[this.timeToFloat(reg[0]), this.timeToFloat(leave[0]), this.timeToFloat(comp[0])]);
-            let latestAvail = Math.max(...[this.timeToFloat(reg[1]), this.timeToFloat(leave[1]), this.timeToFloat(comp[1])]);
+            //generate array based on leave, company event and reg avail
+            if(regAvail.reg_start === null || regAvail.reg_end === null){
+                availTimes = [];
+            } else if(leaveAvail !== undefined){
+                availTimes = [];
+            } else if(compEvent !== undefined){
+                if(compEvent.event_start !== null && compEvent.event_end !== null){
+                    const eventArr = times.slice(times.indexOf(compEvent.event_start.substring(0, 5)), times.indexOf(compEvent.event_end.substring(0, 5)));
+                    const regArr = times.slice(times.indexOf(regAvail.reg_start.substring(0, 5)), times.indexOf(regAvail.reg_end.substring(0, 5)));
+
+                    availTimes = regArr.filter(x => !eventArr.includes(x));
+                }
+            }
 
             //generate input options with colours
             const colorTimes = times.slice(1, times.length - 1).map((time, index) => 
-                <option value={time} style={{color: (this.timeToFloat(time) >= earliestAvail && this.timeToFloat(time) <= latestAvail) ? "black" : "grey"}} key={index}>{time}</option>
+                <option value={time} style={{color: (availTimes.indexOf(time) !== -1) ? "black" : "grey"}} key={index}>{time}</option>
             )
 
             return(
@@ -267,7 +277,7 @@ class EditableRoster extends Component {
                         display="flex"
                         justifyContent="center"
                         alignItems="center">
-                        <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex], earliestAvail, latestAvail)}>Save Roster</Button>
+                        <Button variant='contained' onClick={() => this.addRosterTime(currentEmpView, weekDates[currentDayIndex], availTimes)}>Save Roster</Button>
                     </Box>
                 </div>
             )

@@ -54,7 +54,9 @@ export default function RequestLeave(){
             if(newEventObject.start.getTime() === newEventObject.end.getTime())
             {
                 const date = newEventObject.start;
-                date.setDate(date.getDate() + 1);
+
+                if(engine === "Blink")
+                    date.setDate(date.getDate() + 1);
 
                 const sqlDate = date.toISOString().split('T')[0].replace(/-/g, '/');
 
