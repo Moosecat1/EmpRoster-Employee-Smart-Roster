@@ -50,7 +50,7 @@ export default function Login(){
     }
    
     if(sessionStorage.getItem('emp_id') != null) {
-        alert("you have already Logged in")
+        //alert("you have already Logged in")
         window.location.href = "/mainhub";
     } else {
         // Simple lgin form with a Collapse contain the Alert which contains an error message
