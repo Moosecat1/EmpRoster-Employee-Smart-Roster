@@ -1,7 +1,7 @@
 import {React, useState, useEffect} from "react";
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
-
+import Bowser from 'bowser';
 import {Calendar, dateFnsLocalizer} from 'react-big-calendar';
 import format from "date-fns/format";
 import parse from "date-fns/parse";
@@ -48,6 +48,8 @@ export default function RequestLeave(){
         //if start and end are not null and start time is not later than end time, allow leave to be added
         if((newEventObject.start !== "" && newEventObject.end !== "") && !(newEventObject.start > newEventObject.end))
         {
+            const engine = Bowser.parse(window.navigator.userAgent).engine.name;
+
             //if the start time equals the end time, add the availability for the whole day
             if(newEventObject.start.getTime() === newEventObject.end.getTime())
             {
@@ -69,8 +71,14 @@ export default function RequestLeave(){
                 let dayLooper = newEventObject.start;
                 dayLooper.setDate(dayLooper.getDate());
 
+                if(engine === "Blink")
+                    dayLooper.setDate(dayLooper.getDate() + 1);
+
                 let endDate = newEventObject.end;
                 endDate.setDate(endDate.getDate() + 1);
+
+                if(engine === "Blink")
+                    endDate.setDate(endDate.getDate() + 1);
 
                 while(dayLooper.getTime() !== endDate.getTime())
                 {
