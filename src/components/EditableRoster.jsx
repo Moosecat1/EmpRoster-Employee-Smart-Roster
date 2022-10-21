@@ -228,7 +228,10 @@ class EditableRoster extends Component {
             } else if(leaveAvail !== undefined){
                 availTimes = [];
             } else if(compEvent !== undefined){
-                if(compEvent.event_start !== null && compEvent.event_end !== null){
+                if(compEvent.event_start === null && compEvent.event_end === null){
+                    availTimes = [];
+                }
+                else{
                     const eventArr = times.slice(times.indexOf(compEvent.event_start.substring(0, 5)), times.indexOf(compEvent.event_end.substring(0, 5)));
                     const regArr = times.slice(times.indexOf(regAvail.reg_start.substring(0, 5)), times.indexOf(regAvail.reg_end.substring(0, 5)));
 
