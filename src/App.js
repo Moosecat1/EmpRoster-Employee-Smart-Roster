@@ -43,6 +43,8 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home/>}/>
+            <Route path="/FAQ" element={<FAQ/>}/>
+            <Route path="/About" element={<About/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
             <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
@@ -58,6 +60,8 @@ export default function App() {
           <BrowserRouter>
               <Routes>
                   <Route path="/" element={<Home/>}/>
+                  <Route path="/FAQ" element={<FAQ/>}/>
+                  <Route path="/About" element={<About/>}/>
                   <Route path="/login" element={<Login/>}/>
                   <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
                   <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
@@ -85,6 +89,8 @@ export default function App() {
           <BrowserRouter>
               <Routes>
                   <Route path="/" element={<Home/>}/>
+                  <Route path="/FAQ" element={<FAQ/>}/>
+                  <Route path="/About" element={<About/>}/>
                   <Route path="/login" element={<Login/>}/>
                   <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
                   <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
@@ -110,6 +116,8 @@ export default function App() {
           <BrowserRouter>
               <Routes>
                   <Route path="/" element={<Home/>}/>
+                  <Route path="/FAQ" element={<FAQ/>}/>
+                  <Route path="/About" element={<About/>}/>
                   <Route path="/login" element={<Login/>}/>
                   <Route path="/register/createcompany" element={<RegisterCreateCompany/>}/>
                   <Route path="/register/createemployees" element={<RegisterCreateEmployees/>}/>
