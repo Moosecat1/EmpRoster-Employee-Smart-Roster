@@ -16,7 +16,7 @@ export default function RegisterCreateCompany() {
     const createCompany = () => {
         (async () => {
             //do error checking, and if no errors create company in db
-            if (companyName === "" && companyName.length < 3) {
+            if (companyName === "" || companyName.length < 3) {
                 setMessage("Company Name should contain 3 or more Letters");
                 setOpen(true);
             }else if(companyName.substring(0, 3).includes(' ')){
