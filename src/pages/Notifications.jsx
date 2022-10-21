@@ -91,8 +91,6 @@ class Notifications extends Component {
 
             if(engine !== "Blink")
                 date.setDate(date.getDate() + 1);
-            
-            date.setMonth(date.getMonth() + 1);
 
             return(
                 <>
@@ -100,7 +98,7 @@ class Notifications extends Component {
                         <Card.Title>
                             {"Leave Request"}
                         </Card.Title>
-                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + (date.getDate()) + "/" +  (date.getMonth()) + "/" +
+                        {notification.emp_fName + " " + notification.emp_lName + " is requesting leave on the " + (date.getDate()) + "/" +  (date.getMonth() !== 12 ? date.getMonth() + 1 : 1) + "/" +
                         this.state.dates[index].getFullYear() + " from " + notification.noti_start + "-" + notification.noti_end + " due to " + notification.noti_desc}
                     </Card.Body>
                     <Button variant="primary" onClick={() =>this.acceptRequest(notification, index)}>Accept</Button>
